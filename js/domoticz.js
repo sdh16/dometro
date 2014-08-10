@@ -806,7 +806,7 @@ domoticzUserVariables.result.forEach(function(value, index){
 
 	//update lights
 updateDomoticzDashboard = function(){
-	timerDashboard = setTimeout(updateDomoticzDashboard, 5000)	
+	timerDashboard = setTimeout(updateDomoticzDashboard, 5000)
 
 	var deviceidx
 	var deviceName
@@ -931,14 +931,14 @@ updateDomoticzDashboard = function(){
 			if(!$("#" + virtualDeviceName +"-tile").length) {
 				$("<div></div>")
 				.attr("id", "metro")
-				.appendTo("#Dashboard")
+				.appendTo("#tab-Dashboard")
 				.addClass("metro")
 
 				// Create the tile for the virtual deivce
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile")
 				.appendTo("#metro")
-				.addClass("tile wide text")// bg-color-blue")
+				.addClass("tile wide text") //imagetext wideimage")// bg-color-blue")
 				
 				// Tile Heading				
 				$("<div></div>")
@@ -1092,7 +1092,7 @@ updateDomoticzDashboard = function(){
 				}
 		
 				// update text if not the same
-				if ($(value.idx +key +"-column-text-data").text() != text){
+				if ($(value.idx +key +"-column-text").text() != text){
 				
 					$(value.idx +key +"-column-text-data")
 					.hide()
@@ -1413,6 +1413,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
 	}
 })
-	$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
+	//$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
 	$('select').selectpicker();
 });
