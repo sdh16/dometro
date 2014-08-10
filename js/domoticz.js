@@ -248,15 +248,15 @@
 				switch(tabtext){
 					
 					case "Setup":
-					var tabclass = "fa fa-gears"
+					var tabclass = "icon-tools"
 					break;
 					
 					case "Links":
-					var tabclass = "fa fa-external-link"
+					var tabclass = "icon-link"
 					break;
 					
 					case "Dashboard":
-					var tabclass = "fa fa-dashboard"
+					var tabclass = "icon-dashboard"
 					break;
 					
 					case "Rooms":
@@ -276,19 +276,19 @@
 					break;
 					
 					case "Temp":
-					var tabclass = "ion ion-thermometer"
+					var tabclass = "icon-thermometer-2"
 					break;
 					
 					case "Utility":
-					var tabclass = "fa fa-home"
+					var tabclass = "icon-home"
 					break;
 					
 					case "Weather":
-					var tabclass = "fa fa-sun-o"
+					var tabclass = "icon-weather"
 					break;
 					
 					default:
-					var tabclass = "fa fa-question"
+					var tabclass = "icon-question"
 					break
 					
 				}
@@ -805,394 +805,320 @@ domoticzUserVariables.result.forEach(function(value, index){
 }
 
 	//update lights
-	updateDomoticzDashboard = function(){
-		timerDashboard = setTimeout(updateDomoticzDashboard, 500000)	
+updateDomoticzDashboard = function(){
+	timerDashboard = setTimeout(updateDomoticzDashboard, 5000)	
 
-		var deviceidx
-		var deviceName
-		var vdidx
-		var col = 1;
-		var domoticzUserVariables = $.getUservariables()
-		domoticzUserVariables.result.forEach(function(value, index){
-			if(value.Name.match(/sd_/)) {//== "sd_STB"){
-				//var value = value.Value
-				vdidx = value.idx
-				deviceidx = value.Value.split(",")
-				deviceName = value.Name.split('_')[1];
+	var deviceidx
+	var deviceName
+	var vdidx
+	var col = 1;
+	var domoticzUserVariables = $.getUservariables()
+	domoticzUserVariables.result.forEach(function(value, index){
+		if(value.Name.match(/sd_/)) {
+			//var value = value.Value
+			vdidx = value.idx
+			deviceidx = value.Value.split(",")
+			deviceName = value.Name.split('_')[1];
 
-		switch(deviceidx[0]){
+			switch(deviceidx[0]){
 			
-			// break up categories into Type or SwitchType
-			case undefined:
-			var category = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-			//var text = value.Data
-			var vdName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-			break;
-			
-			default:
-			var category = deviceidx[0].replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-			//var text = value.Data
-			var vdName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-		}
+				// break up categories into Type or SwitchType
+				case undefined:
+				var category = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+				//var text = value.Data
+				var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+				break;
+		
+				default:
+				var category = deviceidx[0].replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+				//var text = value.Data
+				var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+			}
 		
 			// pretty cattegory labels AFTER defining
-		switch(category){
+			switch(category){
 
-			case "Dimmer":
-			var categoryClass = "fa fa-sliders"
-			break;
+				case "Dimmer":
+				var categoryClass = "icon-settings"
+				break;
 			
-			case "Rain":
-			var categoryClass = "ion ion-umbrella"
-			break;
+				case "Rain":
+				var categoryClass = "icon-umbrella"
+				break;
 
-			case "Blinds":
-			var categoryClass = "fa fa-unsorted"
-			break;
+				case "Blinds":
+				var categoryClass = "fa fa-unsorted"
+				break;
 			
-			case "P1Smartmeter":
-			var categoryClass = "fa fa-tasks"
-			break;
+				case "P1Smartmeter":
+				var categoryClass = "fa fa-tasks"
+				break;
 			
-			case "Wind":
-			var categoryClass = "fa fa-compass"
-			break;
+				case "Wind":
+				var categoryClass = "icon-compass"
+				break;
 			
-			case "Thermostat":
-			var categoryClass = "fa fa-tachometer"
-			break;
+				case "Thermostat":
+				var categoryClass = "fa fa-tachometer"
+				break;
+		
+				case "Contact":
+				var categoryClass = "icon-switch"
+				break;
+			
+				case "TempHumidity":
+				var categoryClass = "icon-thermometer-2"
+				break;
+			
+				case "SmokeDetector":
+				var categoryClass = "icon-fire"
+				break;
+			
+				case "OnOff":
+				var categoryClass = "icon-switch-2"
+				break;
+			
+				case "Security":
+				var categoryClass = "fa fa-shield"
+				break;
+			
+				case "DuskSensor":
+				var categoryClass = "fa fa-square"
+				break;
+			
+				case "General":
+				var categoryClass = "ion ion-ios7-pulse-strong"
+				break;
+			
+				case "Usage":
+				var categoryClass = "icon-electricity"
+				break;
+			
+				case "Energy":
+				var categoryClass = "icon-graph"
+				break;
+			
+				case "YouLessMeter":
+				var categoryClass = "icon-home"
+				break;
+			
+				case "TempHumidityBaro":
+				var categoryClass = "icon-sun"
+				break;
+			
+				case "Temp":
+				var categoryClass = "icon-thermometer"
+				break;
+			
+				case "MotionSensor":
+				var categoryClass = "icon-enter"
+				break;
+			
+				case "Lux":
+				var categoryClass = "icon-adjust"
+				break;
+			
+				case "Weather":
+				var categoryClass = "icon-weather"
+				break;
 
-			
-			case "Contact":
-			var categoryClass = "ion ion-toggle"
-			break;
-			
-			case "TempHumidity":
-			var categoryClass = "ion ion-thermometer"
-			break;
-			
-			case "SmokeDetector":
-			var categoryClass = "glyphicon glyphicon-fire"
-			break;
-			
-			case "OnOff":
-			var categoryClass = "fa fa-power-off"
-			break;
-			
-			case "Security":
-			var categoryClass = "fa fa-shield"
-			break;
-			
-			case "DuskSensor":
-			var categoryClass = "fa fa-square"
-			break;
-			
-			case "General":
-			var categoryClass = "ion ion-ios7-pulse-strong"
-			break;
-			
-			case "Usage":
-			var categoryClass = "ion ion-outlet"
-			break;
-			
-			case "Energy":
-			var categoryClass = "ion ion-outlet"
-			break;
-			
-			case "YouLessMeter":
-			var categoryClass = "fa fa-home"
-			break;
-			
-			case "TempHumidityBaro":
-			var categoryClass = "fa fa-sun-o"
-			break;
-			
-			case "Temp":
-			var categoryClass = "ion ion-thermometer"
-			break;
-			
-			case "MotionSensor":
-			var categoryClass = "fa fa-refresh"
-			break;
-			
-			case "Lux":
-			var categoryClass = "fa fa-bullseye"
-			break;
-			
-			case "Weather":
-			var categoryClass = "ion ion-ios7-cloud-outline"
-			break;
-
-			default:
-			var categoryClass = "fa fa-question"
-			break;			
-			
-		}	
+				default:
+				var categoryClass = "icon-question"
+				break;			
+			}
 
 			// create a tile for each virtual device
-			if(!$("#" + vdName ).length) {
+			if(!$("#" + virtualDeviceName +"-tile").length) {
 				$("<div></div>")
 				.attr("id", "metro")
-				.appendTo("#Dashboard") //-col-"+col)
+				.appendTo("#Dashboard")
 				.addClass("metro")
 
-				//$("<div></div>")
-				//.attr("id", "panorama")
-				//.appendTo("#metro")
-				//.addClass("metro-panorama")
-
-				//$("<div></div>")
-				//.attr("id", "sections")
-				//.appendTo("#panorama")
-				//.addClass("panorama-sections")
-
-				//$("<div></div>")
-				//.attr("id", "section")
-				//.appendTo("#sections")
-				//.addClass("panorama-section")
-
+				// Create the tile for the virtual deivce
 				$("<div></div>")
-				.attr("id", vdName)
+				.attr("id", virtualDeviceName +"-tile")
 				.appendTo("#metro")
-				.addClass("tile-column-span-2")
+				.addClass("tile wide text")// bg-color-blue")
 				
-				$("<a></a>")
-				.attr("id", vdName+"-text")
-				.appendTo("#" + vdName)
-				.addClass("tile wide text widetext02 bg-color-orange")
-								
-				//$("<span></span>")
-				//.attr("id", vdName+"-icon")
-				//.appendTo("#" + vdName + "-text")
-				//.addClass(categoryClass)
-
-				$("<span></span>")
-				.attr("id", vdName+"-name")
-				.appendTo("#" + vdName + "-text")
-				.addClass("text small")
+				// Tile Heading				
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-header")
+				.appendTo("#" + virtualDeviceName +"-tile")
+				.addClass("text-header")
 				.text(deviceName)
 
 			}
 
-		for(i = 1; i < deviceidx.length; i++) {
-			var device = $.getDevice(deviceidx[i])
-			device.forEach(function(value, key) {
+			for(i = 1; i < deviceidx.length; i++) {
+				var device = $.getDevice(deviceidx[i])
+				device.forEach(function(value, key) {
 				var text = value.Data
-				//alert(value.Name)
-			// Create Device Type icons
-			switch(value.Type){
+				// Create Device Type icons
+				switch(value.Type){
 
-				case "Dimmer":
-				var deviceType = "fa fa-sliders"
-				break;
+					case "Dimmer":
+					var deviceType = "icon-settings"
+					break;
 			
-				case "Rain":
-				var deviceType = "ion ion-umbrella"
-				break;
+					case "Rain":
+					var deviceType = "ion ion-umbrella"
+					break;
 
-				case "Blinds":
-				var deviceType = "fa fa-unsorted"
-				break;
+					case "Blinds":
+					var deviceType = "fa fa-unsorted"
+					break;
 			
-				case "P1Smartmeter":
-				var deviceType = "fa fa-tasks"
-				break;
+					case "P1Smartmeter":
+					var deviceType = "fa fa-tasks"
+					break;
 			
-				case "Wind":
-				var deviceType = "fa fa-compass"
-				break;
+					case "Wind":
+					var deviceType = "icon-compass-2"
+					break;
 			
-				case "Thermostat":
-				var deviceType = "fa fa-tachometer"
-				break;
+					case "Thermostat":
+					var deviceType = "fa fa-tachometer"
+					break;
 			
-				case "Contact":
-				var deviceType = "ion ion-toggle"
-				break;
+					case "Contact":
+					var deviceType = "icon-enter"
+					break;
 			
-				case "Temp + Humidity":
-				var deviceType = "ion ion-thermometer"
-				break;
+					case "Temp + Humidity":
+					var deviceType = "icon-thermometer"
+					break;
 			
-				case "SmokeDetector":
-				var deviceType = "glyphicon glyphicon-fire"
-				break;
+					case "SmokeDetector":
+					var deviceType = "icon-fire"
+					break;
 				
-				case "Lighting 2":
-				if (value.SwitchType == "On/Off")
-					var deviceType = "ion ion-lightbulb"
-				else if (value.SwitchType == "Contact")
-					var deviceType = "ion ion-log-in"
-				else if (value.SwitchType == "Motion Sensor")
-					var deviceType = "fa  fa-male"
-				else if (value.SwitchType == "Smoke Detector")
-					var deviceType = "fa  fa-flame"
-				else if (value.SwitchType == "Dimmer")
-					var deviceType = "ion ion-ios7-settings-strong"
-				else
-					var deviceType = "fa fa-question"
-				break;
+					case "Lighting 2":
+					if (value.SwitchType == "On/Off")
+						var deviceType = "icon-lightbulb"
+					else if (value.SwitchType == "Contact")
+						var deviceType = "ion ion-log-in"
+					else if (value.SwitchType == "Motion Sensor")
+						var deviceType = "fa  fa-male"
+					else if (value.SwitchType == "Smoke Detector")
+						var deviceType = "fa  fa-flame"
+					else if (value.SwitchType == "Dimmer")
+						var deviceType = "ion ion-ios7-settings-strong"
+					else
+						var deviceType = "fa fa-question"
+					break;
 			
-				case "Security":
-				var deviceType = "fa fa-shield"
-				break;
-			
-				case "DuskSensor":
-				var deviceType = "fa fa-square"
-				break;
-			
-				case "General":
-				if (value.SubType == "Solar Radiation")
-					var deviceType = "ion ion-nuclear"
-				else
-					var deviceType = "ion ion-ios7-pulse-strong"
-				break;
-			
-				case "Usage":
-				var deviceType = "ion ion-flash"
-				break;
-			
-				case "Energy":
-				var deviceType = "ion ion-arrow-graph-up-right"
-				break;
-			
-				case "YouLessMeter":
-				var deviceType = "fa fa-home"
-				break;
-			
-				case "Temp + Humidity + Baro":
-				var deviceType = "fa fa-sun-o"
-				break;
-			
-				case "Temp":
-				var deviceType = "ion ion-thermometer"
-				break;
-			
-				case "MotionSensor":
-				var deviceType = "fa fa-refresh"
-				break;
-			
-				case "Lux":
-				var deviceType = "fa fa-bullseye"
-				break;
-			
-				case "Weather":
-				var deviceType = "ion ion-ios7-cloud-outline"
-				break;
-
-				default:
-				var deviceType = "fa fa-question"
-				break;			
-			
-			}	
-
-			
-			// create a tile for each virtual device
-
-			if(!$("#" + value.idx).length){
-				$("<div></div>")
-					.attr("id", value.idx)
-					.attr("href", "#")
-					.addClass("text")
-					.appendTo("#" + vdName + "-text")
-
-				$("<div></div>")
-					.attr("id", "line-"+value.idx)
-					.appendTo("#"+value.idx)
-					.addClass("clearfix list-group-item-text")
-					.attr("data-toggle", "collapse")
-					.attr("data-target", "#popout-"+value.idx)
-			
-			
-				$("<span></span>")
-					.attr("id", "name-"+value.idx)
-					.appendTo("#line-"+value.idx)
-					.addClass("text small pull-left")
-					// Use icon instead of the textual value
-					//.text(value.Type)
-					.addClass(deviceType)
-			
-				// add data or status
-				
-				$("<a></a>")
-					.attr("id", "text-" + value.idx)
-					.appendTo("#line-"+value.idx)
-					.addClass("text small pull-right")
-					//.addClass("badge")
-					.text(value.Data)
-				
-				$("<span></span>")
-					.attr("id", "icon-" + value.idx)
-					.appendTo("#line-"+value.idx)
-					.addClass("small pull-right")
-				
-					
-			
-			}
+					case "Security":
+					var deviceType = "fa fa-shield"
+					break;
 		
-			// create 'popouts'
-			if(!$("#popout-"+value.idx).length){
+					case "DuskSensor":
+					var deviceType = "fa fa-square"
+					break;
 			
-				$("<div></div>")
-					.attr("id", "popout-"+value.idx)
-					.appendTo("#line-"+value.idx)
-					.attr("data-parent", "#line-"+value.idx)
-					.addClass("spaced collapse well small")
+					case "General":
+					if (value.SubType == "Solar Radiation")
+						var deviceType = "ion ion-nuclear"
+					else
+						var deviceType = "ion ion-ios7-pulse-strong"
+					break;
 			
-				$("<p></p>")
-					.attr("id", "LastUpdate-"+value.idx)
-					.appendTo("#popout-"+value.idx)
+					case "Usage":
+					var deviceType = "ion ion-flash"
+					break;
+
+					case "Energy":
+					var deviceType = "icon-graph"
+					break;
+			
+					case "YouLessMeter":
+					var deviceType = "fa fa-home"
+					break;
+			
+					case "Temp + Humidity + Baro":
+					var deviceType = "icon-sun"
+					break;
+			
+					case "Temp":
+					var deviceType = "icon-thermometer-2"
+					break;
+			
+					case "MotionSensor":
+					var deviceType = "icon-enter"
+					break;
+			
+					case "Lux":
+					var deviceType = "icon-adjust"
+					break;
+			
+					case "Weather":
+					var deviceType = "icon-weather"
+					break;
+	
+					default:
+					var deviceType = "icon-question"
+					break;			
+			
+				}	
+
+				// create a row for each real device in the virtual device
+
+				if(!$("#" +value.idx +key +"-column-label-data").length){
+			
+					$("<div></div>")
+						.attr("id", value.idx +"-column-label")
+						.appendTo("#" + virtualDeviceName +"-tile")
+						.addClass("column2-label")
+
+					$("<div></div>")
+						.attr("id", value.idx +key +"-column-label-data")
+						.appendTo("#" +value.idx +"-column-label")
+						.addClass("text")
+						.addClass(deviceType)
+						//.text(value.Type)
+				}			
+				if(!$("#" +value.idx +key +"-column-text-data").length){
+					// add data or status
+					$("<div></div>")
+						.attr("id", value.idx +"-column-text")
+						.appendTo("#" + virtualDeviceName +"-tile")
+						.addClass("column2-text")
+				
+					$("<div></div>")
+						.attr("id", value.idx +key +"-column-text-data")
+						.appendTo("#" + value.idx + "-column-text" )
+						.addClass("text")
+						.text(value.Data)
+			
+				}
+		
+				// update text if not the same
+				if ($(value.idx +key +"-column-text-data").text() != text){
+				
+					$(value.idx +key +"-column-text-data")
+					.hide()
+					.text(text)
+					.fadeIn(1500)
+				
+				}
+			
+				if ($("#LastUpdate-"+value.idx).text() != value.LastUpdate){				
+					$("#LastUpdate-"+value.idx)
+					.hide()
 					.text(value.LastUpdate)
-					.addClass("list-group-item-text small")
-
-				if(value.BatteryLevel < 100){
-
-				$("<p></p>")
-					.attr("id", "BatteryStatus-"+value.idx)
-					.appendTo("#popout-"+value.idx)
-					.text(value.BatteryLevel)
-					.addClass("list-group-item-text small")
-				
-			}
-					
-					
-													
-			}
+					.fadeIn(1500)				
+				}
 			
-			// update text if not the same
-			if ($("#text-"+value.idx).text() != text){
-				
-				$("#text-"+value.idx)
-				.hide()
-				.text(text)
-				.fadeIn(1500)
-				
-			}
-			
-			if ($("#LastUpdate-"+value.idx).text() != value.LastUpdate){				
-				$("#LastUpdate-"+value.idx)
-				.hide()
-				.text(value.LastUpdate)
-				.fadeIn(1500)				
-			}
-			
-			if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
-				$("#BatteryStatus-"+value.idx)
-				.hide()
-				.text(value.BatteryStatus)
-				.fadeIn(1500)
-			}
+				if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
+					$("#BatteryStatus-"+value.idx)
+					.hide()
+					.text(value.BatteryStatus)
+					.fadeIn(1500)
+				}
 
-			
-			
-
-
-		//} //SD Disabled Fav
-
-		})
+			})
 		} //SD For Loop
-		} // SD if
-	}) // SD User Variable
+	} // SD if
+}) // SD User Variable
 }
 /*
 	//update dashboard
@@ -1290,7 +1216,7 @@ domoticzUserVariables.result.forEach(function(value, index){
 			break;
 			
 			case "TempHumidityBaro":
-			var categoryClass = "fa fa-sun-o"
+			var categoryClass = "icon-sun"
 			break;
 			
 			case "Temp":
