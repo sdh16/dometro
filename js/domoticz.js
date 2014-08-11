@@ -879,11 +879,11 @@ updateDomoticzDashboard = function(){
 				break;
 			
 				case "Security":
-				var categoryClass = "fa fa-shield"
+				var categoryClass = "icon-shield"
 				break;
 			
 				case "DuskSensor":
-				var categoryClass = "fa fa-square"
+				var categoryClass = "icon-cloud-5"
 				break;
 			
 				case "General":
@@ -938,7 +938,10 @@ updateDomoticzDashboard = function(){
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile")
 				.appendTo("#metro")
-				.addClass("tile wide text") //imagetext wideimage")// bg-color-blue")
+				//.addClass("tile wide text")
+				//some issue with tile wide text, use tile wide image instead as workaround
+				.addClass("tile wide image")
+				.addClass("padding 20px")
 				
 				// Tile Heading				
 				$("<div></div>")
@@ -961,7 +964,7 @@ updateDomoticzDashboard = function(){
 					break;
 			
 					case "Rain":
-					var deviceType = "ion ion-umbrella"
+					var deviceType = "icon-umbrella"
 					break;
 
 					case "Blinds":
@@ -996,34 +999,34 @@ updateDomoticzDashboard = function(){
 					if (value.SwitchType == "On/Off")
 						var deviceType = "icon-lightbulb"
 					else if (value.SwitchType == "Contact")
-						var deviceType = "ion ion-log-in"
+						var deviceType = "icon-enter"
 					else if (value.SwitchType == "Motion Sensor")
-						var deviceType = "fa  fa-male"
+						var deviceType = "icon-eye"
 					else if (value.SwitchType == "Smoke Detector")
-						var deviceType = "fa  fa-flame"
+						var deviceType = "icon-fire"
 					else if (value.SwitchType == "Dimmer")
-						var deviceType = "ion ion-ios7-settings-strong"
+						var deviceType = "icon-settings"
 					else
-						var deviceType = "fa fa-question"
+						var deviceType = "icon-question"
 					break;
 			
 					case "Security":
-					var deviceType = "fa fa-shield"
+					var deviceType = "icon-shield"
 					break;
 		
 					case "DuskSensor":
-					var deviceType = "fa fa-square"
+					var deviceType = "icon-sun-5"
 					break;
 			
 					case "General":
 					if (value.SubType == "Solar Radiation")
-						var deviceType = "ion ion-nuclear"
+						var deviceType = "icon-warning"
 					else
-						var deviceType = "ion ion-ios7-pulse-strong"
+						var deviceType = "icon-stats"
 					break;
 			
 					case "Usage":
-					var deviceType = "ion ion-flash"
+					var deviceType = "icon-electricity"
 					break;
 
 					case "Energy":
