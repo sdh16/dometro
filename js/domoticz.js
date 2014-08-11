@@ -820,6 +820,7 @@ updateDomoticzDashboard = function(){
 			deviceidx = value.Value.split(",")
 			deviceName = value.Name.split('_')[1];
 
+/*
 			switch(deviceidx[0]){
 			
 				// break up categories into Type or SwitchType
@@ -834,98 +835,103 @@ updateDomoticzDashboard = function(){
 				//var text = value.Data
 				var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
 			}
+*/			
+			var virtualDeviceType = deviceidx[0].replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+			var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
 		
 			// pretty cattegory labels AFTER defining
-			switch(category){
+			switch(virtualDeviceType){
 
 				case "Dimmer":
-				var categoryClass = "icon-settings"
+				var virtualDeviceTypeClass = "icon-settings"
 				break;
 			
 				case "Rain":
-				var categoryClass = "icon-umbrella"
+				var virtualDeviceTypeClass = "icon-umbrella"
 				break;
 
 				case "Blinds":
-				var categoryClass = "fa fa-unsorted"
+				var virtualDeviceTypeClass = "fa fa-unsorted"
 				break;
 			
 				case "P1Smartmeter":
-				var categoryClass = "fa fa-tasks"
+				var virtualDeviceTypeClass = "fa fa-tasks"
 				break;
 			
 				case "Wind":
-				var categoryClass = "icon-compass"
+				var virtualDeviceTypeClass = "icon-compass"
 				break;
 			
 				case "Thermostat":
-				var categoryClass = "fa fa-tachometer"
+				var virtualDeviceTypeClass = "fa fa-tachometer"
 				break;
 		
 				case "Contact":
-				var categoryClass = "icon-switch"
+				var virtualDeviceTypeClass = "icon-switch"
 				break;
 			
 				case "TempHumidity":
-				var categoryClass = "icon-thermometer-2"
+				var virtualDeviceTypeClass = "icon-thermometer-2"
 				break;
 			
 				case "SmokeDetector":
-				var categoryClass = "icon-fire"
+				var virtualDeviceTypeClass = "icon-fire"
 				break;
 			
 				case "OnOff":
-				var categoryClass = "icon-switch-2"
+				var virtualDeviceTypeClass = "icon-switch-2"
 				break;
 			
 				case "Security":
-				var categoryClass = "icon-shield"
+				var virtualDeviceTypeClass = "icon-shield"
 				break;
 			
 				case "DuskSensor":
-				var categoryClass = "icon-cloud-5"
+				var virtualDeviceTypeClass = "icon-cloud-5"
 				break;
 			
 				case "General":
-				var categoryClass = "ion ion-ios7-pulse-strong"
+				var virtualDeviceTypeClass = "ion ion-ios7-pulse-strong"
 				break;
 			
 				case "Usage":
-				var categoryClass = "icon-electricity"
+				var virtualDeviceTypeClass = "icon-electricity"
 				break;
 			
 				case "Energy":
-				var categoryClass = "icon-graph"
+				var virtualDeviceTypeClass = "icon-graph"
 				break;
 			
 				case "YouLessMeter":
-				var categoryClass = "icon-home"
+				var virtualDeviceTypeClass = "icon-home"
 				break;
 			
 				case "TempHumidityBaro":
-				var categoryClass = "icon-sun"
+				var virtualDeviceTypeClass = "icon-sun"
 				break;
 			
 				case "Temp":
-				var categoryClass = "icon-thermometer"
+				var virtualDeviceTypeClass = "icon-thermometer"
 				break;
 			
 				case "MotionSensor":
-				var categoryClass = "icon-enter"
+				var virtualDeviceTypeClass = "icon-enter"
 				break;
 			
 				case "Lux":
-				var categoryClass = "icon-adjust"
+				var virtualDeviceTypeClass = "icon-adjust"
 				break;
 			
 				case "Weather":
-				var categoryClass = "icon-weather"
+				var virtualDeviceTypeClass = "icon-weather"
 				break;
 
 				default:
-				var categoryClass = "icon-question"
+				var virtualDeviceTypeClass = "icon-question"
 				break;			
 			}
+			//Here create a panorama for each virtual device type
+			//and add all the virtual devices of that type to it
 
 			// create a tile for each virtual device
 			if(!$("#" + virtualDeviceName +"-tile").length) {
@@ -941,7 +947,6 @@ updateDomoticzDashboard = function(){
 				//.addClass("tile wide text")
 				//some issue with tile wide text, use tile wide image instead as workaround
 				.addClass("tile wide image")
-				.addClass("padding 20px")
 				
 				// Tile Heading				
 				$("<div></div>")
@@ -951,10 +956,21 @@ updateDomoticzDashboard = function(){
 				.text(deviceName)
 
 			}
-
+			//alert($(virtualDeviceName +"-tile").text())
 			for(i = 1; i < deviceidx.length; i++) {
 				var device = $.getDevice(deviceidx[i])
 				device.forEach(function(value, key) {
+				
+				//Use status for lighting devices and data for rest
+				switch(value.SwitchType){
+					case undefined:
+					var text = value.Data
+					break;
+					
+					default:
+					var text = value.Status
+					break;
+				}
 				var text = value.Data
 				// Create Device Type icons
 				switch(value.Type){
@@ -967,20 +983,8 @@ updateDomoticzDashboard = function(){
 					var deviceType = "icon-umbrella"
 					break;
 
-					case "Blinds":
-					var deviceType = "fa fa-unsorted"
-					break;
-			
-					case "P1Smartmeter":
-					var deviceType = "fa fa-tasks"
-					break;
-			
 					case "Wind":
 					var deviceType = "icon-compass-2"
-					break;
-			
-					case "Thermostat":
-					var deviceType = "fa fa-tachometer"
 					break;
 			
 					case "Contact":
@@ -1033,10 +1037,6 @@ updateDomoticzDashboard = function(){
 					var deviceType = "icon-graph"
 					break;
 			
-					case "YouLessMeter":
-					var deviceType = "fa fa-home"
-					break;
-			
 					case "Temp + Humidity + Baro":
 					var deviceType = "icon-sun"
 					break;
@@ -1063,9 +1063,9 @@ updateDomoticzDashboard = function(){
 			
 				}	
 
-				// create a row for each real device in the virtual device
+				// add a row for each real device in the virtual device tile
 
-				if(!$("#" +value.idx +key +"-column-label-data").length){
+				if(!$("#" +value.idx +"-column-label-data").length){
 			
 					$("<div></div>")
 						.attr("id", value.idx +"-column-label")
@@ -1073,13 +1073,13 @@ updateDomoticzDashboard = function(){
 						.addClass("column2-label")
 
 					$("<div></div>")
-						.attr("id", value.idx +key +"-column-label-data")
+						.attr("id", value.idx +"-column-label-data")
 						.appendTo("#" +value.idx +"-column-label")
 						.addClass("text")
 						.addClass(deviceType)
 						//.text(value.Type)
 				}			
-				if(!$("#" +value.idx +key +"-column-text-data").length){
+				if(!$("#" +value.idx +"-column-text-data").length){
 					// add data or status
 					$("<div></div>")
 						.attr("id", value.idx +"-column-text")
@@ -1087,17 +1087,17 @@ updateDomoticzDashboard = function(){
 						.addClass("column2-text")
 				
 					$("<div></div>")
-						.attr("id", value.idx +key +"-column-text-data")
+						.attr("id", value.idx +"-column-text-data")
 						.appendTo("#" + value.idx + "-column-text" )
 						.addClass("text")
-						.text(value.Data)
+						.text(text)
 			
 				}
 		
 				// update text if not the same
-				if ($(value.idx +key +"-column-text").text() != text){
-				
-					$(value.idx +key +"-column-text-data")
+				if ($(value.idx +"-column-text-data").text() != text){
+					//alert($(value.idx +"-column-text-data").text())
+					$(value.idx +"-column-text-data")
 					.hide()
 					.text(text)
 					.fadeIn(1500)
