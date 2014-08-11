@@ -971,7 +971,6 @@ updateDomoticzDashboard = function(){
 					var text = value.Status
 					break;
 				}
-				var text = value.Data
 				// Create Device Type icons
 				switch(value.Type){
 
