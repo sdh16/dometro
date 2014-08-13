@@ -355,7 +355,7 @@ updateDomoticzDashboard = function(){
 				.attr("data-role","live-tile")
 				.attr("data-effect","slideUp")
 				.attr("data-click","transform")
-				
+/*				
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile-brand")
 				.appendTo("#" + virtualDeviceName +"-tile")
@@ -376,6 +376,8 @@ updateDomoticzDashboard = function(){
 				.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
 				.addClass(virtualDeviceTypeClass)
 
+				.text(virtualDeviceName)
+
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile-brand-badge")
 				.appendTo("#" + virtualDeviceName +"-tile-brand")
@@ -385,7 +387,7 @@ updateDomoticzDashboard = function(){
 				.attr("id", virtualDeviceName +"-tile-brand-badge-data")
 				.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
 				.text(deviceidx.length-1)
-				
+*/				
 			}
 
 			for(i = 1; i < deviceidx.length; i++) {
@@ -431,7 +433,7 @@ updateDomoticzDashboard = function(){
 				
 					case "Lighting 2":
 					if (value.SwitchType == "On/Off")
-						var deviceType = "icon-switch"
+						var deviceType = "icon-lamp"
 					else if (value.SwitchType == "Contact")
 						var deviceType = "icon-enter"
 					else if (value.SwitchType == "Motion Sensor")
@@ -493,47 +495,40 @@ updateDomoticzDashboard = function(){
 			
 				}	
 
-				// add a row for each real device in the virtual device tile
-								// Tile Heading				
-				if(!$("#" +value.idx +"-tile-content-email-image").length){
-
-				$("<div></div>")
-				.attr("id", value.idx +"-tile-content")
-				.appendTo("#" + virtualDeviceName +"-tile")
-				.addClass("tile-content email")
+				// add a tile content block each real device in the virtual device tile
+				if(!$("#" +value.idx +"-tile-content").length){
+					$("<div></div>")
+					.attr("id", value.idx +"-tile-content")
+					.appendTo("#" + virtualDeviceName +"-tile")
+					.addClass("tile-content email")
 				}
 
+				// add the icon and value
 				if(!$("#" +value.idx +"-tile-content-email-image").length){
-			
 					$("<div></div>")
 						.attr("id", value.idx +"-tile-content-email-image")
 						.appendTo("#" + value.idx +"-tile-content")
 						.addClass("email-image")
 						.addClass(deviceType)
-/*
-					$("<div></div>")
-						.attr("id", value.idx +"-column-label-data")
-						.appendTo("#" +value.idx +"-column-label")
-						.addClass("text")
-						.addClass(deviceType)
-						//.text(value.Type)
-*/
+
 				}			
 				if(!$("#" +value.idx +"-tile-content-email-data").length){
 					// add data or status
-					
 					$("<div></div>")
 						.attr("id", value.idx +"-tile-content-email-data")
 						.appendTo("#" + value.idx +"-tile-content")
 						.addClass("email-data")
 				
 					$("<span></span>")
-						.attr("id", value.idx +"-tile-content-email-data-text")
+						.attr("id", value.idx +"-tile-content-email-data-status")
+						.appendTo("#" + value.idx + "-tile-content-email-data" )
+						.addClass("email-data-subtitle")
+						.text(text)
+					$("<span></span>")
+						.attr("id", value.idx +"-tile-content-email-data-lastupdate")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
 						.addClass("email-data-text")
-						.text(text)
-						
-			
+						.text(value.LastUpdate)
 				}
 		
 				// update text if not the same
@@ -546,7 +541,7 @@ updateDomoticzDashboard = function(){
 				
 				}
 			
-				if ($("#LastUpdate-"+value.idx).text() != value.LastUpdate){				
+				if ($("#" + value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){				
 					$("#LastUpdate-"+value.idx)
 					.hide()
 					.text(value.LastUpdate)
@@ -560,8 +555,40 @@ updateDomoticzDashboard = function(){
 					.fadeIn(1500)
 				}
 
+
 			})
 		} //SD For Loop
+				if(!$("#" +virtualDeviceName +"-tile-brand").length){
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-brand")
+				.appendTo("#" + virtualDeviceName +"-tile")
+				.addClass("brand")
+
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-brand-label")
+				.appendTo("#" + virtualDeviceName +"-tile-brand")
+				.addClass("label")
+
+				$("<h3></h3>")
+				.attr("id", virtualDeviceName +"-tile-brand-label-heading")
+				.appendTo("#" + virtualDeviceName +"-tile-brand-label")
+				.addClass("no-margin fg-white")
+
+				$("<span></span>")
+				.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
+				.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
+				.addClass(virtualDeviceTypeClass)
+
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-brand-badge")
+				.appendTo("#" + virtualDeviceName +"-tile-brand")
+				.addClass("badge")
+
+				$("<span></span>")
+				.attr("id", virtualDeviceName +"-tile-brand-badge-data")
+				.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
+				.text(deviceidx.length-1)
+			}
 	} // SD if
 }) // SD User Variable
 }
