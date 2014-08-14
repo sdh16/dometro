@@ -150,13 +150,13 @@
 
 // Funtions for the webinterface
 	
-	// fix forecastIO implementation ;)
-	function FixForecastIO(ForecastStr){
- var a = new Date();
+// fix forecastIO implementation ;)
+function FixForecastIO(ForecastStr){
+	var a = new Date();
  
- var icon ="";
+	var icon ="";
      
-     var hour = a.getHours();
+	var hour = a.getHours();
           
 	if (ForecastStr == "Rain") {
 		icon = icon+"rain";
@@ -187,14 +187,14 @@
      return icon;
  }
 
-	//return all variables in an easy objects: name = array, name = idx
-	//need to have the names & the idx's arond, want to minimize the for.Eache's, so this seems easy :P
-	// very sucky functions, needs fixing
-	getDomoticzVariables = function(){
+//return all variables in an easy objects: name = array, name = idx
+//need to have the names & the idx's arond, want to minimize the for.Eache's, so this seems easy :P
+// very sucky functions, needs fixing
+getDomoticzVariables = function(){
 	
 	// change
-		domoticzUserVariables = $.getUservariables()
-		if (!domoticzUserVariables.result.framb0ise_widgets){$.saveUservariable("framb0ise_widgets", 2, "{widgets:0}")}
+	domoticzUserVariables = $.getUservariables()
+	if (!domoticzUserVariables.result.framb0ise_widgets){$.saveUservariable("framb0ise_widgets", 2, "{widgets:0}")}
 	// change
 		
 		domoticzval = {};
@@ -202,11 +202,11 @@
 		
 		var variables = $.getUservariables();
 		if (variables.result != undefined){
-		variables.result.forEach(function(value,key){
+			variables.result.forEach(function(value,key){
 			domoticzval[value.Name] = value.Value;
 			domoticzidx[value.Name] = value.idx;
 			})
-			}
+		}
 	
 	//defaults
 	
@@ -214,597 +214,9 @@
 	
 	return domoticzval;
 	return domoticzidx;
-	}
-	
-	// create some tabs & influence order then merge them
-	createDomoticzTabs = function(){
-		
-		
-		var myTabs ={}
-		var domoTabs = $.getActiveTabs()
-
-		// second call, buggy json :(
-		domoTabs = $.getActiveTabs()
-		
-		myTabs.Setup = 0
-		myTabs.Links = 0
-		myTabs.Dashboard = 1
-		myTabs.Rooms = 0
-		myTabs.Magic = 0
-		
-				
-
-		var activeTabs = $.extend({}, myTabs, domoTabs.result) 
-		
-		$.map(activeTabs,function(value,index){
-				
-		if (value == "1"){
-			var tabid = index.replace("Enable", "")
-			var tabtext = index.replace("EnableTab", "")
-			if(!$("#"+tabid).length){
-				tabid = index.replace("Enable", "")
-				tabtext = index.replace("EnableTab", "")
-				
-				switch(tabtext){
-					
-					case "Setup":
-					var tabclass = "icon-tools"
-					break;
-					
-					case "Links":
-					var tabclass = "icon-link"
-					break;
-					
-					case "Dashboard":
-					var tabclass = "icon-dashboard"
-					break;
-					
-					case "Rooms":
-					var tabclass = "fa fa-th-large"
-					break;
-					
-					case "Magic":
-					var tabclass = "fa fa-magic"
-					break;
-					
-					case "Lights":
-					var tabclass = "fa fa-power-off"
-					break;
-					
-					case "Scenes":
-					var tabclass = "fa fa-list-alt"
-					break;
-					
-					case "Temp":
-					var tabclass = "icon-thermometer-2"
-					break;
-					
-					case "Utility":
-					var tabclass = "icon-home"
-					break;
-					
-					case "Weather":
-					var tabclass = "icon-weather"
-					break;
-					
-					default:
-					var tabclass = "icon-question"
-					break
-					
-				}
-				
-						
-				$("<li></li>")
-					.attr("id",tabid)
-					.appendTo("#tabs")
-					
-				$("<a></a>")
-					.appendTo("#"+tabid)
-					.attr("href", "#tab-"+tabtext)
-					.attr("data-toggle", "tab")
-					.attr("title", tabtext)
-					.addClass(tabclass)
-					
-				$("<div></div>")
-					.attr("id", "tab-"+tabtext)
-					.appendTo("#tab-content")
-					.addClass("container tab-pane")
-							
-				$("<div></div>")
-					.attr("id", tabtext+"-row")
-					.appendTo("#tab-"+tabtext)
-					.addClass("row container")
-			
-				$("<div></div>")
-					.attr("id", tabtext + "-col-1")
-					.appendTo("#"+tabtext +"-row")
-					.addClass("col-md-3")
-		
-				$("<div></div>")
-					.attr("id", tabtext + "-col-2")
-					.appendTo("#"+ tabtext + "-row")
-					.addClass("col-md-3")
-		
-				$("<div></div>")
-					.attr("id", tabtext + "-col-3")
-					.appendTo("#" +tabtext +"-row")
-					.addClass("col-md-3")
-				
-				$("<div></div>")
-					.attr("id", tabtext + "-col-4")
-					.appendTo("#" +tabtext +"-row")
-					.addClass("col-md-3")	
-			
-			}
-	
-	
-		}
-			
-		})
-
-		
-	}
-	
-	// update Setup
-	updateDomoticzSetup = function(){
-	getDomoticzVariables();
-	
-		var SetupTabs = {}
-		SetupTabs.Main = 1
-		SetupTabs.Variables = 1
-		SetupTabs.Links = 0
-		SetupTabs.Magic = 1
-		SetupTabs.Devices = 1
-
-	
-	$("<ul></ul>")
-		.attr("id","setup-tabs")
-		.attr("role","tablist")
-		.addClass("nav nav-tabs")
-		.appendTo("#Setup-row")
-	
-	$("<div></div>")
-		.attr("id","setup-tabs-content")
-		.addClass("tab-content")
-		.appendTo("#Setup-row")
-	
-	$.map(SetupTabs,function(value,index){
-		if (value == "1"){
-		
-	$("<li></li>")
-		.attr("id", index+"-setup-tab")
-		.appendTo("#setup-tabs")
-		
-	$("<a></a>")
-		.appendTo("#" + index + "-setup-tab")
-		.attr("href","#" + index+"-setup-tab-content")
-		.attr("data-toggle", "tab")
-		.text(index)
-		
-	$("<div></div>")
-		.attr("id", index + "-setup-tab-content")
-		.addClass("tab-pane spaced")
-		.appendTo("#setup-tabs-content")
-	
-				$("<div></div>")
-					.attr("id", index+"-row")
-					.appendTo("#" + index + "-setup-tab-content")
-					.addClass("row")
-			
-				$("<div></div>")
-					.attr("id", index + "-col-1")
-					.appendTo("#"+ index +"-row")
-					.addClass("col-md-3")
-		
-				$("<div></div>")
-					.attr("id", index + "-col-2")
-					.appendTo("#"+ index + "-row")
-					.addClass("col-md-3")
-
-				$("<div></div>")
-					.attr("id", index + "-col-3")
-					.appendTo("#" + index +"-row")
-					.addClass("col-md-3")
-				
-				$("<div></div>")
-					.attr("id", index + "-col-4")
-					.appendTo("#" + index +"-row")
-					.addClass("col-md-3")		
-				
-		}
-	})
-		
-
-// uservars
-			$("<button></button>")
-				.attr("id","Variables-refresh-button")
-				.appendTo("#Variables-col-1")
-				.text("refresh")
-				.addClass("btn btn-primary btn-xs")
-				.click(function(){refreshVariablesTable()})
-		
-			$("<table></table>")
-				.attr("id", "Variables-setup-table-1")
-				.appendTo("#Variables-setup-tab-content")
-				.addClass("table table-condensed")
-			
-			$("<thead><thead")
-				.attr("id","Variables-setup-thead-1")
-				.appendTo("#Variables-setup-table-1")
-			
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("idx")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Variable name")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Variable type")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Current value")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Last update")
-			
-
-
-		refreshVariablesTable = function(){
-			var userVariables = $.getUservariables()
-			
-			$("#Variables-setup-table-1 > tbody").remove()	
-
-			$("<tbody></tbody")
-				.attr("id","Variables-setup-tbody-1")
-				.appendTo("#Variables-setup-table-1")
-
-			userVariables.result.forEach(function(value, index){
-				
-				$("<tr></tr>")
-					.attr("id","Variables-setup-row"+index)
-					.appendTo("#Variables-setup-tbody-1")
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.idx)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.Name)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.Type)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.Value)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.LastUpdate)
-			})
-		
-		}
-
-// device list
-			$("<button></button>")
-				.attr("id","Devices-refresh-button")
-				.appendTo("#Devices-col-1")
-				.text("refresh")
-				.addClass("btn btn-primary btn-xs")
-				.click(function(){refreshDevicesTable()})
-		
-			$("<table></table>")
-				.attr("id", "Devices-setup-table-1")
-				.appendTo("#Devices-setup-tab-content")
-				.addClass("table table-condensed")
-			
-			$("<thead><thead")
-				.attr("id","Devices-setup-thead-1")
-				.appendTo("#Devices-setup-table-1")
-			
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("idx")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Device name")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Device type")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Current value")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Last update")
-
-		refreshDevicesTable = function(){
-			var devices = $.getUseddevices()
-			
-			$("#Devices-setup-table-1 > tbody").remove()	
-
-			$("<tbody></tbody")
-				.attr("id","Devices-setup-tbody-1")
-				.appendTo("#Devices-setup-table-1")
-
-			devices.result.forEach(function(value,index){
-
-				
-				$("<tr></tr>")
-					.attr("id","Devices-setup-row"+index)
-					.appendTo("#Devices-setup-tbody-1")
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.idx)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.Name)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.Type)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.Data)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.LastUpdate)
-			})
-		
-		}
-
-// themewatch
-
-			$("<div></div>")
-				.attr("id", "Main-setup-panel-1")
-				.appendTo("#Main-col-1")
-				.addClass("item-group")
-			
-			$("<a></a>")
-				.appendTo("#Main-setup-panel-1")
-				.addClass("list-group-item active text-center")
-				.text("Theme")
-			
-			$("<a></a>")
-				.attr("id", "Main-setup-panel-body")
-				.appendTo("#Main-setup-panel-1")
-				.addClass("list-group-item")
-	
-			$("<select/>")
-				.attr("id", "themes")
-				.addClass("spaced")
-				.appendTo("#Main-setup-panel-body")
-			
-	// get & fill the select
-	$.get("http://api.bootswatch.com/3/", function (data) {
-		var themes = data.themes
-		
-		themes.forEach(function(value, index){
-			
-			$('#themes').append($("<option/>", {
-				value: index,
-				text: value.name
-			}));
-		})
-
-$("#themes").change(function(){
-	
-	$.get("http://api.bootswatch.com/3/", function (data){
-		var themes = data.themes
-		var theme = themes[$("#themes").val()];
-		$("#bootswatch").attr("href", theme.css);
-		$.updateUservariable(domoticzidx.framb0ise_theme, "framb0ise_theme", 0, $("#themes").val());
-    })	
-})	
-
-
-$("#themes").val(domoticzval.framb0ise_theme).change();	
-
-$('#themes').selectpicker('refresh');
-
-	})
-
-// Magic
-var widgets = {}
-var widget = {}
-var row = []
-
-
-// create widget
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-list-1")
-				.appendTo("#Magic-col-1")
-				.addClass("list-group")
-				
-			$("<a></a>")
-				.appendTo("#Magic-setup-list-1")
-				.addClass("list-group-item active text-center")
-				.text("Create Widget")
-			
-			$("<a></a>")
-				.attr("id","Magic-setup-name-row")
-				.appendTo("#Magic-setup-list-1")
-				.addClass("list-group-item")
-			
-			$("<input></input>")
-				.attr("id","Magic-setup-widget-name")
-				.appendTo("#Magic-setup-name-row")
-				.addClass("form-control")
-				.val("Widget Name")
-								
-			$( "#Magic-setup-widget-name").change(function() {
-  
-				$("#Magic-setup-widget-title-text")
-					.text($("#Magic-setup-widget-name").val())
-  	
-				
-  
-			});
-
-
-
-
-			$("<a></a>")
-				.attr("id","Magic-setup-row-row")
-				.appendTo("#Magic-setup-list-1")
-				.addClass("list-group-item")
-			
-			$("<input></input>")
-				.attr("id","Magic-row-name")
-				.appendTo("#Magic-setup-row-row")
-				.addClass("form-control")
-				.val("Row Text")
-				
-			$("<a></a>")
-				.attr("id","Magic-setup-select1-row")
-				.appendTo("#Magic-setup-list-1")
-				.addClass("list-group-item")
-
-			$("<select></select")
-				.attr("id","Magic-core-device-select")
-				.appendTo("#Magic-setup-select1-row")
-				.attr("data-live-search","true")
-				.attr("title","Select one of your devices")
-
-			var domoticzDevices = $.getUseddevices()
-			
-			domoticzDevices.result.forEach(function(value,index){
-				
-			$("#Magic-core-device-select").append($("<option/>",{
-				value: value.idx,
-				text: value.Name
-				}));
-			})
-
-
-
-			$("#Magic-core-device-select").change(function(){
-				$("#Magic-data-device-select").empty()
-					
-				var domoticzDeviceData = $.getDevice($("#Magic-core-device-select").val())
-	
-				$.map(domoticzDeviceData[0], function(value, index) {
-		
-					$("#Magic-data-device-select").append($("<option/>",{
-						value: index,
-						text: value
-					}));
-				});
-	
-				$('#Magic-data-device-select').selectpicker('refresh'); 
-			})
-			
-	
-				
-
-			$("<a></a>")
-				.attr("id","Magic-setup-select2-row")
-				.appendTo("#Magic-setup-list-1")
-				.addClass("list-group-item")
-
-			$("<select></select")
-				.attr("id","Magic-data-device-select")
-				.appendTo("#Magic-setup-select2-row")
-
-			$("<a></a>")
-				.attr("id","Magic-setup-button1-row")
-				.appendTo("#Magic-setup-list-1")
-				.addClass("list-group-item")
-				
-			$("<button></button")
-				.attr("id","Magic-core-device-adddata")
-				.appendTo("#Magic-setup-button1-row")
-				.addClass("btn btn-primary btn-xs")
-				.text("Add")
-
-			$( "#Magic-core-device-adddata" ).click(function() {
-				
-				$("<a></a>")
-					.addClass("list-group-item small")
-					.text($("#Magic-row-name").val()+" "+$("#Magic-data-device-select").find(":selected").text())
-					.appendTo("#Magic-setup-widget-body")
-
-				row.push({
-					name: $("#Magic-row-name").val(),
-					idx : $("#Magic-core-device-select").val(),
-					value : $("#Magic-data-device-select").val()
-				})
-	
-			  	
-  
-			});				
-
-// example widget
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-list-2")
-				.appendTo("#Magic-col-2")
-				.addClass("list-group")
-			
-			$("<a></a>")
-				.attr("id","Magic-setup-widget-title-text")
-				.addClass("list-group-item 	active text-center")
-				.appendTo("#Magic-setup-widget-list-2")
-				.text("Widget Name")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-widget-body")
-				.appendTo("#Magic-setup-widget-list-2")
-			
-			$("<a></a>")
-				.attr("id","Magic-setup-button3-row")
-				.appendTo("#Magic-setup-widget-list-2")
-				.addClass("list-group-item")
-
-			$("<button></button")
-				.attr("id","Magic-save-widget")
-				.appendTo("#Magic-setup-button3-row")
-				.addClass("btn btn-primary btn-xs")
-				.text("Save")
-
-//construct widget & save to Domoticz
-			$("#Magic-save-widget" ).click(function() {
-				
-				//fetch fresh values
-				domoticzUserVariables = $.getUservariables()
-				domoticzUserVariables.result.forEach(function(value, index){
-					
-					if(value.Name == "framb0ise_widgets"){
-						widgets = value.Value
-				
-						//construct
-						widget.name = $("#Magic-setup-widget-name").val()
-						widget.rows= row			
-						
-						//combine
-						var newWidgets = $.extend({}, widget, widgets)
-						
-						newWidgets = JSON.stringify(newWidgets)
-						
-						$.updateUservariable(value.idx, value.Name, value.Type, newWidgets)
-					}
-				})
-			})
-
-// existing widgets
-
-domoticzUserVariables.result.forEach(function(value, index){
-	
-	if (value.Name == "framb0ise_widgets"){
-		var idx = value.idx
-		
-		widgets = $.getUservariable(idx)
-	}
-	
-})
-
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-list-3")
-				.appendTo("#Magic-col-3")
-				.addClass("list-group-item active text-center")
-				.text("Widgets")
 }
-
-	//update lights
+	
+//update Dashboard
 updateDomoticzDashboard = function(){
 	timerDashboard = setTimeout(updateDomoticzDashboard, 5000)
 
@@ -820,22 +232,6 @@ updateDomoticzDashboard = function(){
 			deviceidx = value.Value.split(",")
 			deviceName = value.Name.split('_')[1];
 
-/*
-			switch(deviceidx[0]){
-			
-				// break up categories into Type or SwitchType
-				case undefined:
-				var category = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-				//var text = value.Data
-				var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-				break;
-		
-				default:
-				var category = deviceidx[0].replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-				//var text = value.Data
-				var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-			}
-*/			
 			var virtualDeviceType = deviceidx[0].replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
 			var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
 		
@@ -867,7 +263,7 @@ updateDomoticzDashboard = function(){
 				break;
 		
 				case "Contact":
-				var virtualDeviceTypeClass = "icon-switch"
+				var virtualDeviceTypeClass = "icon-link-2"
 				break;
 			
 				case "TempHumidity":
@@ -879,7 +275,7 @@ updateDomoticzDashboard = function(){
 				break;
 			
 				case "OnOff":
-				var virtualDeviceTypeClass = "icon-switch-2"
+				var virtualDeviceTypeClass = "icon-switch"
 				break;
 			
 				case "Security":
@@ -891,7 +287,7 @@ updateDomoticzDashboard = function(){
 				break;
 			
 				case "General":
-				var virtualDeviceTypeClass = "ion ion-ios7-pulse-strong"
+				var virtualDeviceTypeClass = "icon-info"
 				break;
 			
 				case "Usage":
@@ -927,36 +323,78 @@ updateDomoticzDashboard = function(){
 				break;
 
 				default:
-				var virtualDeviceTypeClass = "icon-question"
+				var virtualDeviceTypeClass = "icon-none"
 				break;			
 			}
 			//Here create a panorama for each virtual device type
 			//and add all the virtual devices of that type to it
+			// create a tile group for each virtual device type
+			if(!$("#" + virtualDeviceType +"-tile-group").length) {
+
+				$("<div></div>")
+				.attr("id", virtualDeviceType +"-tile-group")
+				.appendTo("#dashboard")
+				.addClass("tile-group six")
+
+				$("<div></div>")
+				.attr("id", "tile-group-title")
+				.appendTo("#" +virtualDeviceType +"-tile-group")
+				.addClass("tile-group-title")
+				.text(virtualDeviceType)
+			}
+
 
 			// create a tile for each virtual device
 			if(!$("#" + virtualDeviceName +"-tile").length) {
-				$("<div></div>")
-				.attr("id", "metro")
-				.appendTo("#tab-Dashboard")
-				.addClass("metro")
 
 				// Create the tile for the virtual deivce
-				$("<div></div>")
+				$("<a></a>")
 				.attr("id", virtualDeviceName +"-tile")
-				.appendTo("#metro")
-				//.addClass("tile wide text")
-				//some issue with tile wide text, use tile wide image instead as workaround
-				.addClass("tile wide image")
+				.appendTo("#" +virtualDeviceType +"-tile-group")
+				.addClass("tile double bg-lightBlue live")
+				.attr("data-role","live-tile")
+				.attr("data-effect","slideUp")
+				.attr("data-click","transform")
 				
-				// Tile Heading				
-				$("<div></div>")
-				.attr("id", virtualDeviceName +"-header")
-				.appendTo("#" + virtualDeviceName +"-tile")
-				.addClass("text-header")
-				.text(deviceName)
 
+
+/*				
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-brand")
+				.appendTo("#" + virtualDeviceName +"-tile")
+				.addClass("brand")
+
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-brand-label")
+				.appendTo("#" + virtualDeviceName +"-tile-brand")
+				.addClass("label")
+
+				$("<h3></h3>")
+				.attr("id", virtualDeviceName +"-tile-brand-label-heading")
+				.appendTo("#" + virtualDeviceName +"-tile-brand-label")
+				.addClass("no-margin fg-white")
+
+				$("<span></span>")
+				.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
+				.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
+				.addClass(virtualDeviceTypeClass)
+
+				.text(virtualDeviceName)
+
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-brand-badge")
+				.appendTo("#" + virtualDeviceName +"-tile-brand")
+				.addClass("badge")
+
+				$("<span></span>")
+				.attr("id", virtualDeviceName +"-tile-brand-badge-data")
+				.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
+				.text(deviceidx.length-1)
+*/				
 			}
-			//alert($(virtualDeviceName +"-tile").text())
+			
+			
+
 			for(i = 1; i < deviceidx.length; i++) {
 				var device = $.getDevice(deviceidx[i])
 				device.forEach(function(value, key) {
@@ -975,19 +413,19 @@ updateDomoticzDashboard = function(){
 				switch(value.Type){
 
 					case "Dimmer":
-					var deviceType = "icon-settings"
+					var deviceType = "../images/dimmer48-on.png" //"icon-settings"
 					break;
 			
 					case "Rain":
-					var deviceType = "icon-umbrella"
+					var deviceType = "../images/rain48.png" //"icon-umbrella"
 					break;
 
 					case "Wind":
-					var deviceType = "icon-compass-2"
+					var deviceType = "../images/wind48.png" //"icon-compass-2"
 					break;
 			
 					case "Contact":
-					var deviceType = "icon-enter"
+					var deviceType = "../images/contact48.png" //""icon-enter"
 					break;
 			
 					case "Temp + Humidity":
@@ -995,26 +433,26 @@ updateDomoticzDashboard = function(){
 					break;
 			
 					case "SmokeDetector":
-					var deviceType = "icon-fire"
+					var deviceType = "../images/smoke48on.png" //"icon-fire"
 					break;
 				
 					case "Lighting 2":
 					if (value.SwitchType == "On/Off")
-						var deviceType = "icon-lightbulb"
+						var deviceType = "../images/Light48_On.png"//"icon-lamp"
 					else if (value.SwitchType == "Contact")
-						var deviceType = "icon-enter"
+						var deviceType = "../images/contact48.png"
 					else if (value.SwitchType == "Motion Sensor")
 						var deviceType = "icon-eye"
 					else if (value.SwitchType == "Smoke Detector")
-						var deviceType = "icon-fire"
+						var deviceType = "../images/smoke48on.png" //"icon-fire"
 					else if (value.SwitchType == "Dimmer")
-						var deviceType = "icon-settings"
+						var deviceType = "../images/dimmer48-on.png"
 					else
 						var deviceType = "icon-question"
 					break;
 			
 					case "Security":
-					var deviceType = "icon-shield"
+					var deviceType = "../images/security48.png" //"icon-shield"
 					break;
 		
 					case "DuskSensor":
@@ -1023,33 +461,33 @@ updateDomoticzDashboard = function(){
 			
 					case "General":
 					if (value.SubType == "Solar Radiation")
-						var deviceType = "icon-warning"
+						var deviceType = "../images/radiation48.png" //"icon-warning"
 					else
-						var deviceType = "icon-stats"
+						var deviceType = "../images/Percentage48.png" //"icon-stats"
 					break;
 			
 					case "Usage":
-					var deviceType = "icon-electricity"
+					var deviceType = "../images/current48.png" //"icon-power"
 					break;
 
 					case "Energy":
-					var deviceType = "icon-graph"
+					var deviceType = "icon-power-2"
 					break;
 			
 					case "Temp + Humidity + Baro":
-					var deviceType = "icon-sun"
+					var deviceType = "../images/gauge48.png" //"icon-sun"
 					break;
 			
 					case "Temp":
-					var deviceType = "icon-thermometer-2"
+					var deviceType = "../images/temp48.png" //"icon-thermometer"
 					break;
 			
 					case "MotionSensor":
-					var deviceType = "icon-enter"
+					var deviceType = "../images/motion48-on.png" //"icon-enter"
 					break;
 			
 					case "Lux":
-					var deviceType = "icon-adjust"
+					var deviceType = "../images/lux48.png" //"icon-adjust"
 					break;
 			
 					case "Weather":
@@ -1057,54 +495,67 @@ updateDomoticzDashboard = function(){
 					break;
 	
 					default:
-					var deviceType = "icon-question"
+					var deviceType = "icon-none"
 					break;			
 			
 				}	
 
-				// add a row for each real device in the virtual device tile
-
-				if(!$("#" +value.idx +"-column-label-data").length){
-			
+				// add a tile content block each real device in the virtual device tile
+				if(!$("#" +value.idx +"-tile-content").length){
 					$("<div></div>")
-						.attr("id", value.idx +"-column-label")
-						.appendTo("#" + virtualDeviceName +"-tile")
-						.addClass("column2-label")
-
+					.attr("id", value.idx +"-tile-content")
+					.appendTo("#" + virtualDeviceName +"-tile")
+					.addClass("tile-content email")
+				}
+				
+				// add the icon and value
+				if(!$("#" +value.idx +"-tile-content-email-image").length){
 					$("<div></div>")
-						.attr("id", value.idx +"-column-label-data")
-						.appendTo("#" +value.idx +"-column-label")
-						.addClass("text")
-						.addClass(deviceType)
-						//.text(value.Type)
+						.attr("id", value.idx +"-tile-content-email-image")
+						.appendTo("#" + value.idx +"-tile-content")
+						.addClass("email-image")
+						//.addClass(deviceType)
+					$("<img></img>")
+						.appendTo("#" + value.idx +"-tile-content-email-image")
+						.attr("src", deviceType)
+
 				}			
-				if(!$("#" +value.idx +"-column-text-data").length){
+				if(!$("#" +value.idx +"-tile-content-email-data").length){
 					// add data or status
 					$("<div></div>")
-						.attr("id", value.idx +"-column-text")
-						.appendTo("#" + virtualDeviceName +"-tile")
-						.addClass("column2-text")
-				
-					$("<div></div>")
-						.attr("id", value.idx +"-column-text-data")
-						.appendTo("#" + value.idx + "-column-text" )
-						.addClass("text")
+						.attr("id", value.idx +"-tile-content-email-data")
+						.appendTo("#" + value.idx +"-tile-content")
+						.addClass("email-data")
+					// add blank title to pad and avoid conflict with time name
+					//$("<span></span>")
+					//	.attr("id", value.idx +"-tile-content-email-data-title")
+					//	.appendTo("#" + value.idx + "-tile-content-email-data" )
+					//	.addClass("email-data-title")
+					//	.text("-")
+					$("<span></span>")
+						.attr("id", value.idx +"-tile-content-email-data-status")
+						.appendTo("#" + value.idx + "-tile-content-email-data" )
+						.addClass("email-data-subtitle")
 						.text(text)
-			
+					$("<span></span>")
+						.attr("id", value.idx +"-tile-content-email-data-lastupdate")
+						.appendTo("#" + value.idx + "-tile-content-email-data" )
+						.addClass("email-data-text")
+						.text(value.LastUpdate)
 				}
 		
 				// update text if not the same
-				if ($(value.idx +"-column-text-data").text() != text){
+				if ($("#" +value.idx +"-tile-content-email-data-status").text() != text){
 					//alert($(value.idx +"-column-text-data").text())
-					$(value.idx +"-column-text-data")
+					$("#" +value.idx +"-tile-content-email-data-status")
 					.hide()
 					.text(text)
 					.fadeIn(1500)
 				
 				}
 			
-				if ($("#LastUpdate-"+value.idx).text() != value.LastUpdate){				
-					$("#LastUpdate-"+value.idx)
+				if ($("#" + value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){				
+					$("#" +value.idx +"-tile-content-email-data-lastupdate")
 					.hide()
 					.text(value.LastUpdate)
 					.fadeIn(1500)				
@@ -1117,8 +568,57 @@ updateDomoticzDashboard = function(){
 					.fadeIn(1500)
 				}
 
+
 			})
 		} //SD For Loop
+			// add the virtual device name to the tile content			
+			if(!$("#" +virtualDeviceName +"-tile-name").length){
+				$("<div></div>")
+				.attr("id", virtualDeviceName +"-tile-name")
+				.appendTo("#" + virtualDeviceName +"-tile")
+				.addClass("text-right padding10 ntp")
+			
+				$("<p></p>")
+				.attr("id", virtualDeviceName +"-tile-content-tile-name")
+				.appendTo("#" + virtualDeviceName +"-tile-name")
+				.addClass("fg-white")
+				.text(virtualDeviceName)
+					
+			}
+		
+		
+		if(!$("#" +virtualDeviceName +"-tile-brand").length){
+			$("<div></div>")
+			.attr("id", virtualDeviceName +"-tile-brand")
+			.appendTo("#" + virtualDeviceName +"-tile")
+			.addClass("brand")
+
+			$("<div></div>")
+			.attr("id", virtualDeviceName +"-tile-brand-label")
+			.appendTo("#" + virtualDeviceName +"-tile-brand")
+			.addClass("label")
+
+			$("<h3></h3>")
+			.attr("id", virtualDeviceName +"-tile-brand-label-heading")
+			.appendTo("#" + virtualDeviceName +"-tile-brand-label")
+			.addClass("no-margin fg-white")
+
+			$("<span></span>")
+			.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
+			.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
+			.addClass(virtualDeviceTypeClass)
+			//.text(virtualDeviceName)
+
+			$("<div></div>")
+			.attr("id", virtualDeviceName +"-tile-brand-badge")
+			.appendTo("#" + virtualDeviceName +"-tile-brand")
+			.addClass("badge")
+
+			$("<span></span>")
+			.attr("id", virtualDeviceName +"-tile-brand-badge-data")
+			.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
+			.text(deviceidx.length-1)
+		}
 	} // SD if
 }) // SD User Variable
 }
@@ -1376,45 +876,6 @@ updateDomoticzDashboard = function(){
 
 
 $(document).ready(function() {
-$('.collapse').collapse()
 getDomoticzVariables()
-createDomoticzTabs()
-updateDomoticzSetup()
-
-// stop refreshing tabs when not in focus! 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-//alert(e.target.hash)
-	// set and clear timers
-
-	switch(e.target.hash){
-		case "#tab-Dashboard":
-		updateDomoticzDashboard()
-		break;
-		
-		case "#Variables-setup-tab-content":
-		refreshVariablesTable()
-		break;
-		
-		case "#Devices-setup-tab-content":
-		refreshDevicesTable()
-		break;
-
-		default:
-		break;
-	}
-
-
-	switch(e.relatedTarget.hash){
-		
-		case "#tab-Dashboard":
-		clearTimeout(timerDashboard)
-		break;
-		
-		default:
-		break;
-
-	}
-})
-	//$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
-	$('select').selectpicker();
+updateDomoticzDashboard()
 });
