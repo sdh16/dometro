@@ -348,13 +348,16 @@ updateDomoticzDashboard = function(){
 			if(!$("#" + virtualDeviceName +"-tile").length) {
 
 				// Create the tile for the virtual deivce
-				$("<div></div>")
+				$("<a></a>")
 				.attr("id", virtualDeviceName +"-tile")
 				.appendTo("#" +virtualDeviceType +"-tile-group")
 				.addClass("tile double bg-lightBlue live")
 				.attr("data-role","live-tile")
 				.attr("data-effect","slideUp")
 				.attr("data-click","transform")
+				
+
+
 /*				
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile-brand")
@@ -389,6 +392,8 @@ updateDomoticzDashboard = function(){
 				.text(deviceidx.length-1)
 */				
 			}
+			
+			
 
 			for(i = 1; i < deviceidx.length; i++) {
 				var device = $.getDevice(deviceidx[i])
@@ -408,19 +413,19 @@ updateDomoticzDashboard = function(){
 				switch(value.Type){
 
 					case "Dimmer":
-					var deviceType = "icon-settings"
+					var deviceType = "../images/dimmer48-on.png" //"icon-settings"
 					break;
 			
 					case "Rain":
-					var deviceType = "icon-umbrella"
+					var deviceType = "../images/rain48.png" //"icon-umbrella"
 					break;
 
 					case "Wind":
-					var deviceType = "icon-compass-2"
+					var deviceType = "../images/wind48.png" //"icon-compass-2"
 					break;
 			
 					case "Contact":
-					var deviceType = "icon-enter"
+					var deviceType = "../images/contact48.png" //""icon-enter"
 					break;
 			
 					case "Temp + Humidity":
@@ -428,26 +433,26 @@ updateDomoticzDashboard = function(){
 					break;
 			
 					case "SmokeDetector":
-					var deviceType = "icon-fire"
+					var deviceType = "../images/smoke48on.png" //"icon-fire"
 					break;
 				
 					case "Lighting 2":
 					if (value.SwitchType == "On/Off")
-						var deviceType = "icon-lamp"
+						var deviceType = "../images/Light48_On.png"//"icon-lamp"
 					else if (value.SwitchType == "Contact")
-						var deviceType = "icon-enter"
+						var deviceType = "../images/contact48.png"
 					else if (value.SwitchType == "Motion Sensor")
 						var deviceType = "icon-eye"
 					else if (value.SwitchType == "Smoke Detector")
-						var deviceType = "icon-fire"
+						var deviceType = "../images/smoke48on.png" //"icon-fire"
 					else if (value.SwitchType == "Dimmer")
-						var deviceType = "icon-settings"
+						var deviceType = "../images/dimmer48-on.png"
 					else
 						var deviceType = "icon-question"
 					break;
 			
 					case "Security":
-					var deviceType = "icon-shield"
+					var deviceType = "../images/security48.png" //"icon-shield"
 					break;
 		
 					case "DuskSensor":
@@ -456,13 +461,13 @@ updateDomoticzDashboard = function(){
 			
 					case "General":
 					if (value.SubType == "Solar Radiation")
-						var deviceType = "icon-warning"
+						var deviceType = "../images/radiation48.png" //"icon-warning"
 					else
-						var deviceType = "icon-stats"
+						var deviceType = "../images/Percentage48.png" //"icon-stats"
 					break;
 			
 					case "Usage":
-					var deviceType = "icon-power"
+					var deviceType = "../images/current48.png" //"icon-power"
 					break;
 
 					case "Energy":
@@ -470,19 +475,19 @@ updateDomoticzDashboard = function(){
 					break;
 			
 					case "Temp + Humidity + Baro":
-					var deviceType = "icon-sun"
+					var deviceType = "../images/gauge48.png" //"icon-sun"
 					break;
 			
 					case "Temp":
-					var deviceType = "icon-thermometer"
+					var deviceType = "../images/temp48.png" //"icon-thermometer"
 					break;
 			
 					case "MotionSensor":
-					var deviceType = "icon-enter"
+					var deviceType = "../images/motion48-on.png" //"icon-enter"
 					break;
 			
 					case "Lux":
-					var deviceType = "icon-adjust"
+					var deviceType = "../images/lux48.png" //"icon-adjust"
 					break;
 			
 					case "Weather":
@@ -502,14 +507,17 @@ updateDomoticzDashboard = function(){
 					.appendTo("#" + virtualDeviceName +"-tile")
 					.addClass("tile-content email")
 				}
-
+				
 				// add the icon and value
 				if(!$("#" +value.idx +"-tile-content-email-image").length){
 					$("<div></div>")
 						.attr("id", value.idx +"-tile-content-email-image")
 						.appendTo("#" + value.idx +"-tile-content")
 						.addClass("email-image")
-						.addClass(deviceType)
+						//.addClass(deviceType)
+					$("<img></img>")
+						.appendTo("#" + value.idx +"-tile-content-email-image")
+						.attr("src", deviceType)
 
 				}			
 				if(!$("#" +value.idx +"-tile-content-email-data").length){
@@ -518,7 +526,12 @@ updateDomoticzDashboard = function(){
 						.attr("id", value.idx +"-tile-content-email-data")
 						.appendTo("#" + value.idx +"-tile-content")
 						.addClass("email-data")
-				
+					// add blank title to pad and avoid conflict with time name
+					//$("<span></span>")
+					//	.attr("id", value.idx +"-tile-content-email-data-title")
+					//	.appendTo("#" + value.idx + "-tile-content-email-data" )
+					//	.addClass("email-data-title")
+					//	.text(value.Type)
 					$("<span></span>")
 						.attr("id", value.idx +"-tile-content-email-data-status")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
@@ -532,9 +545,9 @@ updateDomoticzDashboard = function(){
 				}
 		
 				// update text if not the same
-				if ($(value.idx +"-column-text-data").text() != text){
+				if ($("#" +value.idx +"-tile-content-email-data-status").text() != text){
 					//alert($(value.idx +"-column-text-data").text())
-					$(value.idx +"-column-text-data")
+					$("#" +value.idx +"-tile-content-email-data-status")
 					.hide()
 					.text(text)
 					.fadeIn(1500)
@@ -542,7 +555,7 @@ updateDomoticzDashboard = function(){
 				}
 			
 				if ($("#" + value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){				
-					$("#LastUpdate-"+value.idx)
+					$("#" +value.idx +"-tile-content-email-data-lastupdate")
 					.hide()
 					.text(value.LastUpdate)
 					.fadeIn(1500)				
@@ -558,37 +571,53 @@ updateDomoticzDashboard = function(){
 
 			})
 		} //SD For Loop
-				if(!$("#" +virtualDeviceName +"-tile-brand").length){
+			// add the virtual device name to the tile content			
+			if(!$("#" +virtualDeviceName +"-tile-name").length){
 				$("<div></div>")
-				.attr("id", virtualDeviceName +"-tile-brand")
+				.attr("id", virtualDeviceName +"-tile-name")
 				.appendTo("#" + virtualDeviceName +"-tile")
-				.addClass("brand")
-
-				$("<div></div>")
-				.attr("id", virtualDeviceName +"-tile-brand-label")
-				.appendTo("#" + virtualDeviceName +"-tile-brand")
-				.addClass("label")
-
-				$("<h3></h3>")
-				.attr("id", virtualDeviceName +"-tile-brand-label-heading")
-				.appendTo("#" + virtualDeviceName +"-tile-brand-label")
-				.addClass("no-margin fg-white")
-
-				$("<span></span>")
-				.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
-				.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
-				.addClass(virtualDeviceTypeClass)
-
-				$("<div></div>")
-				.attr("id", virtualDeviceName +"-tile-brand-badge")
-				.appendTo("#" + virtualDeviceName +"-tile-brand")
-				.addClass("badge")
-
-				$("<span></span>")
-				.attr("id", virtualDeviceName +"-tile-brand-badge-data")
-				.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
-				.text(deviceidx.length-1)
+				.addClass("text-right padding10 ntp")
+					
+				$("<p></p>")
+				.attr("id", virtualDeviceName +"-tile-content-tile-name")
+				.appendTo("#" + virtualDeviceName +"-tile-name")
+				.addClass("fg-white")
+				.text(virtualDeviceName)
+					
 			}
+		
+		
+		if(!$("#" +virtualDeviceName +"-tile-brand").length){
+			$("<div></div>")
+			.attr("id", virtualDeviceName +"-tile-brand")
+			.appendTo("#" + virtualDeviceName +"-tile")
+			.addClass("brand")
+
+			$("<div></div>")
+			.attr("id", virtualDeviceName +"-tile-brand-label")
+			.appendTo("#" + virtualDeviceName +"-tile-brand")
+			.addClass("label")
+
+			$("<h3></h3>")
+			.attr("id", virtualDeviceName +"-tile-brand-label-heading")
+			.appendTo("#" + virtualDeviceName +"-tile-brand-label")
+			.addClass("no-margin fg-white")
+
+			$("<span></span>")
+			.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
+			.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
+			.addClass(virtualDeviceTypeClass)
+
+			$("<div></div>")
+			.attr("id", virtualDeviceName +"-tile-brand-badge")
+			.appendTo("#" + virtualDeviceName +"-tile-brand")
+			.addClass("badge")
+
+			$("<span></span>")
+			.attr("id", virtualDeviceName +"-tile-brand-badge-data")
+			.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
+			.text(deviceidx.length-1)
+		}
 	} // SD if
 }) // SD User Variable
 }
