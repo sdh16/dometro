@@ -531,7 +531,7 @@ updateDomoticzDashboard = function(){
 					//	.attr("id", value.idx +"-tile-content-email-data-title")
 					//	.appendTo("#" + value.idx + "-tile-content-email-data" )
 					//	.addClass("email-data-title")
-					//	.text(value.Type)
+					//	.text("-")
 					$("<span></span>")
 						.attr("id", value.idx +"-tile-content-email-data-status")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
@@ -577,7 +577,7 @@ updateDomoticzDashboard = function(){
 				.attr("id", virtualDeviceName +"-tile-name")
 				.appendTo("#" + virtualDeviceName +"-tile")
 				.addClass("text-right padding10 ntp")
-					
+			
 				$("<p></p>")
 				.attr("id", virtualDeviceName +"-tile-content-tile-name")
 				.appendTo("#" + virtualDeviceName +"-tile-name")
@@ -607,6 +607,7 @@ updateDomoticzDashboard = function(){
 			.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
 			.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
 			.addClass(virtualDeviceTypeClass)
+			//.text(virtualDeviceName)
 
 			$("<div></div>")
 			.attr("id", virtualDeviceName +"-tile-brand-badge")
