@@ -356,9 +356,28 @@ updateDomoticzDashboard = function(){
 				.attr("data-effect","slideUp")
 				.attr("data-click","transform")
 				
-
-
-/*				
+			}
+			
+			// add the virtual device name to the tile content			
+			//if(!$("#" +virtualDeviceName +"-tile-name").length){
+			//	$("<div></div>")
+			//	.attr("id", virtualDeviceName +"-tile-name")
+			//	.appendTo("#" + virtualDeviceName +"-tile")
+			//	.addClass("text-right padding10 ntp")
+			
+			//	$("<p></p>")
+			//	.attr("id", virtualDeviceName +"-tile-name-text")
+			//	.appendTo("#" + virtualDeviceName +"-tile-name")
+			//	.addClass("fg-white")
+				
+			//	$("<small></small>")
+			//	.text(virtualDeviceName)
+			//	.appendTo("#" + virtualDeviceName +"-tile-name-text")
+					
+			//}
+		
+		
+			if(!$("#" +virtualDeviceName +"-tile-brand").length){
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile-brand")
 				.appendTo("#" + virtualDeviceName +"-tile")
@@ -369,17 +388,18 @@ updateDomoticzDashboard = function(){
 				.appendTo("#" + virtualDeviceName +"-tile-brand")
 				.addClass("label")
 
-				$("<h3></h3>")
+				//$("<h3></h3>")
+				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile-brand-label-heading")
 				.appendTo("#" + virtualDeviceName +"-tile-brand-label")
 				.addClass("no-margin fg-white")
+				.text(deviceName)
 
-				$("<span></span>")
-				.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
-				.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
-				.addClass(virtualDeviceTypeClass)
-
-				.text(virtualDeviceName)
+				//$("<span></span>")
+				//.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
+				//.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
+				//.addClass(virtualDeviceTypeClass)
+				//.text(virtualDeviceName)
 
 				$("<div></div>")
 				.attr("id", virtualDeviceName +"-tile-brand-badge")
@@ -390,9 +410,7 @@ updateDomoticzDashboard = function(){
 				.attr("id", virtualDeviceName +"-tile-brand-badge-data")
 				.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
 				.text(deviceidx.length-1)
-*/				
 			}
-			
 			
 
 			for(i = 1; i < deviceidx.length; i++) {
@@ -471,7 +489,7 @@ updateDomoticzDashboard = function(){
 					break;
 
 					case "Energy":
-					var deviceType = "icon-power-2"
+					var deviceType = "../images/current48.png" //"icon-power-2"
 					break;
 			
 					case "Temp + Humidity + Baro":
@@ -571,54 +589,6 @@ updateDomoticzDashboard = function(){
 
 			})
 		} //SD For Loop
-			// add the virtual device name to the tile content			
-			if(!$("#" +virtualDeviceName +"-tile-name").length){
-				$("<div></div>")
-				.attr("id", virtualDeviceName +"-tile-name")
-				.appendTo("#" + virtualDeviceName +"-tile")
-				.addClass("text-right padding10 ntp")
-			
-				$("<p></p>")
-				.attr("id", virtualDeviceName +"-tile-content-tile-name")
-				.appendTo("#" + virtualDeviceName +"-tile-name")
-				.addClass("fg-white")
-				.text(virtualDeviceName)
-					
-			}
-		
-		
-		if(!$("#" +virtualDeviceName +"-tile-brand").length){
-			$("<div></div>")
-			.attr("id", virtualDeviceName +"-tile-brand")
-			.appendTo("#" + virtualDeviceName +"-tile")
-			.addClass("brand")
-
-			$("<div></div>")
-			.attr("id", virtualDeviceName +"-tile-brand-label")
-			.appendTo("#" + virtualDeviceName +"-tile-brand")
-			.addClass("label")
-
-			$("<h3></h3>")
-			.attr("id", virtualDeviceName +"-tile-brand-label-heading")
-			.appendTo("#" + virtualDeviceName +"-tile-brand-label")
-			.addClass("no-margin fg-white")
-
-			$("<span></span>")
-			.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
-			.appendTo("#" + virtualDeviceName +"-tile-brand-label-heading")
-			.addClass(virtualDeviceTypeClass)
-			//.text(virtualDeviceName)
-
-			$("<div></div>")
-			.attr("id", virtualDeviceName +"-tile-brand-badge")
-			.appendTo("#" + virtualDeviceName +"-tile-brand")
-			.addClass("badge")
-
-			$("<span></span>")
-			.attr("id", virtualDeviceName +"-tile-brand-badge-data")
-			.appendTo("#" + virtualDeviceName +"-tile-brand-badge")
-			.text(deviceidx.length-1)
-		}
 	} // SD if
 }) // SD User Variable
 }
