@@ -334,7 +334,7 @@ updateDomoticzDashboard = function(){
 				$("<div></div>")
 				.attr("id", virtualDeviceType +"-tile-group")
 				.appendTo("#dashboard")
-				.addClass("tile-group six")
+				.addClass("tile-group")
 
 				$("<div></div>")
 				.attr("id", "tile-group-title")
@@ -447,7 +447,7 @@ updateDomoticzDashboard = function(){
 					break;
 			
 					case "Temp + Humidity":
-					var deviceType = "icon-thermometer"
+					var deviceType = "../images/temp48.png" //"icon-thermometer"
 					break;
 			
 					case "SmokeDetector":
@@ -456,15 +456,31 @@ updateDomoticzDashboard = function(){
 				
 					case "Lighting 2":
 					if (value.SwitchType == "On/Off")
-						var deviceType = "../images/Light48_On.png"//"icon-lamp"
+						//var deviceType = "icon-lamp"
+						if (value.Status == "On")
+							var deviceType = "../images/Light48_On.png"//"icon-lamp"
+						else
+							var deviceType = "../images/Light48_Off.png"//"icon-lamp"
 					else if (value.SwitchType == "Contact")
-						var deviceType = "../images/contact48.png"
+						if (value.Status == "Open")
+							var deviceType = "../images/contact48_open.png"
+						else
+							var deviceType = "../images/contact48.png"
 					else if (value.SwitchType == "Motion Sensor")
-						var deviceType = "icon-eye"
+						if (value.Status == "On")
+							var deviceType = "../images/motion48-on.png" //"icon-eye"
+						else
+							var deviceType = "../images/motion48-off.png" //"icon-eye"
 					else if (value.SwitchType == "Smoke Detector")
-						var deviceType = "../images/smoke48on.png" //"icon-fire"
+						if (value.Status == "On")
+							var deviceType = "../images/smoke48on.png" //"icon-fire"
+						else
+							var deviceType = "../images/smoke48ff.png" //"icon-fire"
 					else if (value.SwitchType == "Dimmer")
-						var deviceType = "../images/dimmer48-on.png"
+						if (value.Status == "On")
+							var deviceType = "../images/dimmer48-on.png"
+						else
+							var deviceType = "../images/dimmer48-off.png"
 					else
 						var deviceType = "icon-question"
 					break;
@@ -553,12 +569,12 @@ updateDomoticzDashboard = function(){
 					$("<span></span>")
 						.attr("id", value.idx +"-tile-content-email-data-status")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
-						.addClass("email-data-subtitle")
+						.addClass("email-data-title")
 						.text(text)
 					$("<span></span>")
 						.attr("id", value.idx +"-tile-content-email-data-lastupdate")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
-						.addClass("email-data-text")
+						.addClass("email-data-text fg-amber")
 						.text(value.LastUpdate)
 				}
 		
