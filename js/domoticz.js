@@ -353,7 +353,7 @@ updateDomoticzDashboard = function(){
 				.appendTo("#" +virtualDeviceType +"-tile-group")
 				.addClass("tile double bg-lightBlue live")
 				.attr("data-role","live-tile")
-				.attr("data-effect","slideUp")
+				.attr("data-effect","slideUpDown")
 				.attr("data-click","transform")
 				
 			}
