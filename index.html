@@ -37,11 +37,39 @@
 -->
   </head>
   <body class="metro">
-    <!--div class="container-large"-->
-      <div id="dashboard" class="tile-area tile-area-darkTeal"> <!--style="width: 3250px;" style="height: 3250px;"-->
-        <h1 class="tile-area-title fg-white">Dashboard</h1>
+
+    <!-- Static navbar -->
+    <div class="navigation-bar light">
+      <div class="navigation-bar-content container" id="tabs">
+        <a href="#tab-Home" class="element"><span class="icon-grid-view"></span> dometro</a>
+        <span class="element-divider"></span>
       </div>
-    <!--/div-->
+    </div>
+    <div class="tab-content" id="tab-content">    
+      <div id="tab-Home" class="container tab-pane active">
+        <div id="dashboard" class="tile-area tile-area-darkTeal">
+          <h1 class="tile-area-title fg-white">Dashboard</h1>
+        </div>
+      </div>   
+    </div> 
+
+<!--
+    <div class="tab-content" id="tab-content">    
+      <div id="tab-Home" class="container tab-pane active">
+        <div class="jumbotron">
+          <h1>Welcome to dometro!</h1>
+          <p>This is a work in progress ... </p>
+          <p><a class="btn btn-lg btn-primary" href="https://github.com/sdh16/dometro" role="button">Visit the github repo &raquo;</a></p>
+          <p><a class="btn btn-lg btn-primary" href="http://www.domoticz.com/" role="button">Visit Domoticz &raquo;</a></p>
+        </div>
+      </div>   
+    </div> 
+
+    <div id="dashboard" class="tile-area tile-area-darkTeal">
+      <h1 class="tile-area-title fg-white">Dashboard</h1>
+    </div>
+-->
+
 <!--
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.min.js"></script>
 -->
