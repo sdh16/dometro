@@ -296,7 +296,7 @@ createDomoticzTabs = function(){
 				.attr("id",tabid)
 				.attr("href", "#tab-"+tabtext)
 				.appendTo("#tabs")
-				.addClass("element brand")
+				.addClass("element")
 				
 			$("<span></span>")
 				.appendTo("#"+tabid)
