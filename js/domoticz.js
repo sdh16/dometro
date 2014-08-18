@@ -292,34 +292,47 @@ createDomoticzTabs = function(){
 			}
 				
 						
-			$("<a></a>")
+			$("<li></li>")
 				.attr("id",tabid)
-				.attr("href", "#tab-"+tabtext)
 				.appendTo("#tabs")
-				.addClass("element")
-				
-			$("<span></span>")
-				.appendTo("#"+tabid)
-				.attr("id", "tab-" +tabtext)
+					
+			$("<a></a>")
+				.attr("href", "#tab-"+tabtext)
 				.attr("title", tabtext)
+				.appendTo("#" +tabid)
 				.addClass(tabclass)
 				.text(" " +tabtext)
-
-			$("<span></span>")
-				.appendTo("#tabs")
-				.addClass("element-divider")
-
-			//$("<div></div>")
-			//	.attr("id", "tab-" +tabtext +"-tab-content")
-			//	.appendTo("#"+tabid)
-			//	.addClass("tab-content")
-			//	.attr("data-role","tab-control")
-
-			//$("<div></div>")
-			//	.attr("id", "tab-" +tabtext +"-tab-content-container")
-			//	.appendTo("#" +"tab-" +tabtext +"-tab-content")
-			//	.addClass("container")
+				
+			$("<div></div>")
+				.attr("id", "tab-"+tabtext)
+				.appendTo("#tab-control-frames")
+				.addClass("frame")
+/*							
+			$("<div></div>")
+				.attr("id", tabtext+"-row")
+				.appendTo("#tab-"+tabtext)
+				.addClass("row container")
 			
+			$("<div></div>")
+				.attr("id", tabtext + "-col-1")
+				.appendTo("#"+tabtext +"-row")
+				.addClass("col-md-3")
+		
+			$("<div></div>")
+				.attr("id", tabtext + "-col-2")
+				.appendTo("#"+ tabtext + "-row")
+				.addClass("col-md-3")
+		
+			$("<div></div>")
+				.attr("id", tabtext + "-col-3")
+				.appendTo("#" +tabtext +"-row")
+				.addClass("col-md-3")
+				
+			$("<div></div>")
+				.attr("id", tabtext + "-col-4")
+				.appendTo("#" +tabtext +"-row")
+				.addClass("col-md-3")	
+*/			
 		}
 	
 	}
@@ -441,21 +454,21 @@ updateDomoticzDashboard = function(){
 			//Here create a panorama for each virtual device type
 			//and add all the virtual devices of that type to it
 			// create a tile group for each virtual device type
-			//if(!$("#" +"tile-area").length) {
+			if(!$("#" +"tile-area").length) {
 
-			//	$("<div></div>")
-			//	.attr("id", "tile-area")
-			//	//.attr("href", "#Dashboard")
-			//	.appendTo("#dashboard")
-			//	.addClass("tile-area tile-area-darkTeal")
-			//}
+				$("<div></div>")
+				.attr("id", "tile-area")
+				//.attr("href", "#")
+				.appendTo("#tab-Dashboard")
+				.addClass("tile-area tile-area-darkTeal")
+			}
 
 			if(!$("#" + virtualDeviceType +"-tile-group").length) {
 
 				$("<div></div>")
 				.attr("id", virtualDeviceType +"-tile-group")
-				.appendTo("#dashboard")
-				//.appendTo("#tile-area")
+				//.appendTo("#dashboard")
+				.appendTo("#tile-area")
 				.addClass("tile-group")
 
 				$("<div></div>")
@@ -823,13 +836,14 @@ updateDomoticzDashboard = function(){
 
 
 $(document).ready(function() {
+//$('.collapse').collapse()
 getDomoticzVariables()
 createDomoticzTabs()
 updateDomoticzDashboard()
 
 // stop refreshing tabs when not in focus! 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-
+	alert(e.target.hash)
 	// set and clear timers
 
 	switch(e.target.hash){
@@ -837,14 +851,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		updateDomoticzDashboard()
 		break;
 		
-		case "#Variables-setup-tab-content":
-		refreshVariablesTable()
-		break;
-		
-		case "#Devices-setup-tab-content":
-		refreshDevicesTable()
-		break;
-
 		default:
 		break;
 	}
@@ -863,5 +869,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 })
 //	$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
 //	$('select').selectpicker();
+$('.tab-control').tabcontrol();
 
 });
