@@ -450,6 +450,11 @@ updateDomoticzDashboard = function(){
 				//.attr("href", "#Dashboard")
 				.appendTo("#tab-Dashboard")
 				.addClass("tile-area tile-area-darkTeal")
+
+				$("<h2></h2>")
+				.appendTo("#tile-area")
+				.addClass("tile-area-title fg-white")
+				//.text("Dashboard")
 			}
 
 			if(!$("#" + virtualDeviceType +"-tile-group").length) {
@@ -864,6 +869,7 @@ $('a[data-toggle="page"]').on('shown.bs.page', function (e) {
 })
 //	$('#Dashboard a[href="#tab-Dashboard"]').page('show')
 //	$('select').selectpicker();
+//	alert($(".element").attr("href"))
 	$('#tab-Home').hide()
 	$('#tab-Dashboard').show()
 
