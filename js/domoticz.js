@@ -292,47 +292,36 @@ createDomoticzTabs = function(){
 			}
 				
 						
-			$("<li></li>")
-				.attr("id",tabid)
-				.appendTo("#tabs")
-					
 			$("<a></a>")
+				.attr("id",tabid)
 				.attr("href", "#tab-"+tabtext)
-				.attr("title", tabtext)
-				.appendTo("#" +tabid)
-				.addClass(tabclass)
-				.text(" " +tabtext)
+				.appendTo("#tabs")
+				.addClass("element")
+				//.addClass(tabclass)
+				.text(tabtext)
 				
+			//$("<span></span>")
+			//	.appendTo("#"+tabid)
+			//	.attr("id", "tab-" +tabtext)
+			//	.attr("title", tabtext)
+			//	.addClass(tabclass)
+			//	.text(" " +tabtext)
+
+			$("<span></span>")
+				.appendTo("#tabs")
+				.addClass("element-divider")
+
 			$("<div></div>")
-				.attr("id", "tab-"+tabtext)
-				.appendTo("#tab-control-frames")
-				.addClass("frame")
-/*							
-			$("<div></div>")
-				.attr("id", tabtext+"-row")
-				.appendTo("#tab-"+tabtext)
-				.addClass("row container")
+				.attr("id", "tab-" +tabtext)
+				.appendTo("#tab-content")
+				.addClass("page")
+				.attr("style", "display: none;")
+
+			//$("<div></div>")
+			//	.attr("id", "tab-" +tabtext +"-container")
+			//	.appendTo("#" +"tab-" +tabtext)
+			//	.addClass("container")
 			
-			$("<div></div>")
-				.attr("id", tabtext + "-col-1")
-				.appendTo("#"+tabtext +"-row")
-				.addClass("col-md-3")
-		
-			$("<div></div>")
-				.attr("id", tabtext + "-col-2")
-				.appendTo("#"+ tabtext + "-row")
-				.addClass("col-md-3")
-		
-			$("<div></div>")
-				.attr("id", tabtext + "-col-3")
-				.appendTo("#" +tabtext +"-row")
-				.addClass("col-md-3")
-				
-			$("<div></div>")
-				.attr("id", tabtext + "-col-4")
-				.appendTo("#" +tabtext +"-row")
-				.addClass("col-md-3")	
-*/			
 		}
 	
 	}
@@ -458,7 +447,7 @@ updateDomoticzDashboard = function(){
 
 				$("<div></div>")
 				.attr("id", "tile-area")
-				//.attr("href", "#")
+				//.attr("href", "#Dashboard")
 				.appendTo("#tab-Dashboard")
 				.addClass("tile-area tile-area-darkTeal")
 			}
@@ -836,21 +825,27 @@ updateDomoticzDashboard = function(){
 
 
 $(document).ready(function() {
-//$('.collapse').collapse()
 getDomoticzVariables()
 createDomoticzTabs()
 updateDomoticzDashboard()
 
 // stop refreshing tabs when not in focus! 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-	alert(e.target.hash)
-	// set and clear timers
+$('a[data-toggle="page"]').on('shown.bs.page', function (e) {
 
+	// set and clear timers
 	switch(e.target.hash){
 		case "#tab-Dashboard":
 		updateDomoticzDashboard()
 		break;
 		
+		case "#Variables-setup-tab-content":
+		refreshVariablesTable()
+		break;
+		
+		case "#Devices-setup-tab-content":
+		refreshDevicesTable()
+		break;
+
 		default:
 		break;
 	}
@@ -867,8 +862,9 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
 	}
 })
-//	$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
+//	$('#Dashboard a[href="#tab-Dashboard"]').page('show')
 //	$('select').selectpicker();
-$('.tab-control').tabcontrol();
+	$('#tab-Home').hide()
+	$('#tab-Dashboard').show()
 
 });
