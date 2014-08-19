@@ -292,7 +292,7 @@ createDomoticzTabs = function(){
 			}
 				
 						
-			$("<a></a>")
+			$("<item></item>")
 				.attr("id",tabid)
 				.attr("href", "#tab-"+tabtext)
 				.appendTo("#tabs")
@@ -313,6 +313,7 @@ createDomoticzTabs = function(){
 
 			$("<div></div>")
 				.attr("id", "tab-" +tabtext)
+				.attr("href", "#tab-"+tabtext)
 				.appendTo("#tab-content")
 				.addClass("page")
 				.attr("style", "display: none;")
@@ -869,8 +870,8 @@ $('a[data-toggle="page"]').on('shown.bs.page', function (e) {
 })
 //	$('#Dashboard a[href="#tab-Dashboard"]').page('show')
 //	$('select').selectpicker();
-//	alert($(".element").attr("href"))
-	$('#tab-Home').hide()
-	$('#tab-Dashboard').show()
+//	alert($(this).attr("href"))
+//	$('#tab-Home').hide()
+//	$('#tab-Dashboard').show()
 
 });
