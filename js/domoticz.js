@@ -291,37 +291,26 @@ createDomoticzTabs = function(){
 				break
 			}
 				
-						
-			$("<item></item>")
+			$("<li></li>")
 				.attr("id",tabid)
-				.attr("href", "#tab-"+tabtext)
 				.appendTo("#tabs")
-				.addClass("element")
-				//.addClass(tabclass)
-				.text(tabtext)
+					
+			$("<a></a>")
+				.attr("id", tabid +"-icon")
+				.attr("href", "#tab-"+tabtext)
+				.attr("title", tabtext)
+				.attr("data-toggle", "tab")
+				.appendTo("#" +tabid)
+				.addClass(tabclass)
 				
-			//$("<span></span>")
-			//	.appendTo("#"+tabid)
-			//	.attr("id", "tab-" +tabtext)
-			//	.attr("title", tabtext)
-			//	.addClass(tabclass)
-			//	.text(" " +tabtext)
-
-			$("<span></span>")
-				.appendTo("#tabs")
-				.addClass("element-divider")
-
+			$("<span></span>")				
+				.appendTo("#" +tabid +"-icon")
+				.text(" " +tabtext)
+				
 			$("<div></div>")
-				.attr("id", "tab-" +tabtext)
-				.attr("href", "#tab-"+tabtext)
-				.appendTo("#tab-content")
-				.addClass("page")
-				.attr("style", "display: none;")
-
-			//$("<div></div>")
-			//	.attr("id", "tab-" +tabtext +"-container")
-			//	.appendTo("#" +"tab-" +tabtext)
-			//	.addClass("container")
+				.attr("id", "tab-"+tabtext)
+				.appendTo("#tab-control-frames")
+				.addClass("frame")
 			
 		}
 	
@@ -831,27 +820,22 @@ updateDomoticzDashboard = function(){
 
 
 $(document).ready(function() {
-getDomoticzVariables()
-createDomoticzTabs()
-updateDomoticzDashboard()
+	getDomoticzVariables()
+	createDomoticzTabs()
+	updateDomoticzDashboard()
+	//clearTimeout(timerDashboard)
 
 // stop refreshing tabs when not in focus! 
-$('a[data-toggle="page"]').on('shown.bs.page', function (e) {
-
+/*
+$('a[data-toggle="tab"]').on('shown.tab', function (e) {
+	alert(e.target.hash)
 	// set and clear timers
+
 	switch(e.target.hash){
 		case "#tab-Dashboard":
 		updateDomoticzDashboard()
 		break;
 		
-		case "#Variables-setup-tab-content":
-		refreshVariablesTable()
-		break;
-		
-		case "#Devices-setup-tab-content":
-		refreshDevicesTable()
-		break;
-
 		default:
 		break;
 	}
@@ -868,10 +852,11 @@ $('a[data-toggle="page"]').on('shown.bs.page', function (e) {
 
 	}
 })
-//	$('#Dashboard a[href="#tab-Dashboard"]').page('show')
-//	$('select').selectpicker();
-//	alert($(this).attr("href"))
-//	$('#tab-Home').hide()
-//	$('#tab-Dashboard').show()
-
+*/
+	//	$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
+	//	$('select').selectpicker();
+	$('.tab-control').tabcontrol().bind("tabcontrolchange", function(event, frame){
+		//alert("I am here")
+	});
 });
+

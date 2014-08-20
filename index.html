@@ -23,10 +23,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 -->
     <script src="js/domoticz.js"></script>
+    <!--script src="js/start-screen.js"></script-->
+
     <script src="js/metro.min.js"></script>	
 
 <!--
-    <script src="js/start-screen.js"></script>
 
     <link href="http:///maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
@@ -37,25 +38,24 @@
 -->
   </head>
   <body class="metro">
-
-    <!-- Static navbar -->
-    <nav class="navigation-bar dark">
-      <nav class="navigation-bar-content container" id="tabs">
-        <item href="#tab-Home" class="element"><span class="icon-grid-view"></span> dometro</item>
-        <span class="element-divider"></span>
-      </nav>
-    </nav>
-    <div id="tab-content">
-      <div id="tab-Home" class="page">    
-        <div class="container">
+    <div class="tab-control" data-role="tab-control" id="tab-control">
+      <ul class="tabs no-spaces" id="tabs">
+        <li id="dometro" class="active">
+          <a href="#tab-Home" data-toggle="tab" class="icon-grid-view">
+			<span> dometro</span>
+          </a>
+        </li>
+      </ul>
+      <div class="frames" id="tab-control-frames">    
+        <div id="tab-Home" class="frame">
           <div class="jumbotron">
             <h1>Welcome to dometro!</h1>
             <p>This is a work in progress ... </p>
-            <p><button class="large primary" href="https://github.com/sdh16/dometro">Visit the github repo &raquo;</button></p>
-            <p><button class="large primary" href="http://www.domoticz.com/">Visit Domoticz &raquo;</button></p>
+            <p><a class="btn btn-lg btn-primary" href="https://github.com/sdh16/dometro" role="button">Visit the github repo &raquo;</a></p>
+            <p><a class="btn btn-lg btn-primary" href="http://www.domoticz.com/" role="button">Visit Domoticz &raquo;</a></p>
           </div>
-        </div>   
-      </div>
+        </div> 
+      </div>  
     </div>
 
 <!--
