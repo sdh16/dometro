@@ -321,8 +321,8 @@ createDomoticzTabs = function(){
 
 	
 //update Dashboard
-updateDomoticzDashboard = function(){
-	timerDashboard = setTimeout(updateDomoticzDashboard, 5000)
+updateDeviceData = function(){
+	timerDeviceUpdate = setTimeout(updateDeviceData, 5000)
 
 	var deviceidx
 	var deviceName
@@ -697,17 +697,16 @@ updateDomoticzDashboard = function(){
 						.attr("id", value.idx +"-tile-content-email-data")
 						.appendTo("#" + value.idx +"-tile-content")
 						.addClass("email-data")
-					// add blank title to pad and avoid conflict with time name
-					//$("<span></span>")
-					//	.attr("id", value.idx +"-tile-content-email-data-title")
-					//	.appendTo("#" + value.idx + "-tile-content-email-data" )
-					//	.addClass("email-data-title")
-					//	.text("-")
 					$("<span></span>")
 						.attr("id", value.idx +"-tile-content-email-data-status")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
 						.addClass("email-data-title")
 						.text(text)
+					$("<span></span>")
+						.attr("id", value.idx +"-tile-content-email-data-status")
+						.appendTo("#" + value.idx + "-tile-content-email-data" )
+						.addClass("email-data-subtitle fg-darkCobalt")
+						.text(value.Name)
 					$("<span></span>")
 						.attr("id", value.idx +"-tile-content-email-data-lastupdate")
 						.appendTo("#" + value.idx + "-tile-content-email-data" )
@@ -822,41 +821,23 @@ updateDomoticzDashboard = function(){
 $(document).ready(function() {
 	getDomoticzVariables()
 	createDomoticzTabs()
-	updateDomoticzDashboard()
-	//clearTimeout(timerDashboard)
+	updateDeviceData()
+	clearTimeout(timerDeviceUpdate)
 
-// stop refreshing tabs when not in focus! 
-/*
-$('a[data-toggle="tab"]').on('shown.tab', function (e) {
-	alert(e.target.hash)
-	// set and clear timers
-
-	switch(e.target.hash){
-		case "#tab-Dashboard":
-		updateDomoticzDashboard()
-		break;
-		
-		default:
-		break;
-	}
-
-
-	switch(e.relatedTarget.hash){
-		
-		case "#tab-Dashboard":
-		clearTimeout(timerDashboard)
-		break;
-		
-		default:
-		break;
-
-	}
-})
-*/
-	//	$('#Dashboard a[href="#tab-Dashboard"]').tab('show')
-	//	$('select').selectpicker();
-	$('.tab-control').tabcontrol().bind("tabcontrolchange", function(event, frame){
+	// stop refreshing tabs when not in focus! 
+	//$('.tab-control').tabcontrol().bind("tabcontrolchange", function(event, frame){
+	$('a[data-toggle="tab"]').on("click", function(event) {
 		//alert("I am here")
+		switch(event.currentTarget.hash){
+			case "#tab-Dashboard":
+			updateDeviceData()
+			break;
+			
+			default:
+			clearTimeout(timerDeviceUpdate)
+			break;
+		}	
+		
 	});
 });
 
