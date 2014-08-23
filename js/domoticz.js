@@ -19,13 +19,13 @@
  	$.getActiveTabs = function() {
  	  var activeTabs = [];
  	  $.ajax({
-      url: '/json.htm?type=command&param=getactivetabs',
-  		async: false,
-  		dataType: 'json',
-  		success: function (json) {		
-	 		  activeTabs = json;
-	 		}
-	 	});
+            url: '/json.htm?type=command&param=getactivetabs',
+  	    async: false,
+  	    dataType: 'json',
+  	    success: function (json) {		
+              activeTabs = json;
+            }
+	  });
 	  return activeTabs;
  	}
   
@@ -315,7 +315,7 @@
 				.attr("id","Variables-refresh-button")
 				.appendTo("#Variables-setup-tab")
 				.text("Refresh")
-				.addClass("button")
+				.addClass("bg-darkRed fg-white")
 				.click(function(){refreshVariablesTable()})
 		
 			$("<table></table>")
@@ -354,43 +354,18 @@
 			$("<tbody></tbody")
 				.attr("id","Variables-setup-tbody-1")
 				.appendTo("#Variables-setup-table-1")
-
-			userVariables.result.forEach(function(value, index){
-				
-				$("<tr></tr>")
-					.attr("id","Variables-setup-row"+index)
-					.appendTo("#Variables-setup-tbody-1")
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.idx)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.Name)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.Type)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.Value)
-				$("<td></td>")
-					.appendTo("#Variables-setup-row"+index)
-					.text(value.LastUpdate)
-
-
-			})
-			/*
-        $('#Variables-setup-table-1').dataTable( {
-                        "bProcessing": true,
-                        "sAjaxSource": userVariables.result,
-                        "aoColumns": [
-                            { "mData": "idx" },
-                            { "mData": "Name" },
-                            { "mData": "Type" },
-                            { "mData": "Value" },
-                            { "mData": "LastUpdate" }
-                        ]
-                    } );
-*/		
+		        $('#Variables-setup-table-1').dataTable( {
+                	        "bProcessing": true,
+                        	"bDestroy": true,
+                        	"aaData": userVariables.result,
+                        	"aoColumns": [
+	                            { "mData": "idx" },
+        	                    { "mData": "Name" },
+                	            { "mData": "Type" },
+                        	    { "mData": "Value" },
+	                            { "mData": "LastUpdate" }
+        	                ]
+                	    } );
 		}
 
 // device list
@@ -398,7 +373,7 @@
 				.attr("id","Devices-refresh-button")
 				.appendTo("#Devices-setup-tab")
 				.text("Refresh")
-				.addClass("button")
+				.addClass("bg-darkRed fg-white")
 				.click(function(){refreshDevicesTable()})
 		
 			$("<table></table>")
@@ -435,29 +410,18 @@
 			$("<tbody></tbody")
 				.attr("id","Devices-setup-tbody-1")
 				.appendTo("#Devices-setup-table-1")
-
-			devices.result.forEach(function(value,index){
-
-				
-				$("<tr></tr>")
-					.attr("id","Devices-setup-row"+index)
-					.appendTo("#Devices-setup-tbody-1")
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.idx)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.Name)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.Type)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.Data)
-				$("<td></td>")
-					.appendTo("#Devices-setup-row"+index)
-					.text(value.LastUpdate)
-			})
+       			$('#Devices-setup-table-1').dataTable({
+                        	"bProcessing": true,
+                        	"bDestroy": true,
+                        	"aaData": devices.result,
+                        	"aoColumns": [
+	                            { "mData": "idx" },
+        	                    { "mData": "Name" },
+                	            { "mData": "Type" },
+                        	    { "mData": "Data" },
+	                            { "mData": "LastUpdate" }
+        	                ]
+                	});
 		
 		}
 
@@ -490,7 +454,7 @@ var row = []
 				
 			$("<div></div>")
 				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-header")
+				.addClass("panel-header bg-lightBlue fg-white")
 				.text("Create Widget")
 			
 			$("<div></div>")
@@ -507,7 +471,7 @@ var row = []
 				.appendTo("#Magic-setup-name-row-input-control")
 				.attr("type","text")
 				.attr("value","")
-				.attr("placeholder", "Widget Name")
+				.attr("placeholder", "Virtual Deivce Name")
 								
 			$( "#Magic-setup-widget-name").change(function() {
   
@@ -530,7 +494,7 @@ var row = []
 				.appendTo("#Magic-setup-row-row-input-control")
 				.attr("type","text")
 				.attr("value","")
-				.attr("placeholder", "Row Text")
+				.attr("placeholder", "Virtual Device Type")
 				
 			$("<div></div>")
 				.attr("id","Magic-setup-select1-row")
@@ -596,7 +560,7 @@ var row = []
 			$("<button></button>")
 				.attr("id","Magic-core-device-adddata")
 				.appendTo("#Magic-setup-button1-row")
-				.addClass("button")
+				.addClass("bg-darkBlue fg-white")
 				.text("Add")
 
 			$( "#Magic-core-device-adddata" ).click(function() {
@@ -634,7 +598,7 @@ var row = []
 			
 			$("<div></div>")
 				.attr("id","Magic-setup-widget-title-text")
-				.addClass("panel-header")
+				.addClass("panel-header bg-lightBlue fg-white")
 				.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
 				.text("Widget Name")
 			
@@ -650,7 +614,7 @@ var row = []
 			$("<button></button>")
 				.attr("id","Magic-save-widget")
 				.appendTo("#Magic-setup-button3-row")
-				.addClass("button")
+				.addClass("bg-darkBlue fg-white")
 				.text("Save")
 
       //construct widget & save to Domoticz
@@ -710,7 +674,7 @@ domoticzUserVariables.result.forEach(function(value, index){
 			$("<div></div>")
 				.attr("id", "Magic-setup-widget-list-3")
 				.appendTo("#Magic-setup-widget-grid-row-span-panel-3")
-				.addClass("panel-header")
+				.addClass("panel-header bg-lightBlue fg-white")
 				.text("Widgets")
 }
 	
