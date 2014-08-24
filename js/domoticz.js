@@ -448,10 +448,12 @@
       .attr("id", "Magic-setup-grid-row")
       .appendTo("#Magic-setup-grid")
       .addClass("row")
+    
+    //Add spans to the rows  
     $("<div></div>")
       .attr("id", "Magic-setup-grid-row-span-1")
       .appendTo("#Magic-setup-grid-row")
-      .addClass("span3")
+      .addClass("span4")
   
     $("<div></div>")
       .attr("id", "Magic-setup-grid-row-span-panel-1")
@@ -583,38 +585,30 @@
       })
     });        
   
-    // example widget
     $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid")
-      .appendTo("#Magic-setup-tab")
-      .addClass("grid fluid")
-    $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid-row")
-      .appendTo("#Magic-setup-widget-grid")
-      .addClass("row")
-    $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid-row-span-2")
-      .appendTo("#Magic-setup-widget-grid-row")
-      .addClass("span3")
+      .attr("id", "Magic-setup-grid-row-span-2")
+      //.appendTo("#Magic-setup-widget-grid-row")
+      .appendTo("#Magic-setup-grid-row")
+      .addClass("span4")
   
     $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid-row-span-panel-2")
-      .appendTo("#Magic-setup-widget-grid-row-span-2")
+      .attr("id", "Magic-setup-grid-row-span-panel-2")
+      .appendTo("#Magic-setup-grid-row-span-2")
       .addClass("panel")
     
     $("<div></div>")
       .attr("id","Magic-setup-widget-title-text")
       .addClass("panel-header bg-lightBlue fg-white")
-      .appendTo("#Magic-setup-widget-grid-row-span-panel-2")
+      .appendTo("#Magic-setup-grid-row-span-panel-2")
       .text("Widget Name")
     
     $("<div></div>")
       .attr("id","Magic-setup-widget-body")
-      .appendTo("#Magic-setup-widget-grid-row-span-panel-2")
+      .appendTo("#Magic-setup-grid-row-span-panel-2")
     
     $("<div></div>")
       .attr("id","Magic-setup-button3-row")
-      .appendTo("#Magic-setup-widget-grid-row-span-panel-2")
+      .appendTo("#Magic-setup-grid-row-span-panel-2")
       .addClass("panel-content")
   
     $("<button></button>")
@@ -660,28 +654,39 @@
     })
   
     $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid")
-      .appendTo("#Magic-setup-tab")
-      .addClass("grid fluid")
-    $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid-row")
-      .appendTo("#Magic-setup-widget-grid")
-      .addClass("row")
-    $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid-row-span-3")
-      .appendTo("#Magic-setup-widget-grid-row")
-      .addClass("span3")
+      .attr("id", "Magic-setup-grid-row-span-3")
+      //.appendTo("#Magic-setup-widget-grid-row")
+      .appendTo("#Magic-setup-grid-row")
+      .addClass("span4")
   
     $("<div></div>")
-      .attr("id", "Magic-setup-widget-grid-row-span-panel-3")
-      .appendTo("#Magic-setup-widget-grid-row-span-3")
+      .attr("id", "Magic-setup-grid-row-span-panel-3")
+      .appendTo("#Magic-setup-grid-row-span-3")
       .addClass("panel")
   
     $("<div></div>")
       .attr("id", "Magic-setup-widget-list-3")
-      .appendTo("#Magic-setup-widget-grid-row-span-panel-3")
+      .appendTo("#Magic-setup-grid-row-span-panel-3")
       .addClass("panel-header bg-lightBlue fg-white")
       .text("Widgets")
+  }
+  
+  //Create a list of devices appended by VD Name and Type
+  updateDevices = function(){
+    var col = 1;
+    var userVariables = $.getUservariables()
+    userVariables.result.forEach(function(value, index){
+      var deviceidx = value.Value.split(",")
+      var virtualDeviceName = value.Name.split('_')[1];
+      for(i = 1; i < deviceidx.length; i++) {
+        var device = $.getDevice(deviceidx[i])
+        device.forEach(function(value, key){
+          //alert(value)
+          //value.add("Virtual Deivce Name", virtualDeviceName)
+          //value.add("Virtual Deivce Type", virtualDeviceName)
+        })
+      }    
+    })
   }
   
   //update Dashboard
@@ -1088,6 +1093,7 @@ $(document).ready(function() {
   //getDomoticzVariables()
   createDomoticzTabs()
   updateDomoticzSetup()
+  updateDevices()
   //deviceGroup = $('a[data-toggle="tab"]').attr("href").split('-')[1]
   updateDeviceData()
   clearTimeout(timerDeviceUpdate)
