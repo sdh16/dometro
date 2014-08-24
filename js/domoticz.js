@@ -33,10 +33,10 @@
  	$.getUseddevices = function(){
  	  var usedDevices = [];
  	  $.ajax({
-      url: '/json.htm?type=devices&used=true',
-      async: false,
-    	dataType: 'json',
-    	success: function (json) {
+            url: '/json.htm?type=devices&used=true',
+            async: false,
+            dataType: 'json',
+            success: function (json) {
 	    	usedDevices = json;
 	    }
 	  });
@@ -47,13 +47,13 @@
  	$.getDevice = function(idx){
  	  var device = [];
  	  $.ajax({
-  	  url: '/json.htm?type=devices&rid=' + idx,
-  	  async: false,
-    	dataType: 'json',
-  		success: function (json) {
-	  		device = json;
-	 		}
-		});
+  	    url: '/json.htm?type=devices&rid=' + idx,
+  	    async: false,
+    	    dataType: 'json',
+  	    success: function (json) {
+	  	device = json;
+	    }
+	  });
 	  return device.result;
  	 }
 
@@ -236,6 +236,9 @@
 						case "Weather":
   						var tabclass = "icon-weather"
 						break;
+						case "Custom":
+  						var tabclass = "icon-star"
+						break;
 						default:
   						var tabclass = "icon-none"
 						break;
@@ -263,420 +266,420 @@
 	}
 	// update Setup
 	updateDomoticzSetup = function(){
-	getDomoticzVariables();
-	
+		getDomoticzVariables();
+		
 		var SetupTabs = {}
 		SetupTabs.Main = 0
 		SetupTabs.Variables = 1
 		SetupTabs.Devices = 1
 		SetupTabs.Links = 0
 		SetupTabs.Magic = 1
-
 	
-	$("<div></div>")
-		.attr("id","setup-tabs")
-		.attr("data-role","tab-control")
-		.addClass("tab-control")
-		.appendTo("#tab-Setup")
+		
+		$("<div></div>")
+			.attr("id","setup-tabs")
+			.attr("data-role","tab-control")
+			.addClass("tab-control")
+			.appendTo("#tab-Setup")
+		
+		$("<ul></ul>")
+			.attr("id","setup-tabs-tab")
+			.addClass("tabs no-spaces")
+			.appendTo("#setup-tabs")
 	
-	$("<ul></ul>")
-		.attr("id","setup-tabs-tab")
-		.addClass("tabs no-spaces")
-		.appendTo("#setup-tabs")
-
-	$("<div></div>")
-		.attr("id","setup-tabs-frames")
-		.addClass("frames")
-		.appendTo("#setup-tabs")
-
-	$.map(SetupTabs,function(value,index){
-		if (value == "1"){
-		
-	$("<li></li>")
-		.attr("id", index)
-		.appendTo("#setup-tabs-tab")
-		
-	$("<a></a>")
-		.appendTo("#" + index)
-		.attr("href","#" + index +"-setup-tab")
-		.attr("data-toggle", "tab")
-		.text(index)
-		
-	$("<div></div>")
-		.attr("id", index + "-setup-tab")
-		.addClass("frame")
-		.appendTo("#setup-tabs-frames")
-		}
-	})
-		
-
-// uservars
-			$("<button></button>")
-				.attr("id","Variables-refresh-button")
-				.appendTo("#Variables-setup-tab")
-				.text("Refresh")
-				.addClass("bg-darkRed fg-white")
-				.click(function(){refreshVariablesTable()})
-		
-			$("<table></table>")
-				.attr("id", "Variables-setup-table-1")
-				.appendTo("#Variables-setup-tab")
-				.addClass("table striped hovered dataTable")
+		$("<div></div>")
+			.attr("id","setup-tabs-frames")
+			.addClass("frames")
+			.appendTo("#setup-tabs")
+	
+		$.map(SetupTabs,function(value,index){
+			if (value == "1"){
 			
-			$("<thead><thead")
-				.attr("id","Variables-setup-thead-1")
-				.appendTo("#Variables-setup-table-1")
-				.addClass("text-left")
+		$("<li></li>")
+			.attr("id", index)
+			.appendTo("#setup-tabs-tab")
 			
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("idx")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Variable name")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Variable type")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Current value")
-			$("<th></th>")
-				.appendTo("#Variables-setup-thead-1")
-				.text("Last update")
+		$("<a></a>")
+			.appendTo("#" + index)
+			.attr("href","#" + index +"-setup-tab")
+			.attr("data-toggle", "tab")
+			.text(index)
 			
-
-
+		$("<div></div>")
+			.attr("id", index + "-setup-tab")
+			.addClass("frame")
+			.appendTo("#setup-tabs-frames")
+			}
+		})
+			
+	
+		// uservars
+		$("<button></button>")
+			.attr("id","Variables-refresh-button")
+			.appendTo("#Variables-setup-tab")
+			.text("Refresh")
+			.addClass("bg-darkRed fg-white")
+			.click(function(){refreshVariablesTable()})
+	
+		$("<table></table>")
+			.attr("id", "Variables-setup-table-1")
+			.appendTo("#Variables-setup-tab")
+			.addClass("table striped hovered dataTable")
+		
+		$("<thead><thead")
+			.attr("id","Variables-setup-thead-1")
+			.appendTo("#Variables-setup-table-1")
+			.addClass("text-left")
+		
+		$("<th></th>")
+			.appendTo("#Variables-setup-thead-1")
+			.text("idx")
+		$("<th></th>")
+			.appendTo("#Variables-setup-thead-1")
+			.text("Variable name")
+		$("<th></th>")
+			.appendTo("#Variables-setup-thead-1")
+			.text("Variable type")
+		$("<th></th>")
+			.appendTo("#Variables-setup-thead-1")
+			.text("Current value")
+		$("<th></th>")
+			.appendTo("#Variables-setup-thead-1")
+			.text("Last update")
+		
+	
+	
 		refreshVariablesTable = function(){
 			var userVariables = $.getUservariables()
 			
 			$("#Variables-setup-table-1 > tbody").remove()	
-
+	
 			$("<tbody></tbody")
 				.attr("id","Variables-setup-tbody-1")
 				.appendTo("#Variables-setup-table-1")
 		        $('#Variables-setup-table-1').dataTable( {
-                	        "bProcessing": true,
-                        	"bDestroy": true,
-                        	"aaData": userVariables.result,
-                        	"aoColumns": [
+	        	        "bProcessing": true,
+	                	"bDestroy": true,
+	                	"aaData": userVariables.result,
+	                	"aoColumns": [
 	                            { "mData": "idx" },
-        	                    { "mData": "Name" },
-                	            { "mData": "Type" },
-                        	    { "mData": "Value" },
+		                    { "mData": "Name" },
+	        	            { "mData": "Type" },
+	                	    { "mData": "Value" },
 	                            { "mData": "LastUpdate" }
-        	                ]
-                	    } );
+		                ]
+	        	    } );
 		}
-
-// device list
-			$("<button></button>")
-				.attr("id","Devices-refresh-button")
-				.appendTo("#Devices-setup-tab")
-				.text("Refresh")
-				.addClass("bg-darkRed fg-white")
-				.click(function(){refreshDevicesTable()})
+	
+		// device list
+		$("<button></button>")
+			.attr("id","Devices-refresh-button")
+			.appendTo("#Devices-setup-tab")
+			.text("Refresh")
+			.addClass("bg-darkRed fg-white")
+			.click(function(){refreshDevicesTable()})
+	
+		$("<table></table>")
+			.attr("id", "Devices-setup-table-1")
+			.appendTo("#Devices-setup-tab")
+			.addClass("table striped hovered dataTable")
 		
-			$("<table></table>")
-				.attr("id", "Devices-setup-table-1")
-				.appendTo("#Devices-setup-tab")
-				.addClass("table striped hovered dataTable")
-			
-			$("<thead><thead")
-				.attr("id","Devices-setup-thead-1")
-				.appendTo("#Devices-setup-table-1")
-				.addClass("text-left")
-			
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("idx")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Device name")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Device type")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Current value")
-			$("<th></th>")
-				.appendTo("#Devices-setup-thead-1")
-				.text("Last update")
-
+		$("<thead><thead")
+			.attr("id","Devices-setup-thead-1")
+			.appendTo("#Devices-setup-table-1")
+			.addClass("text-left")
+		
+		$("<th></th>")
+			.appendTo("#Devices-setup-thead-1")
+			.text("idx")
+		$("<th></th>")
+			.appendTo("#Devices-setup-thead-1")
+			.text("Device name")
+		$("<th></th>")
+			.appendTo("#Devices-setup-thead-1")
+			.text("Device type")
+		$("<th></th>")
+			.appendTo("#Devices-setup-thead-1")
+			.text("Current value")
+		$("<th></th>")
+			.appendTo("#Devices-setup-thead-1")
+			.text("Last update")
+	
 		refreshDevicesTable = function(){
 			var devices = $.getUseddevices()
 			
 			$("#Devices-setup-table-1 > tbody").remove()	
-
+	
 			$("<tbody></tbody")
 				.attr("id","Devices-setup-tbody-1")
 				.appendTo("#Devices-setup-table-1")
-       			$('#Devices-setup-table-1').dataTable({
-                        	"bProcessing": true,
-                        	"bDestroy": true,
-                        	"aaData": devices.result,
-                        	"aoColumns": [
+				$('#Devices-setup-table-1').dataTable({
+	                	"bProcessing": true,
+	                	"bDestroy": true,
+	                	"aaData": devices.result,
+	                	"aoColumns": [
 	                            { "mData": "idx" },
-        	                    { "mData": "Name" },
-                	            { "mData": "Type" },
-                        	    { "mData": "Data" },
+		                    { "mData": "Name" },
+	        	            { "mData": "Type" },
+	                	    { "mData": "Data" },
 	                            { "mData": "LastUpdate" }
-        	                ]
-                	});
+		                ]
+	        	});
 		
 		}
-
-
-// Magic
-var widgets = {}
-var widget = {}
-var row = []
-
-
-// create widget
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-grid")
-				.appendTo("#Magic-setup-tab")
-				.addClass("grid fluid")
-			$("<div></div>")
-				.attr("id", "Magic-setup-grid-row")
-				.appendTo("#Magic-setup-grid")
-				.addClass("row")
-			$("<div></div>")
-				.attr("id", "Magic-setup-grid-row-span-1")
-				.appendTo("#Magic-setup-grid-row")
-				.addClass("span3")
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-grid-row-span-panel-1")
-				.appendTo("#Magic-setup-grid-row-span-1")
-				.addClass("panel")
+	
+	
+		// Magic
+		var widgets = {}
+		var widget = {}
+		var row = []
+		
+		
+		// create widget
+	
+		$("<div></div>")
+			.attr("id", "Magic-setup-grid")
+			.appendTo("#Magic-setup-tab")
+			.addClass("grid fluid")
+		$("<div></div>")
+			.attr("id", "Magic-setup-grid-row")
+			.appendTo("#Magic-setup-grid")
+			.addClass("row")
+		$("<div></div>")
+			.attr("id", "Magic-setup-grid-row-span-1")
+			.appendTo("#Magic-setup-grid-row")
+			.addClass("span3")
+	
+		$("<div></div>")
+			.attr("id", "Magic-setup-grid-row-span-panel-1")
+			.appendTo("#Magic-setup-grid-row-span-1")
+			.addClass("panel")
+			
+		$("<div></div>")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("panel-header bg-lightBlue fg-white")
+			.text("Create Widget")
+		
+		$("<div></div>")
+			.attr("id","Magic-setup-name-row")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("panel-content")
+		
+		$("<div></div>")
+			.attr("id","Magic-setup-name-row-input-control")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("input-control text")
+		$("<input></input>")
+			.attr("id","Magic-setup-widget-name")
+			.appendTo("#Magic-setup-name-row-input-control")
+			.attr("type","text")
+			.attr("value","")
+			.attr("placeholder", "Virtual Deivce Name")
+							
+		$( "#Magic-setup-widget-name").change(function() {
+	
+			$("#Magic-setup-widget-title-text")
+				.text($("#Magic-setup-widget-name").val())
+		});
+	
+		$("<div></div>")
+			.attr("id","Magic-setup-row-row")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("panel-content")
+		
+		$("<div></div>")
+			.attr("id","Magic-setup-row-row-input-control")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("input-control text")
+		
+		$("<input></input>")
+			.attr("id","Magic-row-name")
+			.appendTo("#Magic-setup-row-row-input-control")
+			.attr("type","text")
+			.attr("value","")
+			.attr("placeholder", "Virtual Device Type")
+			
+		$("<div></div>")
+			.attr("id","Magic-setup-select1-row")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("panel-content")
+		$("<div></div>")
+			.attr("id","Magic-setup-select1-row-input-control")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("input-control select")
+	
+		$("<select></select>")
+			.attr("id","Magic-core-device-select")
+			.appendTo("#Magic-setup-select1-row-input-control")
+			.attr("data-live-search","true")
+			.attr("title","Select one of your devices")
+	
+		var domoticzDevices = $.getUseddevices()
+		
+		domoticzDevices.result.forEach(function(value,index){
+			
+		$("#Magic-core-device-select").append($("<option/>",{
+			value: value.idx,
+			text: value.Name
+			}));
+		})
+	
+	
+	
+		$("#Magic-core-device-select").change(function(){
+			$("#Magic-data-device-select").empty()
 				
-			$("<div></div>")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-header bg-lightBlue fg-white")
-				.text("Create Widget")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-name-row")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-content")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-name-row-input-control")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("input-control text")
-			$("<input></input>")
-				.attr("id","Magic-setup-widget-name")
-				.appendTo("#Magic-setup-name-row-input-control")
-				.attr("type","text")
-				.attr("value","")
-				.attr("placeholder", "Virtual Deivce Name")
-								
-			$( "#Magic-setup-widget-name").change(function() {
-  
-				$("#Magic-setup-widget-title-text")
-					.text($("#Magic-setup-widget-name").val())
-			});
-
-			$("<div></div>")
-				.attr("id","Magic-setup-row-row")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-content")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-row-row-input-control")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("input-control text")
-			
-			$("<input></input>")
-				.attr("id","Magic-row-name")
-				.appendTo("#Magic-setup-row-row-input-control")
-				.attr("type","text")
-				.attr("value","")
-				.attr("placeholder", "Virtual Device Type")
-				
-			$("<div></div>")
-				.attr("id","Magic-setup-select1-row")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-content")
-			$("<div></div>")
-				.attr("id","Magic-setup-select1-row-input-control")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("input-control select")
-
-			$("<select></select>")
-				.attr("id","Magic-core-device-select")
-				.appendTo("#Magic-setup-select1-row-input-control")
-				.attr("data-live-search","true")
-				.attr("title","Select one of your devices")
-
-			var domoticzDevices = $.getUseddevices()
-			
-			domoticzDevices.result.forEach(function(value,index){
-				
-			$("#Magic-core-device-select").append($("<option/>",{
-				value: value.idx,
-				text: value.Name
+			var domoticzDeviceData = $.getDevice($("#Magic-core-device-select").val())
+	
+			$.map(domoticzDeviceData[0], function(value, index) {
+	
+				$("#Magic-data-device-select").append($("<option/>",{
+					value: index,
+					text: value
 				}));
-			})
-
-
-
-			$("#Magic-core-device-select").change(function(){
-				$("#Magic-data-device-select").empty()
-					
-				var domoticzDeviceData = $.getDevice($("#Magic-core-device-select").val())
+			});
 	
-				$.map(domoticzDeviceData[0], function(value, index) {
+			$('#Magic-data-device-select').selectpicker('refresh'); 
+		})
+	
+		$("<div></div>")
+			.attr("id","Magic-setup-select2-row")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("panel-content")
+		$("<div></div>")
+			.attr("id","Magic-setup-select2-row-input-control")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("input-control select")
+	
+		$("<select></select>")
+			.attr("id","Magic-data-device-select")
+			.appendTo("#Magic-setup-select2-row-input-control")
+	
+		$("<div></div>")
+			.attr("id","Magic-setup-button1-row")
+			.appendTo("#Magic-setup-grid-row-span-panel-1")
+			.addClass("panel-content")
+			
+		$("<button></button>")
+			.attr("id","Magic-core-device-adddata")
+			.appendTo("#Magic-setup-button1-row")
+			.addClass("bg-darkBlue fg-white")
+			.text("Add")
+	
+		$( "#Magic-core-device-adddata" ).click(function() {
+			
+			$("<div></div>")
+				.addClass("panel-content")
+				.text($("#Magic-row-name").val()+" "+$("#Magic-data-device-select").find(":selected").text())
+				.appendTo("#Magic-setup-widget-body")
+	
+			row.push({
+				name: $("#Magic-row-name").val(),
+				idx : $("#Magic-core-device-select").val(),
+				value : $("#Magic-data-device-select").val()
+			})
+		});				
+	
+		// example widget
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid")
+			.appendTo("#Magic-setup-tab")
+			.addClass("grid fluid")
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid-row")
+			.appendTo("#Magic-setup-widget-grid")
+			.addClass("row")
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid-row-span-2")
+			.appendTo("#Magic-setup-widget-grid-row")
+			.addClass("span3")
+	
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid-row-span-panel-2")
+			.appendTo("#Magic-setup-widget-grid-row-span-2")
+			.addClass("panel")
 		
-					$("#Magic-data-device-select").append($("<option/>",{
-						value: index,
-						text: value
-					}));
-				});
-	
-				$('#Magic-data-device-select').selectpicker('refresh'); 
-			})
-
-			$("<div></div>")
-				.attr("id","Magic-setup-select2-row")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-content")
-			$("<div></div>")
-				.attr("id","Magic-setup-select2-row-input-control")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("input-control select")
-
-			$("<select></select>")
-				.attr("id","Magic-data-device-select")
-				.appendTo("#Magic-setup-select2-row-input-control")
-
-			$("<div></div>")
-				.attr("id","Magic-setup-button1-row")
-				.appendTo("#Magic-setup-grid-row-span-panel-1")
-				.addClass("panel-content")
-				
-			$("<button></button>")
-				.attr("id","Magic-core-device-adddata")
-				.appendTo("#Magic-setup-button1-row")
-				.addClass("bg-darkBlue fg-white")
-				.text("Add")
-
-			$( "#Magic-core-device-adddata" ).click(function() {
-				
-				$("<div></div>")
-					.addClass("panel-content")
-					.text($("#Magic-row-name").val()+" "+$("#Magic-data-device-select").find(":selected").text())
-					.appendTo("#Magic-setup-widget-body")
-
-				row.push({
-					name: $("#Magic-row-name").val(),
-					idx : $("#Magic-core-device-select").val(),
-					value : $("#Magic-data-device-select").val()
-				})
-			});				
-
-// example widget
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid")
-				.appendTo("#Magic-setup-tab")
-				.addClass("grid fluid")
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid-row")
-				.appendTo("#Magic-setup-widget-grid")
-				.addClass("row")
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid-row-span-2")
-				.appendTo("#Magic-setup-widget-grid-row")
-				.addClass("span3")
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid-row-span-panel-2")
-				.appendTo("#Magic-setup-widget-grid-row-span-2")
-				.addClass("panel")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-widget-title-text")
-				.addClass("panel-header bg-lightBlue fg-white")
-				.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
-				.text("Widget Name")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-widget-body")
-				.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
-			
-			$("<div></div>")
-				.attr("id","Magic-setup-button3-row")
-				.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
-				.addClass("panel-content")
-
-			$("<button></button>")
-				.attr("id","Magic-save-widget")
-				.appendTo("#Magic-setup-button3-row")
-				.addClass("bg-darkBlue fg-white")
-				.text("Save")
-
-      //construct widget & save to Domoticz
-			$("#Magic-save-widget" ).click(function() {
-				
-				//fetch fresh values
-				domoticzUserVariables = $.getUservariables()
-				domoticzUserVariables.result.forEach(function(value, index){
-					
-					if(value.Name == "framb0ise_widgets"){
-						widgets = value.Value
-				
-						//construct
-						widget.name = $("#Magic-setup-widget-name").val()
-						widget.rows= row			
-						
-						//combine
-						var newWidgets = $.extend({}, widget, widgets)
-						
-						newWidgets = JSON.stringify(newWidgets)
-						
-						//$.updateUservariable(value.idx, value.Name, value.Type, newWidgets)
-					}
-				})
-			})
-
-// existing widgets
-
-domoticzUserVariables.result.forEach(function(value, index){
-	
-	if (value.Name == "framb0ise_widgets"){
-		var idx = value.idx
+		$("<div></div>")
+			.attr("id","Magic-setup-widget-title-text")
+			.addClass("panel-header bg-lightBlue fg-white")
+			.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
+			.text("Widget Name")
 		
-		widgets = $.getUservariable(idx)
+		$("<div></div>")
+			.attr("id","Magic-setup-widget-body")
+			.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
+		
+		$("<div></div>")
+			.attr("id","Magic-setup-button3-row")
+			.appendTo("#Magic-setup-widget-grid-row-span-panel-2")
+			.addClass("panel-content")
+	
+		$("<button></button>")
+			.attr("id","Magic-save-widget")
+			.appendTo("#Magic-setup-button3-row")
+			.addClass("bg-darkBlue fg-white")
+			.text("Save")
+	
+		//construct widget & save to Domoticz
+		$("#Magic-save-widget" ).click(function() {
+			
+			//fetch fresh values
+			domoticzUserVariables = $.getUservariables()
+			domoticzUserVariables.result.forEach(function(value, index){
+				
+				if(value.Name == "framb0ise_widgets"){
+					widgets = value.Value
+			
+					//construct
+					widget.name = $("#Magic-setup-widget-name").val()
+					widget.rows= row			
+					
+					//combine
+					var newWidgets = $.extend({}, widget, widgets)
+					
+					newWidgets = JSON.stringify(newWidgets)
+					
+					//$.updateUservariable(value.idx, value.Name, value.Type, newWidgets)
+				}
+			})
+		})
+	
+		// existing widgets
+		
+		domoticzUserVariables.result.forEach(function(value, index){
+			
+			if (value.Name == "framb0ise_widgets"){
+				var idx = value.idx
+				
+				widgets = $.getUservariable(idx)
+			}
+			
+		})
+	
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid")
+			.appendTo("#Magic-setup-tab")
+			.addClass("grid fluid")
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid-row")
+			.appendTo("#Magic-setup-widget-grid")
+			.addClass("row")
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid-row-span-3")
+			.appendTo("#Magic-setup-widget-grid-row")
+			.addClass("span3")
+	
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-grid-row-span-panel-3")
+			.appendTo("#Magic-setup-widget-grid-row-span-3")
+			.addClass("panel")
+	
+		$("<div></div>")
+			.attr("id", "Magic-setup-widget-list-3")
+			.appendTo("#Magic-setup-widget-grid-row-span-panel-3")
+			.addClass("panel-header bg-lightBlue fg-white")
+			.text("Widgets")
 	}
-	
-})
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid")
-				.appendTo("#Magic-setup-tab")
-				.addClass("grid fluid")
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid-row")
-				.appendTo("#Magic-setup-widget-grid")
-				.addClass("row")
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid-row-span-3")
-				.appendTo("#Magic-setup-widget-grid-row")
-				.addClass("span3")
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-grid-row-span-panel-3")
-				.appendTo("#Magic-setup-widget-grid-row-span-3")
-				.addClass("panel")
-
-			$("<div></div>")
-				.attr("id", "Magic-setup-widget-list-3")
-				.appendTo("#Magic-setup-widget-grid-row-span-panel-3")
-				.addClass("panel-header bg-lightBlue fg-white")
-				.text("Widgets")
-}
 	
 	//update Dashboard
 	updateDeviceData = function(){
