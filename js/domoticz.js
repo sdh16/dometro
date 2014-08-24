@@ -415,20 +415,19 @@
         .attr("id","Devices-setup-tbody-1")
         .appendTo("#Devices-setup-table-1")
         $('#Devices-setup-table-1').dataTable({
-                    "bProcessing": true,
-                    "bDestroy": true,
-                    "bSort": true,
-                    "bOrder": [[0, "asc"]],
-                    "aaData": devices.result,
-                    "aoColumns": [
-                              { "mData": "idx" },
-                        { "mData": "Name" },
-                        { "mData": "Type" },
-                        { "mData": "Data" },
-                              { "mData": "LastUpdate" }
-                    ]
-            });
-    
+          "bProcessing": true,
+          "bDestroy": true,
+          "bSort": true,
+          "bOrder": [[0, "asc"]],
+          "aaData": devices.result,
+          "aoColumns": [
+             { "mData": "idx" },
+             { "mData": "Name" },
+             { "mData": "Type" },
+             { "mData": "Data" },
+             { "mData": "LastUpdate" }
+           ]
+         });
     }
   
   
@@ -689,6 +688,170 @@
     })
   }
   
+  //Create Lights tab
+  updateLights = function(){
+    var device = $.getUseddevices()
+    device.result.forEach(function(value, key){
+      if(value.Type == "Lighting 2"){
+        var switchType = value.SwitchType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+        var text = value.Status
+        switch (value.SwitchType) {
+          case "On/Off":
+            if (value.Status == "On")
+              var deviceType = "../images/Light48_On.png"
+            else
+              var deviceType = "../images/Light48_Off.png"
+          break;
+          case "Contact":
+            if (value.Status == "Open")
+              var deviceType = "../images/contact48_open.png"
+            else
+              var deviceType = "../images/contact48.png"
+          break;
+          case "Motion Sensor":
+            if (value.Status == "On")
+              var deviceType = "../images/motion48-on.png"
+            else
+              var deviceType = "../images/motion48-off.png"
+          break;
+          case "Smoke Detector":
+            if (value.Status == "On")
+              var deviceType = "../images/smoke48on.png"
+            else
+              var deviceType = "../images/smoke48off.png"
+            break;
+          case "Dimmer":
+            if (value.Status == "On")
+              var deviceType = "../images/dimmer48-on.png"
+            else
+              var deviceType = "../images/dimmer48-off.png"
+          break;
+          default:
+            var deviceType = "icon-question"
+          break;
+        }
+        
+        if(!$("#" +"lights-tile-area").length) {
+          $("<div></div>")
+            .attr("id", "lights-tile-area")
+            .appendTo("#tab-Lights")
+            .addClass("tile-area tile-area-darkTeal")
+          $("<h2></h2>")
+            .appendTo("#lights-tile-area")
+            .addClass("tile-area-title fg-white")
+            //.text("Lights")
+        }
+        if(!$("#" +"lights-" +switchType +"-tile-group").length) {
+          $("<div></div>")
+            .attr("id", "lights-" +switchType +"-tile-group")
+            .appendTo("#lights-tile-area")
+            .addClass("tile-group")
+          $("<div></div>")
+            .attr("id", "lights-tile-group-title")
+            .appendTo("#" +"lights-" +switchType +"-tile-group")
+            .addClass("tile-group-title")
+            .text(switchType)
+        }
+        // create a tile for each virtual device
+        if(!$("#" +"lights-" +value.idx +"-tile").length) {
+          // Create the tile for the virtual deivce
+          $("<a></a>")
+            .attr("id", "lights-" +value.idx +"-tile")
+            .appendTo("#" +"lights-" +switchType +"-tile-group")
+            .addClass("tile double bg-lightBlue live")
+            .attr("data-role","live-tile")
+            .attr("data-effect","slideUpDown")
+            .attr("data-click","transform")
+        }
+        if(!$("#" +"lights-" +value.idx +"-tile-brand").length){
+          $("<div></div>")
+            .attr("id", "lights-" +value.idx +"-tile-brand")
+            .appendTo("#" +"lights-" +value.idx +"-tile")
+            .addClass("brand")
+          $("<div></div>")
+            .attr("id", "lights-" +value.idx +"-tile-brand-label")
+            .appendTo("#" +"lights-" +value.idx +"-tile-brand")
+            .addClass("label")
+          $("<div></div>")
+            .attr("id", "lights-" +value.idx +"-tile-brand-label-heading")
+            .appendTo("#" +"lights-" +value.idx +"-tile-brand-label")
+            .addClass("no-margin fg-white")
+            .text(value.Name)
+          $("<div></div>")
+            .attr("id", "lights-" +value.idx +"-tile-brand-badge")
+            .appendTo("#" +"lights-" +value.idx +"-tile-brand")
+            .addClass("badge")
+          $("<span></span>")
+            .attr("id", "lights-" +value.idx +"-tile-brand-badge-data")
+            .appendTo("#" +"lights-" +value.idx +"-tile-brand-badge")
+            .text(value.Status)
+        }
+
+        // add a tile content block each real device in the virtual device tile
+        if(!$("#" +"lights-" +value.idx +"-tile-content").length){
+          $("<div></div>")
+          .attr("id", "lights-" +value.idx +"-tile-content")
+          .appendTo("#" +"lights-" +value.idx +"-tile")
+          .addClass("tile-content email")
+        }
+    
+        // add the icon and value
+        if(!$("#" +"lights-" +value.idx +"-tile-content-email-image").length){
+          $("<div></div>")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-image")
+            .appendTo("#" +"lights-" +value.idx +"-tile-content")
+            .addClass("email-image")
+          $("<img></img>")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-image-data")
+            .appendTo("#" +"lights-" +value.idx +"-tile-content-email-image")
+            .attr("src", deviceType)
+        }      
+        if(!$("#" +"lights-" +value.idx +"-tile-content-email-data").length){
+          // add data or status
+          $("<div></div>")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-data")
+            .appendTo("#" +"lights-" +value.idx +"-tile-content")
+            .addClass("email-data")
+          $("<span></span>")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-data-status")
+            .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
+            .addClass("email-data-title")
+            .text(text)
+          $("<span></span>")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-data-name")
+            .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
+            .addClass("email-data-subtitle fg-darkCobalt")
+            .text(value.Name)
+          $("<span></span>")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-data-lastupdate")
+            .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
+            .addClass("email-data-text fg-gray")
+            .text(value.LastUpdate)
+        }
+        // update text if not the same
+        if ($("#" +"lights-" +value.idx +"-tile-content-email-data-status").text() != text){
+          $("#" +"lights-" +value.idx +"-tile-content-email-data-status")
+            .hide()
+            .text(text)
+            .fadeIn(1500)
+        }
+        // Update the image in case of status chage
+        if ($("#" +"lights-" +value.idx +"-tile-content-email-image-data").attr('src') != deviceType){
+          $("#" +"lights-" +value.idx +"-tile-content-email-image-data")
+            .hide()
+            .attr("src", deviceType)
+            .fadeIn(1500)
+        }
+        if ($("#" +"lights-" +value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){        
+          $("#" +"lights-" +value.idx +"-tile-content-email-data-lastupdate")
+            .hide()
+            .text(value.LastUpdate)
+            .fadeIn(1500)        
+        }
+      }
+    })
+  }
+
   //update Dashboard
   updateDeviceData = function(){
     //deviceGroup = $("ul.tabs li a").find(".active");
@@ -1094,11 +1257,12 @@ $(document).ready(function() {
   createDomoticzTabs()
   updateDomoticzSetup()
   updateDevices()
-  //deviceGroup = $('a[data-toggle="tab"]').attr("href").split('-')[1]
+
   updateDeviceData()
   clearTimeout(timerDeviceUpdate)
-  // stop refreshing tabs when not in focus! 
-  //$('.tab-control').tabcontrol().bind("tabcontrolchange", function(event, frame){
+
+  updateLights()
+
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
     var targetTab = event.currentTarget.hash
@@ -1109,7 +1273,8 @@ $(document).ready(function() {
         updateDeviceData()
       break;
       case "#tab-Lights":
-        updateDeviceData()
+        updateLights()
+        clearTimeout(timerDeviceUpdate)
       break;
       default:
         clearTimeout(timerDeviceUpdate)
