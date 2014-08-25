@@ -690,6 +690,8 @@
   
   //Create Lights tab
   updateLights = function(){
+    timerUpdateLights = setTimeout(updateLights, 5000)
+
     var device = $.getUseddevices()
     device.result.forEach(function(value, key){
       if(value.Type == "Lighting 2"){
@@ -793,6 +795,7 @@
           .attr("id", "lights-" +value.idx +"-tile-content")
           .appendTo("#" +"lights-" +value.idx +"-tile")
           .addClass("tile-content email")
+          .attr("style", "display: block;")
         }
     
         // add the icon and value
@@ -817,11 +820,11 @@
             .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
             .addClass("email-data-title")
             .text(text)
-          $("<span></span>")
-            .attr("id", "lights-" +value.idx +"-tile-content-email-data-name")
-            .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
-            .addClass("email-data-subtitle fg-darkCobalt")
-            .text(value.Name)
+          //$("<span></span>")
+          //  .attr("id", "lights-" +value.idx +"-tile-content-email-data-name")
+          //  .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
+          //  .addClass("email-data-subtitle fg-darkCobalt")
+          //  .text(value.Name)
           $("<span></span>")
             .attr("id", "lights-" +value.idx +"-tile-content-email-data-lastupdate")
             .appendTo("#" +"lights-" +value.idx + "-tile-content-email-data" )
@@ -853,10 +856,10 @@
   }
 
   //update Dashboard
-  updateDeviceData = function(){
+  updateDashboard = function(){
     //deviceGroup = $("ul.tabs li a").find(".active");
     //alert(deviceGroup)
-    timerDeviceUpdate = setTimeout(updateDeviceData, 5000)
+    timerUpdateDashboard = setTimeout(updateDashboard, 5000)
     var deviceidx
     var deviceName
     var vdidx
@@ -1258,10 +1261,11 @@ $(document).ready(function() {
   updateDomoticzSetup()
   updateDevices()
 
-  updateDeviceData()
-  clearTimeout(timerDeviceUpdate)
+  updateDashboard()
+  clearTimeout(timerUpdateDashboard)
 
   updateLights()
+  clearTimeout(timerUpdateLights)
 
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
@@ -1270,14 +1274,16 @@ $(document).ready(function() {
     //alert(deviceGroup)
     switch(targetTab){
       case "#tab-Dashboard":
-        updateDeviceData()
+        updateDashboard()
+        clearTimeout(timerUpdateLights)
       break;
       case "#tab-Lights":
         updateLights()
-        clearTimeout(timerDeviceUpdate)
+        clearTimeout(timerUpdateDashboard)
       break;
       default:
-        clearTimeout(timerDeviceUpdate)
+        clearTimeout(timerUpdateDashboard)
+        clearTimeout(timerUpdateLights)
        break;
     }  
   });
