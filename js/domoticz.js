@@ -786,7 +786,7 @@
           $("<span></span>")
             .attr("id", "lights-" +value.idx +"-tile-brand-badge-data")
             .appendTo("#" +"lights-" +value.idx +"-tile-brand-badge")
-            .text(value.Status)
+            .text(value.idx)
         }
 
         // add a tile content block each real device in the virtual device tile
