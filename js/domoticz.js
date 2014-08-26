@@ -1866,17 +1866,17 @@ $(document).ready(function() {
   updateDashboard()
   clearTimeout(timerUpdateDashboard)
 
-  //updateLights()
-  //clearTimeout(timerUpdateLights)
+  updateLights()
+  clearTimeout(timerUpdateLights)
 
-  //updateUtility()
-  //clearTimeout(timerUpdateUtility)
+  updateUtility()
+  clearTimeout(timerUpdateUtility)
   
-  //updateTemp()
-  //clearTimeout(timerUpdateTemp)
+  updateTemp()
+  clearTimeout(timerUpdateTemp)
 
-  //updateWeather()
-  //clearTimeout(timerUpdateWeather)
+  updateWeather()
+  clearTimeout(timerUpdateWeather)
 
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
