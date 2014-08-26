@@ -395,16 +395,31 @@
       .text("idx")
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1")
-      .text("Device name")
+      .text("Hardware")
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1")
-      .text("Device type")
+      .text("ID")
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1")
-      .text("Current value")
+      .text("Name")
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1")
-      .text("Last update")
+      .text("Type")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1")
+      .text("SubType")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1")
+      .text("Data")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1")
+      .text("Signal")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1")
+      .text("Battery")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1")
+      .text("Last Seen")
   
     refreshDevicesTable = function(){
       var devices = $.getUseddevices()
@@ -422,9 +437,14 @@
           "aaData": devices.result,
           "aoColumns": [
              { "mData": "idx" },
+             { "mData": "HardwareName" },
+             { "mData": "ID" },
              { "mData": "Name" },
              { "mData": "Type" },
+             { "mData": "SubType" },
              { "mData": "Data" },
+             { "mData": "SignalLevel" },
+             { "mData": "BatteryLevel" },
              { "mData": "LastUpdate" }
            ]
          });
@@ -1638,23 +1658,27 @@ $(document).ready(function() {
         clearTimeout(timerUpdateLights)
         clearTimeout(timerUpdateUtility)
         clearTimeout(timerUpdateTemp)
+        //$.StartScreen()
       break;
       case "#tab-Lights":
         updateLights()
         clearTimeout(timerUpdateDashboard)
         clearTimeout(timerUpdateUtility)
         clearTimeout(timerUpdateTemp)
+        //$.StartScreen()
       break;
       case "#tab-Utility":
         updateLights()
         clearTimeout(timerUpdateLights)
         clearTimeout(timerUpdateDashboard)
         clearTimeout(timerUpdateTemp)
+        //$.StartScreen()
       case "#tab-Temp":
         updateLights()
         clearTimeout(timerUpdateLights)
         clearTimeout(timerUpdateDashboard)
         clearTimeout(timerUpdateUtility)
+        //$.StartScreen()
       break;
       default:
         clearTimeout(timerUpdateDashboard)
