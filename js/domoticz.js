@@ -1768,6 +1768,10 @@
                 .hide()
                 .text(text)
                 .fadeIn(1500)
+              setTimeout(function(){
+                $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+              }, 3000);
+                
             }
             // Update the image in case of status chage
             if ($("#" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
@@ -1880,6 +1884,7 @@ $(document).ready(function() {
 
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
+
     var targetTab = event.currentTarget.hash
     //deviceGroup = targetTab.split('-')[1]
     //alert(deviceGroup)
