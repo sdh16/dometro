@@ -330,21 +330,24 @@
       .attr("id","Variables-setup-thead-1")
       .appendTo("#Variables-setup-table-1")
       .addClass("text-left")
+    $("<tr><tr")
+      .attr("id","Variables-setup-thead-1-row")
+      .appendTo("#Variables-setup-thead-1")
     
     $("<th></th>")
-      .appendTo("#Variables-setup-thead-1")
+      .appendTo("#Variables-setup-thead-1-row")
       .text("idx")
     $("<th></th>")
-      .appendTo("#Variables-setup-thead-1")
+      .appendTo("#Variables-setup-thead-1-row")
       .text("Variable name")
     $("<th></th>")
-      .appendTo("#Variables-setup-thead-1")
+      .appendTo("#Variables-setup-thead-1-row")
       .text("Variable type")
     $("<th></th>")
-      .appendTo("#Variables-setup-thead-1")
+      .appendTo("#Variables-setup-thead-1-row")
       .text("Current value")
     $("<th></th>")
-      .appendTo("#Variables-setup-thead-1")
+      .appendTo("#Variables-setup-thead-1-row")
       .text("Last update")
     
   
@@ -357,19 +360,19 @@
       $("<tbody></tbody")
         .attr("id","Variables-setup-tbody-1")
         .appendTo("#Variables-setup-table-1")
-            $('#Variables-setup-table-1').dataTable( {
-                    "bProcessing": true,
-                    "bDestroy": true,
-                    "bOrder": [[1, "desc"]],
-                    "aaData": userVariables.result,
-                    "aoColumns": [
-                              { "mData": "idx" },
-                        { "mData": "Name" },
-                        { "mData": "Type" },
-                        { "mData": "Value" },
-                              { "mData": "LastUpdate" }
-                    ]
-                } );
+        $('#Variables-setup-table-1').dataTable({
+          "bProcessing": true,
+          "bDestroy": true,
+          "bOrder": [[1, "desc"]],
+          "aaData": userVariables.result,
+          "aoColumns": [
+             { "mData": "idx" },
+             { "mData": "Name" },
+             { "mData": "Type" },
+             { "mData": "Value" },
+             { "mData": "LastUpdate" }
+           ]
+        });
     }
   
     // device list
@@ -389,36 +392,39 @@
       .attr("id","Devices-setup-thead-1")
       .appendTo("#Devices-setup-table-1")
       .addClass("text-left")
+    $("<tr><tr")
+      .attr("id","Devices-setup-thead-1-row")
+      .appendTo("#Devices-setup-thead-1")
     
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("idx")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Hardware")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("ID")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Name")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Type")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("SubType")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Data")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Signal")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Battery")
     $("<th></th>")
-      .appendTo("#Devices-setup-thead-1")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("Last Seen")
   
     refreshDevicesTable = function(){
@@ -1238,7 +1244,7 @@
 
     var device = $.getUseddevices()
     device.result.forEach(function(value, key){
-      if(value.HardwareName == "Forecast IO"){
+      if((value.HardwareName == "Forecast IO") || (value.HardwareName == "Weather Underground")){
         var deviceType = value.HardwareName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var text = value.Data
 
@@ -1829,17 +1835,17 @@ $(document).ready(function() {
   updateDashboard()
   clearTimeout(timerUpdateDashboard)
 
-  updateLights()
-  clearTimeout(timerUpdateLights)
+  //updateLights()
+  //clearTimeout(timerUpdateLights)
 
-  updateUtility()
-  clearTimeout(timerUpdateUtility)
+  //updateUtility()
+  //clearTimeout(timerUpdateUtility)
   
-  updateTemp()
-  clearTimeout(timerUpdateTemp)
+  //updateTemp()
+  //clearTimeout(timerUpdateTemp)
 
-  updateWeather()
-  clearTimeout(timerUpdateWeather)
+  //updateWeather()
+  //clearTimeout(timerUpdateWeather)
 
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
