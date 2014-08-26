@@ -991,12 +991,12 @@
             .addClass("email-data-title")
             .text(text)
           if(value.Type == "Energy"){
-          $("<span></span>")
-            .attr("id", "utility-" +value.idx +"-tile-content-email-data-name")
-            .appendTo("#" +"utility-" +value.idx +"-tile-content-email-data" )
-            .addClass("email-data-subtitle fg-darkCobalt")
-            .text("Today: " +value.Usage)
-          }
+            $("<span></span>")
+              .attr("id", "utility-" +value.idx +"-tile-content-email-data-name")
+              .appendTo("#" +"utility-" +value.idx +"-tile-content-email-data" )
+              .addClass("email-data-subtitle fg-darkCobalt")
+              .text("Today: " +value.CounterToday)
+            }
           $("<span></span>")
             .attr("id", "utility-" +value.idx +"-tile-content-email-data-lastupdate")
             .appendTo("#" +"utility-" +value.idx +"-tile-content-email-data" )
@@ -1028,7 +1028,7 @@
           var currentPower = parseFloat(value.Data.split(' ')[0])
         }
         if (value.Type == "Energy") {
-          var currentPower = parseFloat(value.Usage.split(' ')[0])
+          var energyToday = parseFloat(value.CounterToday.split(' ')[0])
         }
         if (currentPower <= 50) {
           $("#" +"utility-" +value.idx +"-tile")
@@ -1059,7 +1059,38 @@
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkViolet live")
+        }  
+        if (energyToday <= 0.5) {
+          $("#" +"utility-" +value.idx +"-tile")
+            .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
+            .addClass("tile double bg-darkGreen live")
         }          
+        if ((energyToday > 0.5) && (energyToday <= 1.0)) {
+          $("#" +"utility-" +value.idx +"-tile")
+            .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
+            .addClass("tile double bg-green live")
+        }          
+        if ((energyToday > 1.0) && (energyToday <= 1.5)) {
+          $("#" +"utility-" +value.idx +"-tile")
+            .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
+            .addClass("tile double bg-orange live")
+        }          
+        if ((energyToday > 1.5) && (energyToday <= 2.0)) {
+          $("#" +"utility-" +value.idx +"-tile")
+            .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
+            .addClass("tile double bg-darkOrange live")
+        }          
+        if ((energyToday > 2.0) && (energyToday <= 2.5)) {
+          $("#" +"utility-" +value.idx +"-tile")
+            .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
+            .addClass("tile double bg-darkRed live")
+        }
+        if (energyToday > 2.5) {
+          $("#" +"utility-" +value.idx +"-tile")
+            .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
+            .addClass("tile double bg-darkViolet live")
+        }          
+                
       }
     })
   }
