@@ -185,6 +185,34 @@
     return domoticzval;
     return domoticzidx;
   }
+  
+  //Create a list of devices appended by VD Name and Type
+  updateDevices = function(){
+    timerUpdateDevices = setTimeout(updateDevices, 5000)
+    combinedDeviceList= []
+    var userVariables = $.getUservariables()
+    userVariables.result.forEach(function(valueVirtualDevice, index){
+      if(valueVirtualDevice.Name.match(/vd_/)){    
+        var deviceidx = valueVirtualDevice.Value.split(",")
+        var virtualDeviceName = valueVirtualDevice.Name.split('_')[1];
+        var virtualDeviceType = deviceidx[0]
+        var virtualDeviceIndex = valueVirtualDevice.idx
+        var tempObj = {
+          VirtualDeivceName: virtualDeviceName,
+          VirtualDeivceType: virtualDeviceType,
+          VirtualDeiceIdx: virtualDeviceIndex
+        }
+        for(i = 1; i < deviceidx.length; i++) {
+          var device = $.getDevice(deviceidx[i])
+          var object = $.extend({}, device[0], tempObj);
+          combinedDeviceList.push(object)
+        }
+      }  
+    })
+    //return combinedDeviceList  
+  }
+  
+  
 
   // create some tabs & influence order then merge them
   createDomoticzTabs = function(){
@@ -398,6 +426,12 @@
     
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1-row")
+      .text("VD Name")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1-row")
+      .text("VD Type")
+    $("<th></th>")
+      .appendTo("#Devices-setup-thead-1-row")
       .text("idx")
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1-row")
@@ -417,18 +451,19 @@
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1-row")
       .text("Data")
-    $("<th></th>")
-      .appendTo("#Devices-setup-thead-1-row")
-      .text("Signal")
-    $("<th></th>")
-      .appendTo("#Devices-setup-thead-1-row")
-      .text("Battery")
+    //$("<th></th>")
+    //  .appendTo("#Devices-setup-thead-1-row")
+    //  .text("Signal")
+    //$("<th></th>")
+    //  .appendTo("#Devices-setup-thead-1-row")
+    //  .text("Battery")
     $("<th></th>")
       .appendTo("#Devices-setup-thead-1-row")
       .text("Last Seen")
   
     refreshDevicesTable = function(){
-      var devices = $.getUseddevices()
+      //var devices = $.getUseddevices()
+      devices = combinedDeviceList
       
       $("#Devices-setup-table-1 > tbody").remove()  
   
@@ -440,8 +475,10 @@
           "bDestroy": true,
           "bSort": true,
           "bOrder": [[0, "asc"]],
-          "aaData": devices.result,
+          "aaData": devices,
           "aoColumns": [
+            { "mData": "VirtualDeivceName" },
+            { "mData": "VirtualDeivceType" },
             { "mData": "idx" },
             { "mData": "HardwareName" },
             { "mData": "ID" },
@@ -449,8 +486,8 @@
             { "mData": "Type" },
             { "mData": "SubType" },
             { "mData": "Data" },
-            { "mData": "SignalLevel" },
-            { "mData": "BatteryLevel" },
+            //{ "mData": "SignalLevel" },
+            //{ "mData": "BatteryLevel" },
             { "mData": "LastUpdate" }
           ]
         });
@@ -696,32 +733,6 @@
       .text("Widgets")
   }
   
-  //Create a list of devices appended by VD Name and Type
-  updateDevices = function(){
-    timerUpdateDevices = setTimeout(updateDevices, 5000)
-    combinedDeviceList= []
-    var userVariables = $.getUservariables()
-    userVariables.result.forEach(function(valueVirtualDevice, index){
-      if(valueVirtualDevice.Name.match(/vd_/)){    
-        var deviceidx = valueVirtualDevice.Value.split(",")
-        var virtualDeviceName = valueVirtualDevice.Name.split('_')[1];
-        var virtualDeviceType = deviceidx[0]
-        var virtualDeviceIndex = valueVirtualDevice.idx
-        var tempObj = {
-          VirtualDeivceName: virtualDeviceName,
-          VirtualDeivceType: virtualDeviceType,
-          VirtualDeiceIdx: virtualDeviceIndex
-        }
-        for(i = 1; i < deviceidx.length; i++) {
-          var device = $.getDevice(deviceidx[i])
-          var object = $.extend({}, device[0], tempObj);
-          combinedDeviceList.push(object)
-        }
-      }  
-    })
-    //return combinedDeviceList  
-  }
-  
   //Create Lights Tab
   updateLights = function(){
     timerUpdateLights = setTimeout(updateLights, 5000)
@@ -905,8 +916,10 @@
   updateUtility = function(){
     timerUpdateUtility = setTimeout(updateUtility, 5000)
 
-    var device = $.getUseddevices()
-    device.result.forEach(function(value, key){
+    //var device = $.getUseddevices()
+    device = combinedDeviceList
+    
+    device.forEach(function(value, key){
       if((value.Type == "Usage") || (value.Type == "Energy")){
         var deviceType = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var deviceImage = "../images/current48.png"
@@ -1118,8 +1131,10 @@
   updateTemp = function(){
     timerUpdateTemp = setTimeout(updateTemp, 5000)
 
-    var device = $.getUseddevices()
-    device.result.forEach(function(value, key){
+    //var device = $.getUseddevices()
+    device = combinedDeviceList
+    
+    device.forEach(function(value, key){
       if((value.Type == "Temp") || (value.Type == "Temp + Humidity") || (value.Type == "Temp + Humidity + Baro")){
         var deviceType = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var text = value.Data
@@ -1293,8 +1308,10 @@
   updateWeather = function(){
     timerUpdateWeather = setTimeout(updateWeather, 5000)
 
-    var device = $.getUseddevices()
-    device.result.forEach(function(value, key){
+    //var device = $.getUseddevices()
+    device = combinedDeviceList
+    
+    device.forEach(function(value, key){
       if((value.HardwareName == "Forecast IO") || (value.HardwareName == "Weather Underground")){
         var deviceType = value.HardwareName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var text = value.Data
