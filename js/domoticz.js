@@ -842,24 +842,24 @@
             .appendTo("#" +"lights-" +value.idx +"-tile-content")
             .addClass("email-data")
           $("<span></span>")
-            .attr("id", "lights-" +value.idx +"-tile-content-email-data-status")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-data-title")
             .appendTo("#" +"lights-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-title")
             .text(text)
           //$("<span></span>")
-          //  .attr("id", "lights-" +value.idx +"-tile-content-email-data-name")
+          //  .attr("id", "lights-" +value.idx +"-tile-content-email-data-subtitle")
           //  .appendTo("#" +"lights-" +value.idx +"-tile-content-email-data" )
           //  .addClass("email-data-subtitle fg-darkCobalt")
           //  .text(value.Name)
           $("<span></span>")
-            .attr("id", "lights-" +value.idx +"-tile-content-email-data-lastupdate")
+            .attr("id", "lights-" +value.idx +"-tile-content-email-data-text")
             .appendTo("#" +"lights-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-text fg-gray")
             .text(value.LastUpdate)
         }
         // update text if not the same
-        if ($("#" +"lights-" +value.idx +"-tile-content-email-data-status").text() != text){
-          $("#" +"lights-" +value.idx +"-tile-content-email-data-status")
+        if ($("#" +"lights-" +value.idx +"-tile-content-email-data-title").text() != text){
+          $("#" +"lights-" +value.idx +"-tile-content-email-data-title")
             .hide()
             .text(text)
             .fadeIn(1500)
@@ -871,8 +871,8 @@
             .attr("src", deviceImage)
             .fadeIn(1500)
         }
-        if ($("#" +"lights-" +value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){        
-          $("#" +"lights-" +value.idx +"-tile-content-email-data-lastupdate")
+        if ($("#" +"lights-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+          $("#" +"lights-" +value.idx +"-tile-content-email-data-text")
             .hide()
             .text(value.LastUpdate)
             .fadeIn(1500)        
@@ -883,7 +883,7 @@
             .removeClass($("#" +"lights-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-green live")
         }          
-        if ((text == "Off") || (text == "Open")) {
+        else if ((text == "Off") || (text == "Open")) {
           $("#" +"lights-" +value.idx +"-tile")
             .removeClass($("#" +"lights-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-red live")
@@ -902,7 +902,10 @@
         var deviceType = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var deviceImage = "../images/current48.png"
         var text = value.Data
-       
+        var counterToday = value.CounterToday
+        if (typeof(counterToday)  === "undefined"){
+          counterToday = "0.0 kWh"
+        }
         if(!$("#" +"utility-tile-area").length) {
           $("<div></div>")
             .attr("id", "utility-tile-area")
@@ -986,26 +989,26 @@
             .appendTo("#" +"utility-" +value.idx +"-tile-content")
             .addClass("email-data")
           $("<span></span>")
-            .attr("id", "utility-" +value.idx +"-tile-content-email-data-status")
+            .attr("id", "utility-" +value.idx +"-tile-content-email-data-title")
             .appendTo("#" +"utility-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-title")
             .text(text)
           if(value.Type == "Energy"){
             $("<span></span>")
-              .attr("id", "utility-" +value.idx +"-tile-content-email-data-name")
+              .attr("id", "utility-" +value.idx +"-tile-content-email-data-subtitle")
               .appendTo("#" +"utility-" +value.idx +"-tile-content-email-data" )
               .addClass("email-data-subtitle fg-darkCobalt")
-              .text("Today: " +value.CounterToday)
+              .text("Today: " +counterToday)
             }
           $("<span></span>")
-            .attr("id", "utility-" +value.idx +"-tile-content-email-data-lastupdate")
+            .attr("id", "utility-" +value.idx +"-tile-content-email-data-text")
             .appendTo("#" +"utility-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-text fg-gray")
             .text(value.LastUpdate)
         }
         // update text if not the same
-        if ($("#" +"utility-" +value.idx +"-tile-content-email-data-status").text() != text){
-          $("#" +"utility-" +value.idx +"-tile-content-email-data-status")
+        if ($("#" +"utility-" +value.idx +"-tile-content-email-data-title").text() != text){
+          $("#" +"utility-" +value.idx +"-tile-content-email-data-title")
             .hide()
             .text(text)
             .fadeIn(1500)
@@ -1017,8 +1020,15 @@
             .attr("src", deviceImage)
             .fadeIn(1500)
         }
-        if ($("#" +"utility-" +value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){        
-          $("#" +"utility-" +value.idx +"-tile-content-email-data-lastupdate")
+        // Update the today counter in case of chage
+        if ($("#" +"utility-" +value.idx +"-tile-content-email-data-subtitle").text() != "Today: " +counterToday){
+          $("#" +"utility-" +value.idx +"-tile-content-email-data-subtitle")
+            .hide()
+            .text("Today: " +counterToday)
+            .fadeIn(1500)
+        }
+        if ($("#" +"utility-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+          $("#" +"utility-" +value.idx +"-tile-content-email-data-text")
             .hide()
             .text(value.LastUpdate)
             .fadeIn(1500)        
@@ -1027,35 +1037,36 @@
         if (value.Type == "Usage") {
           var currentPower = parseFloat(value.Data.split(' ')[0])
         }
-        if (value.Type == "Energy") {
-          var energyToday = parseFloat(value.CounterToday.split(' ')[0])
+//        if ((value.Type == "Energy") && (typeof(counterToday)  != "undefined")){
+        if (value.Type == "Energy"){
+          var energyToday = parseFloat(counterToday.split(' ')[0])
         }
         if (currentPower <= 50) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkGreen live")
         }          
-        if ((currentPower > 50) && (currentPower <= 500)) {
+        else if ((currentPower > 50) && (currentPower <= 500)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-green live")
         }          
-        if ((currentPower > 500) && (currentPower <= 1000)) {
+        else if ((currentPower > 500) && (currentPower <= 1000)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-orange live")
         }          
-        if ((currentPower > 1000) && (currentPower <= 1500)) {
+        else if ((currentPower > 1000) && (currentPower <= 1500)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkOrange live")
         }          
-        if ((currentPower > 1500) && (currentPower <= 2000)) {
+        else if ((currentPower > 1500) && (currentPower <= 2000)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkRed live")
         }
-        if (currentPower > 2000) {
+        else if (currentPower > 2000) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkViolet live")
@@ -1065,27 +1076,27 @@
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkGreen live")
         }          
-        if ((energyToday > 0.5) && (energyToday <= 1.0)) {
+        else if ((energyToday > 0.5) && (energyToday <= 1.0)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-green live")
         }          
-        if ((energyToday > 1.0) && (energyToday <= 1.5)) {
+        else if ((energyToday > 1.0) && (energyToday <= 1.5)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-orange live")
         }          
-        if ((energyToday > 1.5) && (energyToday <= 2.0)) {
+        else if ((energyToday > 1.5) && (energyToday <= 2.0)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkOrange live")
         }          
-        if ((energyToday > 2.0) && (energyToday <= 2.5)) {
+        else if ((energyToday > 2.0) && (energyToday <= 2.5)) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkRed live")
         }
-        if (energyToday > 2.5) {
+        else if (energyToday > 2.5) {
           $("#" +"utility-" +value.idx +"-tile")
             .removeClass($("#" +"utility-" +value.idx +"-tile").attr('class'))
             .addClass("tile double bg-darkViolet live")
@@ -1199,24 +1210,24 @@
             .appendTo("#" +"temp-" +value.idx +"-tile-content")
             .addClass("email-data")
           $("<span></span>")
-            .attr("id", "temp-" +value.idx +"-tile-content-email-data-status")
+            .attr("id", "temp-" +value.idx +"-tile-content-email-data-title")
             .appendTo("#" +"temp-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-title")
             .text(text)
           //$("<span></span>")
-          //  .attr("id", "temp-" +value.idx +"-tile-content-email-data-name")
+          //  .attr("id", "temp-" +value.idx +"-tile-content-email-data-subtitle")
           //  .appendTo("#" +"temp-" +value.idx +"-tile-content-email-data" )
           //  .addClass("email-data-subtitle fg-darkCobalt")
           //  .text(value.Name)
           $("<span></span>")
-            .attr("id", "temp-" +value.idx +"-tile-content-email-data-lastupdate")
+            .attr("id", "temp-" +value.idx +"-tile-content-email-data-text")
             .appendTo("#" +"temp-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-text fg-gray")
             .text(value.LastUpdate)
         }
         // update text if not the same
-        if ($("#" +"temp-" +value.idx +"-tile-content-email-data-status").text() != text){
-          $("#" +"temp-" +value.idx +"-tile-content-email-data-status")
+        if ($("#" +"temp-" +value.idx +"-tile-content-email-data-title").text() != text){
+          $("#" +"temp-" +value.idx +"-tile-content-email-data-title")
             .hide()
             .text(text)
             .fadeIn(1500)
@@ -1228,8 +1239,8 @@
             .attr("src", deviceImage)
             .fadeIn(1500)
         }
-        if ($("#" +"temp-" +value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){        
-          $("#" +"temp-" +value.idx +"-tile-content-email-data-lastupdate")
+        if ($("#" +"temp-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+          $("#" +"temp-" +value.idx +"-tile-content-email-data-text")
             .hide()
             .text(value.LastUpdate)
             .fadeIn(1500)        
@@ -1243,22 +1254,22 @@
               .removeClass($("#" +"temp-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-lightTeam live")
           }          
-          if ((currentTemp > 5) && (currentTemp <= 15)) {
+          else if ((currentTemp > 5) && (currentTemp <= 15)) {
             $("#" +"temp-" +value.idx +"-tile")
               .removeClass($("#" +"temp-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-lightBlue live")
           }          
-          if ((currentTemp > 15) && (currentTemp <= 25)) {
+          else if ((currentTemp > 15) && (currentTemp <= 25)) {
             $("#" +"temp-" +value.idx +"-tile")
               .removeClass($("#" +"temp-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-amber live")
           }          
-          if ((currentTemp > 25) && (currentTemp <= 35)) {
+          else if ((currentTemp > 25) && (currentTemp <= 35)) {
             $("#" +"temp-" +value.idx +"-tile")
               .removeClass($("#" +"temp-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-orange live")
           }          
-          if (currentTemp > 35) {
+          else if (currentTemp > 35) {
             $("#" +"temp-" +value.idx +"-tile")
               .removeClass($("#" +"temp-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-red live")
@@ -1391,24 +1402,24 @@
             .appendTo("#" +"weather-" +value.idx +"-tile-content")
             .addClass("email-data")
           $("<span></span>")
-            .attr("id", "weather-" +value.idx +"-tile-content-email-data-status")
+            .attr("id", "weather-" +value.idx +"-tile-content-email-data-title")
             .appendTo("#" +"weather-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-title")
             .text(text)
           //$("<span></span>")
-          //  .attr("id", "weather-" +value.idx +"-tile-content-email-data-name")
+          //  .attr("id", "weather-" +value.idx +"-tile-content-email-data-subtitle")
           //  .appendTo("#" +"weather-" +value.idx +"-tile-content-email-data" )
           //  .addClass("email-data-subtitle fg-darkCobalt")
           //  .text(value.Name)
           $("<span></span>")
-            .attr("id", "weather-" +value.idx +"-tile-content-email-data-lastupdate")
+            .attr("id", "weather-" +value.idx +"-tile-content-email-data-text")
             .appendTo("#" +"weather-" +value.idx +"-tile-content-email-data" )
             .addClass("email-data-text fg-gray")
             .text(value.LastUpdate)
         }
         // update text if not the same
-        if ($("#" +"weather-" +value.idx +"-tile-content-email-data-status").text() != text){
-          $("#" +"weather-" +value.idx +"-tile-content-email-data-status")
+        if ($("#" +"weather-" +value.idx +"-tile-content-email-data-title").text() != text){
+          $("#" +"weather-" +value.idx +"-tile-content-email-data-title")
             .hide()
             .text(text)
             .fadeIn(1500)
@@ -1420,8 +1431,8 @@
             .attr("src", deviceImage)
             .fadeIn(1500)
         }
-        if ($("#" +"weather-" +value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){        
-          $("#" +"weather-" +value.idx +"-tile-content-email-data-lastupdate")
+        if ($("#" +"weather-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+          $("#" +"weather-" +value.idx +"-tile-content-email-data-text")
             .hide()
             .text(value.LastUpdate)
             .fadeIn(1500)        
@@ -1435,22 +1446,22 @@
               .removeClass($("#" +"weather-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-lightTeam live")
           }          
-          if ((currentTemp > 5) && (currentTemp <= 15)) {
+          else if ((currentTemp > 5) && (currentTemp <= 15)) {
             $("#" +"weather-" +value.idx +"-tile")
               .removeClass($("#" +"weather-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-lightBlue live")
           }          
-          if ((currentTemp > 15) && (currentTemp <= 25)) {
+          else if ((currentTemp > 15) && (currentTemp <= 25)) {
             $("#" +"weather-" +value.idx +"-tile")
               .removeClass($("#" +"weather-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-amber live")
           }          
-          if ((currentTemp > 25) && (currentTemp <= 35)) {
+          else if ((currentTemp > 25) && (currentTemp <= 35)) {
             $("#" +"weather-" +value.idx +"-tile")
               .removeClass($("#" +"weather-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-orange live")
           }          
-          if (currentTemp > 35) {
+          else if (currentTemp > 35) {
             $("#" +"weather-" +value.idx +"-tile")
               .removeClass($("#" +"weather-" +value.idx +"-tile").attr('class'))
               .addClass("tile double bg-red live")
@@ -1747,24 +1758,24 @@
                 .appendTo("#" +value.idx +"-tile-content")
                 .addClass("email-data")
               $("<span></span>")
-                .attr("id", value.idx +"-tile-content-email-data-status")
+                .attr("id", value.idx +"-tile-content-email-data-title")
                 .appendTo("#" +value.idx +"-tile-content-email-data" )
                 .addClass("email-data-title")
                 .text(text)
               $("<span></span>")
-                .attr("id", value.idx +"-tile-content-email-data-status")
+                .attr("id", value.idx +"-tile-content-email-data-subtitle")
                 .appendTo("#" +value.idx +"-tile-content-email-data" )
                 .addClass("email-data-subtitle fg-darkCobalt")
                 .text(value.Name)
               $("<span></span>")
-                .attr("id", value.idx +"-tile-content-email-data-lastupdate")
+                .attr("id", value.idx +"-tile-content-email-data-text")
                 .appendTo("#" +value.idx +"-tile-content-email-data" )
                 .addClass("email-data-text fg-gray")
                 .text(value.LastUpdate)
             }
             // update text if not the same
-            if ($("#" +value.idx +"-tile-content-email-data-status").text() != text){
-              $("#" +value.idx +"-tile-content-email-data-status")
+            if ($("#" +value.idx +"-tile-content-email-data-title").text() != text){
+              $("#" +value.idx +"-tile-content-email-data-title")
                 .hide()
                 .text(text)
                 .fadeIn(1500)
@@ -1780,8 +1791,8 @@
                 .attr("src", deviceImage)
                 .fadeIn(1500)
             }
-            if ($("#" +value.idx +"-tile-content-email-data-lastupdate").text() != value.LastUpdate){        
-              $("#" +value.idx +"-tile-content-email-data-lastupdate")
+            if ($("#" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+              $("#" +value.idx +"-tile-content-email-data-text")
                 .hide()
                 .text(value.LastUpdate)
                 .fadeIn(1500)        
@@ -1800,27 +1811,27 @@
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-darkGreen live")
               }          
-              if ((currentPower > 50) && (currentPower <= 500)) {
+              else if ((currentPower > 50) && (currentPower <= 500)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-green live")
               }          
-              if ((currentPower > 500) && (currentPower <= 1000)) {
+              else if ((currentPower > 500) && (currentPower <= 1000)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-orange live")
               }          
-              if ((currentPower > 1000) && (currentPower <= 1500)) {
+              else if ((currentPower > 1000) && (currentPower <= 1500)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-darkOrange live")
               }          
-              if ((currentPower > 1500) && (currentPower <= 2000)) {
+              else if ((currentPower > 1500) && (currentPower <= 2000)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-darkRed live")
               }
-              if (currentPower > 2000) {
+              else if (currentPower > 2000) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-darkViolet live")
@@ -1833,22 +1844,22 @@
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-lightTeam live")
               }          
-              if ((currentTemp > 5) && (currentTemp <= 15)) {
+              else if ((currentTemp > 5) && (currentTemp <= 15)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-lightBlue live")
               }          
-              if ((currentTemp > 15) && (currentTemp <= 25)) {
+              else if ((currentTemp > 15) && (currentTemp <= 25)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-amber live")
               }          
-              if ((currentTemp > 25) && (currentTemp <= 35)) {
+              else if ((currentTemp > 25) && (currentTemp <= 35)) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-orange live")
               }          
-              if (currentTemp > 35) {
+              else if (currentTemp > 35) {
                 $("#" +virtualDeviceName +"-tile")
                   .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
                   .addClass("tile double bg-red live")
