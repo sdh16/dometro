@@ -698,28 +698,37 @@
   
   //Create a list of devices appended by VD Name and Type
   updateDevices = function(){
-    var col = 1;
+    timerUpdateDevices = setTimeout(updateDevices, 5000)
+    combinedDeviceList= []
     var userVariables = $.getUservariables()
-    userVariables.result.forEach(function(value, index){
-      var deviceidx = value.Value.split(",")
-      var virtualDeviceName = value.Name.split('_')[1];
-      for(i = 1; i < deviceidx.length; i++) {
-        var device = $.getDevice(deviceidx[i])
-        device.forEach(function(value, key){
-          //alert(value)
-          //value.add("Virtual Deivce Name", virtualDeviceName)
-          //value.add("Virtual Deivce Type", virtualDeviceName)
-        })
-      }    
+    userVariables.result.forEach(function(valueVirtualDevice, index){
+      if(valueVirtualDevice.Name.match(/vd_/)){    
+        var deviceidx = valueVirtualDevice.Value.split(",")
+        var virtualDeviceName = valueVirtualDevice.Name.split('_')[1];
+        var virtualDeviceType = deviceidx[0]
+        var virtualDeviceIndex = valueVirtualDevice.idx
+        var tempObj = {
+          VirtualDeivceName: virtualDeviceName,
+          VirtualDeivceType: virtualDeviceType,
+          VirtualDeiceIdx: virtualDeviceIndex
+        }
+        for(i = 1; i < deviceidx.length; i++) {
+          var device = $.getDevice(deviceidx[i])
+          var object = $.extend({}, device[0], tempObj);
+          combinedDeviceList.push(object)
+        }
+      }  
     })
+    //return combinedDeviceList  
   }
   
   //Create Lights Tab
   updateLights = function(){
     timerUpdateLights = setTimeout(updateLights, 5000)
 
-    var device = $.getUseddevices()
-    device.result.forEach(function(value, key){
+    //var device = $.getUseddevices()
+    device = combinedDeviceList
+    device.forEach(function(value, key){
       if(value.Type == "Lighting 2"){
         var switchType = value.SwitchType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var text = value.Status
