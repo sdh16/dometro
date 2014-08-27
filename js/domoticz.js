@@ -1497,22 +1497,20 @@
       }
     })
   }
-
+  
   //Create Dashboard Tab
   updateDashboard = function(){
     timerUpdateDashboard = setTimeout(updateDashboard, 5000)
-    var deviceidx
-    var deviceName
-    var vdidx
-    var domoticzUserVariables = $.getUservariables()
-    domoticzUserVariables.result.forEach(function(value, index){
-      if(value.Name.match(/vd_/)){
-        //var value = value.Value
-        vdidx = value.idx
-        deviceidx = value.Value.split(",")
-        deviceName = value.Name.split('_')[1];
-        var virtualDeviceType = deviceidx[0].replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+
+    device = combinedDeviceList
+    
+    device.forEach(function(value, key){
+    
+        var vdidx = value.VirtualDeiceIdx
+        var deviceName = value.VirtualDeivceName
+        var virtualDeviceType = value.VirtualDeivceType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+        
         // pretty cattegory labels AFTER defining
         switch(virtualDeviceType){
           case "Dimmer":
@@ -1590,7 +1588,8 @@
             .attr("id", "tile-area")
             .appendTo("#tab-Dashboard")
             .addClass("tile-area tile-area-darkTeal")
-          $("<h2></h2>")
+          $("<h1></h1>")
+            .attr("id", "tile-area-title")
             .appendTo("#tile-area")
             .addClass("tile-area-title fg-white")
             //.text("Dashboard")
@@ -1617,6 +1616,7 @@
             .attr("data-role","live-tile")
             .attr("data-effect","slideUpDown")
             .attr("data-click","transform")
+
         }
         if(!$("#" +virtualDeviceName +"-tile-brand").length){
           $("<div></div>")
@@ -1645,256 +1645,250 @@
           $("<span></span>")
             .attr("id", virtualDeviceName +"-tile-brand-badge-data")
             .appendTo("#" +virtualDeviceName +"-tile-brand-badge")
-            .text(deviceidx.length-1)
+            .text(value.idx)
         }
-        for(i = 1; i < deviceidx.length; i++) {
-          var device = $.getDevice(deviceidx[i])
-          device.forEach(function(value, key) {
-            //Use status for lighting devices and data for rest
-            switch(value.SwitchType){
-              case undefined:
-                var text = value.Data
+        //Use status for lighting devices and data for rest
+        switch(value.SwitchType){
+          case undefined:
+            var text = value.Data
+          break;
+          default:
+            var text = value.Status
+          break;
+        }
+        // Create Device Type icons
+        switch(value.Type){
+          //case "Dimmer":
+            //var deviceImage = "../images/dimmer48-on.png"
+          //break;
+          case "Rain":
+            var deviceImage = "../images/rain48.png"
+          break;
+          case "Wind":
+            var deviceImage = "../images/wind48.png"
+          break;
+          //case "Contact":
+            //var deviceImage = "../images/contact48.png"
+          //break;
+          case "Temp":
+            var deviceImage = "../images/temp48.png"
+          break;
+          case "Temp + Humidity":
+            var deviceImage = "../images/temp48.png"
+          break;
+          case "Temp + Humidity + Baro":
+            var deviceImage = "../images/gauge48.png"
+          break;
+          //case "SmokeDetector":
+            //var deviceImage = "../images/smoke48on.png"
+          //break;
+          case "Lighting 2":
+            switch (value.SwitchType) {
+              case "On/Off":
+                if (value.Status == "On")
+                  var deviceImage = "../images/Light48_On.png"
+                else
+                  var deviceImage = "../images/Light48_Off.png"
+              break;
+              case "Contact":
+                if (value.Status == "Open")
+                  var deviceImage = "../images/contact48_open.png"
+                else
+                  var deviceImage = "../images/contact48.png"
+              break;
+              case "Motion Sensor":
+                if (value.Status == "On")
+                  var deviceImage = "../images/motion48-on.png"
+                else
+                  var deviceImage = "../images/motion48-off.png"
+              break;
+              case "Smoke Detector":
+                if (value.Status == "On")
+                  var deviceImage = "../images/smoke48on.png"
+                else
+                  var deviceImage = "../images/smoke48off.png"
+              break;
+              case "Dimmer":
+                if (value.Status == "On")
+                  var deviceImage = "../images/dimmer48-on.png"
+                else
+                  var deviceImage = "../images/dimmer48-off.png"
               break;
               default:
-                var text = value.Status
+                var deviceImage = "icon-question"
               break;
             }
-            // Create Device Type icons
-            switch(value.Type){
-              //case "Dimmer":
-                //var deviceImage = "../images/dimmer48-on.png"
-              //break;
-              case "Rain":
-                var deviceImage = "../images/rain48.png"
+          break;
+          case "Security":
+            var deviceImage = "../images/security48.png"
+          break;
+          //case "DuskSensor":
+            //var deviceImage = "icon-sun-5"
+          //break;
+          case "General":
+            switch (value.SubType) {
+              case "Solar Radiation":
+                var deviceImage = "../images/radiation48.png"
               break;
-              case "Wind":
-                var deviceImage = "../images/wind48.png"
+              case "Percentage":
+                var deviceImage = "../images/Percentage48.png"
               break;
-              //case "Contact":
-                //var deviceImage = "../images/contact48.png"
-              //break;
-              case "Temp":
-                var deviceImage = "../images/temp48.png"
-              break;
-              case "Temp + Humidity":
-                var deviceImage = "../images/temp48.png"
-              break;
-              case "Temp + Humidity + Baro":
-                var deviceImage = "../images/gauge48.png"
-              break;
-              //case "SmokeDetector":
-                //var deviceImage = "../images/smoke48on.png"
-              //break;
-              case "Lighting 2":
-                switch (value.SwitchType) {
-                  case "On/Off":
-                    if (value.Status == "On")
-                      var deviceImage = "../images/Light48_On.png"
-                    else
-                      var deviceImage = "../images/Light48_Off.png"
-                  break;
-                  case "Contact":
-                    if (value.Status == "Open")
-                      var deviceImage = "../images/contact48_open.png"
-                    else
-                      var deviceImage = "../images/contact48.png"
-                  break;
-                  case "Motion Sensor":
-                    if (value.Status == "On")
-                      var deviceImage = "../images/motion48-on.png"
-                    else
-                      var deviceImage = "../images/motion48-off.png"
-                  break;
-                  case "Smoke Detector":
-                    if (value.Status == "On")
-                      var deviceImage = "../images/smoke48on.png"
-                    else
-                      var deviceImage = "../images/smoke48off.png"
-                  break;
-                  case "Dimmer":
-                    if (value.Status == "On")
-                      var deviceImage = "../images/dimmer48-on.png"
-                    else
-                      var deviceImage = "../images/dimmer48-off.png"
-                  break;
-                  default:
-                    var deviceImage = "icon-question"
-                  break;
-                }
-              break;
-              case "Security":
-                var deviceImage = "../images/security48.png"
-              break;
-              //case "DuskSensor":
-                //var deviceImage = "icon-sun-5"
-              //break;
-              case "General":
-                switch (value.SubType) {
-                  case "Solar Radiation":
-                    var deviceImage = "../images/radiation48.png"
-                  break;
-                  case "Percentage":
-                    var deviceImage = "../images/Percentage48.png"
-                  break;
-                }
-              break;
-              case "Usage":
-                var deviceImage = "../images/current48.png"
-              break;
-              case "Energy":
-                var deviceImage = "../images/current48.png"
-              break;
-              //case "MotionSensor":
-                //var deviceImage = "../images/motion48-on.png"
-              //break;
-              case "Lux":
-                var deviceImage = "../images/lux48.png"
-              break;
-                    //case "Weather":
-                //var deviceImage = "icon-weather"
-              //break;
-              default:
-                var deviceImage = "icon-none"
-              break;      
-            }  
-            // add a tile content block each real device in the virtual device tile
-            if(!$("#" +value.idx +"-tile-content").length){
-              $("<div></div>")
-              .attr("id", value.idx +"-tile-content")
-              .appendTo("#" +virtualDeviceName +"-tile")
-              .addClass("tile-content email")
             }
+          break;
+          case "Usage":
+            var deviceImage = "../images/current48.png"
+          break;
+          case "Energy":
+            var deviceImage = "../images/current48.png"
+          break;
+          //case "MotionSensor":
+            //var deviceImage = "../images/motion48-on.png"
+          //break;
+          case "Lux":
+            var deviceImage = "../images/lux48.png"
+          break;
+          //case "Weather":
+            //var deviceImage = "icon-weather"
+          //break;
+          default:
+            var deviceImage = "icon-none"
+          break;      
+        }  
+        // add a tile content block each real device in the virtual device tile
+        if(!$("#" +value.idx +"-tile-content").length){
+          $("<div></div>")
+            .attr("id", value.idx +"-tile-content")
+            .appendTo("#" +virtualDeviceName +"-tile")
+            .addClass("tile-content email")
+        }
         
-            // add the icon and value
-            if(!$("#" +value.idx +"-tile-content-email-image").length){
-              $("<div></div>")
-                .attr("id", value.idx +"-tile-content-email-image")
-                .appendTo("#" +value.idx +"-tile-content")
-                .addClass("email-image")
-                //.addClass(deviceImage)
-              $("<img></img>")
-                .attr("id", value.idx +"-tile-content-email-image-data")
-                .appendTo("#" +value.idx +"-tile-content-email-image")
-                .attr("src", deviceImage)
-            }      
-            if(!$("#" +value.idx +"-tile-content-email-data").length){
-              // add data or status
-              $("<div></div>")
-                .attr("id", value.idx +"-tile-content-email-data")
-                .appendTo("#" +value.idx +"-tile-content")
-                .addClass("email-data")
-              $("<span></span>")
-                .attr("id", value.idx +"-tile-content-email-data-title")
-                .appendTo("#" +value.idx +"-tile-content-email-data" )
-                .addClass("email-data-title")
-                .text(text)
-              $("<span></span>")
-                .attr("id", value.idx +"-tile-content-email-data-subtitle")
-                .appendTo("#" +value.idx +"-tile-content-email-data" )
-                .addClass("email-data-subtitle fg-darkCobalt")
-                .text(value.Name)
-              $("<span></span>")
-                .attr("id", value.idx +"-tile-content-email-data-text")
-                .appendTo("#" +value.idx +"-tile-content-email-data" )
-                .addClass("email-data-text fg-gray")
-                .text(value.LastUpdate)
-            }
-            // update text if not the same
-            if ($("#" +value.idx +"-tile-content-email-data-title").text() != text){
-              $("#" +value.idx +"-tile-content-email-data-title")
-                .hide()
-                .text(text)
-                .fadeIn(1500)
-              setTimeout(function(){
-                $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
-              }, 3000);
-                
-            }
-            // Update the image in case of status chage
-            if ($("#" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
-              $("#" +value.idx +"-tile-content-email-image-data")
-                .hide()
-                .attr("src", deviceImage)
-                .fadeIn(1500)
-            }
-            if ($("#" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
-              $("#" +value.idx +"-tile-content-email-data-text")
-                .hide()
-                .text(value.LastUpdate)
-                .fadeIn(1500)        
-            }
-            //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
-            //  $("#BatteryStatus-"+value.idx)
-            //  .hide()
-            //  .text(value.BatteryStatus)
-            //  .fadeIn(1500)
-            //}
-            // Update the tile color
-            if (value.Type == "Usage") {
-              var currentPower = parseFloat(value.Data.split(' ')[0])
-              if (currentPower <= 50) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-darkGreen live")
-              }          
-              else if ((currentPower > 50) && (currentPower <= 500)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-green live")
-              }          
-              else if ((currentPower > 500) && (currentPower <= 1000)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-orange live")
-              }          
-              else if ((currentPower > 1000) && (currentPower <= 1500)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-darkOrange live")
-              }          
-              else if ((currentPower > 1500) && (currentPower <= 2000)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-darkRed live")
-              }
-              else if (currentPower > 2000) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-darkViolet live")
-              }          
-            }
-            if ((value.Type == "Temp") || (value.Type == "Temp + Humidity")) {
-              var currentTemp = parseFloat(value.Data.split(' ')[0])
-              if (currentTemp <= 5) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-lightTeam live")
-              }          
-              else if ((currentTemp > 5) && (currentTemp <= 15)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-lightBlue live")
-              }          
-              else if ((currentTemp > 15) && (currentTemp <= 25)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-amber live")
-              }          
-              else if ((currentTemp > 25) && (currentTemp <= 35)) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-orange live")
-              }          
-              else if (currentTemp > 35) {
-                $("#" +virtualDeviceName +"-tile")
-                  .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-                  .addClass("tile double bg-red live")
-              }          
-            }
-          })
+        // add the icon and value
+        if(!$("#" +value.idx +"-tile-content-email-image").length){
+          $("<div></div>")
+            .attr("id", value.idx +"-tile-content-email-image")
+            .appendTo("#" +value.idx +"-tile-content")
+            .addClass("email-image")
+            //.addClass(deviceImage)
+          $("<img></img>")
+            .attr("id", value.idx +"-tile-content-email-image-data")
+            .appendTo("#" +value.idx +"-tile-content-email-image")
+            .attr("src", deviceImage)
+        }      
+        if(!$("#" +value.idx +"-tile-content-email-data").length){
+          // add data or status
+          $("<div></div>")
+            .attr("id", value.idx +"-tile-content-email-data")
+            .appendTo("#" +value.idx +"-tile-content")
+            .addClass("email-data")
+          $("<span></span>")
+            .attr("id", value.idx +"-tile-content-email-data-title")
+            .appendTo("#" +value.idx +"-tile-content-email-data" )
+            .addClass("email-data-title")
+            .text(text)
+          $("<span></span>")
+            .attr("id", value.idx +"-tile-content-email-data-subtitle")
+            .appendTo("#" +value.idx +"-tile-content-email-data" )
+            .addClass("email-data-subtitle fg-darkCobalt")
+            .text(value.Name)
+          $("<span></span>")
+            .attr("id", value.idx +"-tile-content-email-data-text")
+            .appendTo("#" +value.idx +"-tile-content-email-data" )
+            .addClass("email-data-text fg-gray")
+            .text(value.LastUpdate)
         }
-      }
-    })
+        // update text if not the same
+        if ($("#" +value.idx +"-tile-content-email-data-title").text() != text){
+          $("#" +value.idx +"-tile-content-email-data-title")
+            .hide()
+            .text(text)
+            .fadeIn(1500)
+          setTimeout(function(){
+            $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+          }, 3000);
+                
+        }
+        // Update the image in case of status chage
+        if ($("#" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
+          $("#" +value.idx +"-tile-content-email-image-data")
+            .hide()
+            .attr("src", deviceImage)
+            .fadeIn(1500)
+        }
+        if ($("#" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+          $("#" +value.idx +"-tile-content-email-data-text")
+            .hide()
+            .text(value.LastUpdate)
+            .fadeIn(1500)        
+        }
+        //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
+        //  $("#BatteryStatus-"+value.idx)
+        //  .hide()
+        //  .text(value.BatteryStatus)
+        //  .fadeIn(1500)
+        //}
+        // Update the tile color
+        if (value.Type == "Usage") {
+          var currentPower = parseFloat(value.Data.split(' ')[0])
+          if (currentPower <= 50) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-darkGreen live")
+          }          
+          else if ((currentPower > 50) && (currentPower <= 500)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-green live")
+          }          
+          else if ((currentPower > 500) && (currentPower <= 1000)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-orange live")
+          }          
+          else if ((currentPower > 1000) && (currentPower <= 1500)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-darkOrange live")
+          }          
+          else if ((currentPower > 1500) && (currentPower <= 2000)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-darkRed live")
+          }
+          else if (currentPower > 2000) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-darkViolet live")
+          }          
+        }
+        if ((value.Type == "Temp") || (value.Type == "Temp + Humidity")) {
+          var currentTemp = parseFloat(value.Data.split(' ')[0])
+          if (currentTemp <= 5) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-lightTeam live")
+          }          
+          else if ((currentTemp > 5) && (currentTemp <= 15)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-lightBlue live")
+          }          
+          else if ((currentTemp > 15) && (currentTemp <= 25)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-amber live")
+          }          
+          else if ((currentTemp > 25) && (currentTemp <= 35)) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-orange live")
+          }          
+          else if (currentTemp > 35) {
+            $("#" +virtualDeviceName +"-tile")
+              .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+              .addClass("tile double bg-red live")
+          }          
+        }
+    })        
   }
 }(jQuery, window, document));
 
