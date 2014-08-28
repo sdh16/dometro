@@ -447,10 +447,11 @@
       //  .fadeIn(1500)
       //}
       // Update the tile color
-      $("#" +virtualDeviceName +"-tile")
-        .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-        .addClass("tile double live " +tileColor)
-   
+      if ((value.Type == "Usage") || (value.Type == "Temp") || (value.Type == "Temp + Humidity")) {
+        $("#" +virtualDeviceName +"-tile")
+          .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
+          .addClass("tile double live " +tileColor)
+      }
     })
   }
   
