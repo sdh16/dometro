@@ -133,6 +133,30 @@
     return result;
   }
 
+  //update light switch
+  $.updateLightSwitch = function(idx, switchcmd, level){
+    var result = [];
+    $.ajax({
+      url: '/json.htm?type=command&param=switchlight&idx='+idx+'&switchcmd='+switchcmd+'&level='+level,
+      async: false,
+      dataType: 'json',
+      success: function (json) {
+        result = json;
+      }
+    });
+    return result;
+  }
+  
+  tileClickFunction = function(obj){
+  	var idx = $(obj).data("deviceIdx")
+  	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
+  	$.updateLightSwitch(idx,switchcmd)
+  	//store the new switch state in the object
+  	$(obj).data("deviceStatus", switchcmd)
+  }
+  
+  
+  
   // Funtions for the webinterface
   
   // fix forecastIO implementation ;)
@@ -213,6 +237,7 @@
     refreshTabs() 
   }
   
+  
   refreshTabs = function(){
     // Refresh DOM objects showing data
     var device = combinedDeviceList
@@ -237,10 +262,10 @@
       if (value.Type == "Usage") {
         var currentPower = parseFloat(value.Data.split(' ')[0])
         if (currentPower <= 50) {
-          tileColor = "bg-darkGreen"
+          tileColor = "bg-green"
         }          
         else if ((currentPower > 50) && (currentPower <= 500)) {
-          tileColor = "bg-green"
+          tileColor = "bg-lime"
         }          
         else if ((currentPower > 500) && (currentPower <= 1000)) {
           tileColor = "bg-orange"
@@ -252,16 +277,16 @@
           tileColor = "bg-darkRed"
         }
         else if (currentPower > 2000) {
-          tileColor = "bg-darkViolet"
+          tileColor = "bg-violet"
         }        
       }
       else if (value.Type == "Energy"){
         var energyToday = parseFloat(counterToday.split(' ')[0])
         if (energyToday <= 0.5) {
-          tileColor = "bg-darkGreen"
+          tileColor = "bg-green"
         }          
         else if ((energyToday > 0.5) && (energyToday <= 1.0)) {
-          tileColor = "bg-green"
+          tileColor = "bg-lime"
         }          
         else if ((energyToday > 1.0) && (energyToday <= 1.5)) {
           tileColor = "bg-orange"
@@ -273,7 +298,7 @@
           tileColor = "bg-darkRed"
         }
         else if (energyToday > 2.5) {
-          tileColor = "bg-darkViolet"
+          tileColor = "bg-violet"
         }         
       }
       else if ((value.Type == "Temp") || (value.Type == "Temp + Humidity") || (value.Type == "Temp + Humidity + Baro")) {
@@ -295,15 +320,44 @@
         }        
       }   
       else if (value.Type == "Lighting 2"){
-        if ((text == "On") || (text == "Closed")) {
-          tileColor = "bg-green"
-        }          
-        else if ((text == "Off") || (text == "Open")) {
-          tileColor = "bg-red"
+        switch (value.SwitchType){
+          case "On/Off":
+            if (text == "On")
+              tileColor = "bg-green"
+            else
+              tileColor = "bg-red"
+          break;
+          case "Contact":
+            if (text == "Open")
+              tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
+          break;
+          case "Motion Sensor":
+            if (text == "On")
+              tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
+          break;
+          case "Smoke Detector":
+            if (text == "On")
+              tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
+            break;
+          case "Dimmer":
+            if (text == "On")
+              tileColor = "bg-green"
+            else
+              tileColor = "bg-red"
+          break;
+          default:
+              tileColor = "bg-lightBlue"
+          break;    
         }
       }
       else {
-        tileColor = "bg-blue"
+        tileColor = "bg-lightBlue"
       }      
                   
 
@@ -1065,13 +1119,14 @@
       if(value.Type == "Lighting 2"){
         var switchType = value.SwitchType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var text = value.Status
+        var idx = value.idx
         var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       
         if(!$("#" +"lights-tile-area").length) {
           $("<div></div>")
             .attr("id", "lights-tile-area")
             .appendTo("#tab-Lights")
-            .addClass("tile-area tile-area-darkTeal")
+            .addClass("tile-area tile-area-dark")
           $("<h2></h2>")
             .appendTo("#lights-tile-area")
             .addClass("tile-area-title fg-white")
@@ -1097,7 +1152,11 @@
             .addClass("tile double bg-lightBlue live")
             .attr("data-role","live-tile")
             .attr("data-effect","slideUpDown")
-            .attr("data-click","transform")
+            .data("deviceIdx", value.idx)
+            .data("deviceStatus", text)
+            //.attr("data-click","transform")
+            //.attr("draggable","true")
+            .attr("onclick", "tileClickFunction(this)")
         }
         if(!$("#" +"lights-" +value.idx +"-tile-brand").length){
           $("<div></div>")
@@ -1189,7 +1248,7 @@
           $("<div></div>")
             .attr("id", "utility-tile-area")
             .appendTo("#tab-Utility")
-            .addClass("tile-area tile-area-darkTeal")
+            .addClass("tile-area tile-area-dark")
           $("<h2></h2>")
             .appendTo("#utility-tile-area")
             .addClass("tile-area-title fg-white")
@@ -1306,7 +1365,7 @@
           $("<div></div>")
             .attr("id", "temp-tile-area")
             .appendTo("#tab-Temp")
-            .addClass("tile-area tile-area-darkTeal")
+            .addClass("tile-area tile-area-dark")
           $("<h2></h2>")
             .appendTo("#temp-tile-area")
             .addClass("tile-area-title fg-white")
@@ -1423,7 +1482,7 @@
           $("<div></div>")
             .attr("id", "weather-tile-area")
             .appendTo("#tab-Weather")
-            .addClass("tile-area tile-area-darkTeal")
+            .addClass("tile-area tile-area-dark")
           $("<h2></h2>")
             .appendTo("#weather-tile-area")
             .addClass("tile-area-title fg-white")
@@ -1621,7 +1680,7 @@
         $("<div></div>")
           .attr("id", "tile-area")
           .appendTo("#tab-Dashboard")
-          .addClass("tile-area tile-area-darkTeal")
+          .addClass("tile-area tile-area-dark")
         $("<h1></h1>")
           .attr("id", "tile-area-title")
           .appendTo("#tile-area")
