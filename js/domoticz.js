@@ -57,6 +57,20 @@
     return device.result;
   }
 
+  // get all scenes
+  $.getScenes = function(){
+    var scenes = [];
+    $.ajax({
+      url: '/json.htm?type=scenes',
+      async: false,
+      dataType: 'json',
+      success: function (json) {
+        scenes = json;
+      }
+    });
+    return scenes;
+  }
+
   //get all uservariables return as array
   $.getUservariables = function() {
     var userVariables = [];
@@ -147,7 +161,21 @@
     return result;
   }
   
-  tileClickFunction = function(obj){
+  //update light switch
+  $.updateScene = function(idx, switchcmd){
+    var result = [];
+    $.ajax({
+      url: '/json.htm?type=command&param=switchscene&idx='+idx+'&switchcmd='+switchcmd,
+      async: false,
+      dataType: 'json',
+      success: function (json) {
+        result = json;
+      }
+    });
+    return result;
+  }
+  
+  switchLights = function(obj){
   	var idx = $(obj).data("deviceIdx")
   	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
   	$.updateLightSwitch(idx,switchcmd)
@@ -155,6 +183,13 @@
   	$(obj).data("deviceStatus", switchcmd)
   }
   
+  switchScenes = function(obj){
+  	var idx = $(obj).data("deviceIdx")
+  	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
+  	$.updateScene(idx,switchcmd)
+  	//store the new switch state in the object
+  	$(obj).data("deviceStatus", switchcmd)
+  }
   
   
   // Funtions for the webinterface
@@ -235,6 +270,7 @@
     })
     //return combinedDeviceList 
     refreshTabs() 
+    updateScenes()
   }
   
   
@@ -346,10 +382,10 @@
               tileColor = "bg-green"
             break;
           case "Dimmer":
-            if (text == "On")
-              tileColor = "bg-green"
-            else
+            if (text == "Off")
               tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
           break;
           default:
               tileColor = "bg-lightBlue"
@@ -364,6 +400,7 @@
 
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      
       // update text if not the same
       if ($("#" +"lights-" +value.idx +"-tile-content-email-data-title").text() != text){
         $("#" +"lights-" +value.idx +"-tile-content-email-data-title")
@@ -538,6 +575,18 @@
       case "Security":
         var deviceImage = "../images/security48.png"
       break;
+      case "Scene":
+        if (currentValue == "On")
+          var deviceImage = "../images/pushon48.png"
+        else
+          var deviceImage = "../images/pushoff48.png"
+      break;
+      case "Group":
+        if (currentValue == "On")
+          var deviceImage = "../images/pushon48.png"
+        else
+          var deviceImage = "../images/pushoff48.png"
+      break;
       case "General":
         switch (deviceSubType) {
           case "Solar Radiation":
@@ -575,10 +624,10 @@
               var deviceImage = "../images/smoke48off.png"
             break;
           case "Dimmer":
-            if (currentValue == "On")
-              var deviceImage = "../images/dimmer48-on.png"
-            else
+            if (currentValue == "Off")
               var deviceImage = "../images/dimmer48-off.png"
+            else
+              var deviceImage = "../images/dimmer48-on.png"
           break;
           default:
             var deviceImage = "../images/iphone-icon.png"
@@ -1109,6 +1158,151 @@
       .text("Widgets")
   }
   
+  //Create Scenes Tab
+  updateScenes = function(){
+    //timerUpdateLights = setTimeout(updateLights, 5000)
+
+    var scenes = $.getScenes()
+    scenes.result.forEach(function(value, key){
+      if((value.Type == "Scene") || (value.Type == "Group")){
+        var text = value.Status
+        var idx = value.idx
+        var sceneType = value.Type
+        var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      
+        if(!$("#" +"scenes-tile-area").length) {
+          $("<div></div>")
+            .attr("id", "scenes-tile-area")
+            .appendTo("#tab-Scenes")
+            .addClass("tile-area tile-area-dark")
+          $("<h2></h2>")
+            .appendTo("#scenes-tile-area")
+            .addClass("tile-area-title fg-white")
+            //.text("scenes")
+        }
+        if(!$("#" +"scenes-" +sceneType +"-tile-group").length) {
+          $("<div></div>")
+            .attr("id", "scenes-" +sceneType +"-tile-group")
+            .appendTo("#scenes-tile-area")
+            .addClass("tile-group")
+          $("<div></div>")
+            .attr("id", "scenes-tile-group-title")
+            .appendTo("#" +"scenes-" +sceneType +"-tile-group")
+            .addClass("tile-group-title")
+            .text(sceneType)
+        }
+        // create a tile for each virtual device
+        if(!$("#" +"scenes-" +value.idx +"-tile").length) {
+          // Create the tile for the virtual deivce
+          $("<a></a>")
+            .attr("id", "scenes-" +value.idx +"-tile")
+            .appendTo("#" +"scenes-" +sceneType +"-tile-group")
+            .addClass("tile double bg-lightBlue live")
+            .attr("data-role","live-tile")
+            .attr("data-effect","slideUpDown")
+            .data("deviceIdx", value.idx)
+            .data("deviceStatus", text)
+            //.attr("data-click","transform")
+            //.attr("draggable","true")
+            .attr("onclick", "switchScenes(this)")
+        }
+        if(!$("#" +"scenes-" +value.idx +"-tile-brand").length){
+          $("<div></div>")
+            .attr("id", "scenes-" +value.idx +"-tile-brand")
+            .appendTo("#" +"scenes-" +value.idx +"-tile")
+            .addClass("brand")
+          $("<div></div>")
+            .attr("id", "scenes-" +value.idx +"-tile-brand-label")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-brand")
+            .addClass("label")
+          $("<div></div>")
+            .attr("id", "scenes-" +value.idx +"-tile-brand-label-heading")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-brand-label")
+            .addClass("no-margin fg-white")
+            .text(value.Name)
+          $("<div></div>")
+            .attr("id", "scenes-" +value.idx +"-tile-brand-badge")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-brand")
+            .addClass("badge")
+          $("<span></span>")
+            .attr("id", "scenes-" +value.idx +"-tile-brand-badge-data")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-brand-badge")
+            .text(value.idx)
+        }
+
+        // add a tile content block each real device in the virtual device tile
+        if(!$("#" +"scenes-" +value.idx +"-tile-content").length){
+          $("<div></div>")
+          .attr("id", "scenes-" +value.idx +"-tile-content")
+          .appendTo("#" +"scenes-" +value.idx +"-tile")
+          .addClass("tile-content email")
+          .attr("style", "display: block;")
+        }
+    
+        // add the icon and value
+        if(!$("#" +"scenes-" +value.idx +"-tile-content-email-image").length){
+          $("<div></div>")
+            .attr("id", "scenes-" +value.idx +"-tile-content-email-image")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-content")
+            .addClass("email-image")
+          $("<img></img>")
+            .attr("id", "scenes-" +value.idx +"-tile-content-email-image-data")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-content-email-image")
+            .attr("src", deviceImage)
+        }      
+        if(!$("#" +"scenes-" +value.idx +"-tile-content-email-data").length){
+          // add data or status
+          $("<div></div>")
+            .attr("id", "scenes-" +value.idx +"-tile-content-email-data")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-content")
+            .addClass("email-data")
+          $("<span></span>")
+            .attr("id", "scenes-" +value.idx +"-tile-content-email-data-title")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-content-email-data" )
+            .addClass("email-data-title")
+            .text(text)
+          //$("<span></span>")
+          //  .attr("id", "scenes-" +value.idx +"-tile-content-email-data-subtitle")
+          //  .appendTo("#" +"scenes-" +value.idx +"-tile-content-email-data" )
+          //  .addClass("email-data-subtitle fg-darkCobalt")
+          //  .text(value.Name)
+          $("<span></span>")
+            .attr("id", "scenes-" +value.idx +"-tile-content-email-data-text")
+            .appendTo("#" +"scenes-" +value.idx +"-tile-content-email-data" )
+            .addClass("email-data-text fg-gray")
+            .text(value.LastUpdate)
+        }    
+      // update text if not the same
+      if ($("#" +"scenes-" +value.idx +"-tile-content-email-data-title").text() != text){
+        $("#" +"scenes-" +value.idx +"-tile-content-email-data-title")
+          .hide()
+          .text(text)
+          .fadeIn(1500)
+      }
+      if ($("#" +"scenes-" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
+        $("#" +"scenes-" +value.idx +"-tile-content-email-image-data")
+          .hide()
+          .attr("src", deviceImage)
+          .fadeIn(1500)
+      }
+      if ($("#" +"scenes-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
+        $("#" +"scenes-" +value.idx +"-tile-content-email-data-text")
+          .hide()
+          .text(value.LastUpdate)
+          .fadeIn(1500)        
+      }
+      // Update the tile color
+      //$("#" +"scenes-" +value.idx +"-tile")
+      //  .removeClass($("#" +"scenes-" +value.idx +"-tile").attr('class'))
+      //  .addClass("tile double live " +tileColor)
+        
+      
+            
+      }
+    })
+  }
+  
+  
   //Create Lights Tab
   updateLights = function(){
     //timerUpdateLights = setTimeout(updateLights, 5000)
@@ -1154,9 +1348,10 @@
             .attr("data-effect","slideUpDown")
             .data("deviceIdx", value.idx)
             .data("deviceStatus", text)
+            .data("deviceSetLevel", value.LevelInt)
             //.attr("data-click","transform")
             //.attr("draggable","true")
-            .attr("onclick", "tileClickFunction(this)")
+            .attr("onclick", "switchLights(this)")
         }
         if(!$("#" +"lights-" +value.idx +"-tile-brand").length){
           $("<div></div>")
@@ -1803,6 +1998,8 @@ $(document).ready(function() {
   updateTemp()
 
   updateWeather()
+  
+  updateScenes()
 
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
@@ -1829,6 +2026,10 @@ $(document).ready(function() {
       break;
       case "#tab-Weather":
         updateWeather()
+        //$.StartScreen()
+      break;
+      case "#tab-Scenes":
+        updateScenes()
         //$.StartScreen()
       break;
       default:
