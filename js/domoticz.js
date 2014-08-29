@@ -320,15 +320,44 @@
         }        
       }   
       else if (value.Type == "Lighting 2"){
-        if ((text == "On") || (text == "Closed")) {
-          tileColor = "bg-green"
-        }          
-        else if ((text == "Off") || (text == "Open")) {
-          tileColor = "bg-red"
+        switch (value.SwitchType){
+          case "On/Off":
+            if (text == "On")
+              tileColor = "bg-green"
+            else
+              tileColor = "bg-red"
+          break;
+          case "Contact":
+            if (text == "Open")
+              tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
+          break;
+          case "Motion Sensor":
+            if (text == "On")
+              tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
+          break;
+          case "Smoke Detector":
+            if (text == "On")
+              tileColor = "bg-red"
+            else
+              tileColor = "bg-green"
+            break;
+          case "Dimmer":
+            if (text == "On")
+              tileColor = "bg-green"
+            else
+              tileColor = "bg-red"
+          break;
+          default:
+              tileColor = "bg-lightBlue"
+          break;    
         }
       }
       else {
-        tileColor = "bg-blue"
+        tileColor = "bg-lightBlue"
       }      
                   
 
