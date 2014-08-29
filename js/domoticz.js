@@ -342,50 +342,59 @@
         if (currentTemp <= 5) {
           tileColor = "bg-lightTeal"
         }
-        else if ((currentTemp > 5) && (currentTemp <= 15)) {
+        else if ((currentTemp > 5) && (currentTemp <= 10)) {
           tileColor = "bg-lightBlue"
         }          
-        else if ((currentTemp > 15) && (currentTemp <= 25)) {
+        else if ((currentTemp > 10) && (currentTemp <= 15)) {
+          tileColor = "bg-lightGreen"
+        }          
+        else if ((currentTemp > 15) && (currentTemp <= 20)) {
+          tileColor = "bg-yellow"
+        }          
+        else if ((currentTemp > 20) && (currentTemp <= 25)) {
           tileColor = "bg-amber"
         }          
-        else if ((currentTemp > 25) && (currentTemp <= 35)) {
+        else if ((currentTemp > 25) && (currentTemp <= 30)) {
           tileColor = "bg-orange"
         }          
-        else if (currentTemp > 35) {
-          tileColor = "bg-red"
-        }        
+        else if (currentTemp > 30) {
+          tileColor = "bg-lightRed"
+        }
+        else {
+          tileColor = "bg-lightBlue"
+        }    
       }   
       else if (value.Type == "Lighting 2"){
         switch (value.SwitchType){
           case "On/Off":
             if (text == "On")
-              tileColor = "bg-green"
+              tileColor = "bg-lightRed"
             else
-              tileColor = "bg-red"
+              tileColor = "bg-lightGreen"
           break;
           case "Contact":
             if (text == "Open")
-              tileColor = "bg-red"
+              tileColor = "bg-lightRed"
             else
-              tileColor = "bg-green"
+              tileColor = "bg-lightGreen"
           break;
           case "Motion Sensor":
             if (text == "On")
-              tileColor = "bg-red"
+              tileColor = "bg-lightRed"
             else
-              tileColor = "bg-green"
+              tileColor = "bg-lightGreen"
           break;
           case "Smoke Detector":
             if (text == "On")
-              tileColor = "bg-red"
+              tileColor = "bg-lightRed"
             else
-              tileColor = "bg-green"
+              tileColor = "bg-lightGreen"
             break;
           case "Dimmer":
             if (text == "Off")
-              tileColor = "bg-red"
+              tileColor = "bg-lightGreen"
             else
-              tileColor = "bg-green"
+              tileColor = "bg-lightRed"
           break;
           default:
               tileColor = "bg-lightBlue"
@@ -555,14 +564,37 @@
         var deviceImage = "../images/current48.png"
       break;
       case "Temp":
-        var deviceImage = "../images/temp48.png"
-      break;
       case "Temp + Humidity":
-        var deviceImage = "../images/temp48.png"
-      break;
       case "Temp + Humidity + Baro":
-        var deviceImage = "../images/gauge48.png"
+        var currentTemp = parseFloat(currentValue.split(' ')[0])
+        if (currentTemp <= 5) {
+          var deviceImage = "../images/temp-0-5.png"
+        }
+        else if ((currentTemp > 5) && (currentTemp <= 10)) {
+          var deviceImage = "../images/temp-5-10.png"
+        }          
+        else if ((currentTemp > 10) && (currentTemp <= 15)) {
+          var deviceImage = "../images/temp-10-15.png"
+        }          
+        else if ((currentTemp > 15) && (currentTemp <= 20)) {
+          var deviceImage = "../images/temp-15-20.png"
+        }          
+        else if ((currentTemp > 20) && (currentTemp <= 25)) {
+          var deviceImage = "../images/temp-20-25.png"
+        }          
+        else if ((currentTemp > 25) && (currentTemp <= 30)) {
+          var deviceImage = "../images/temp-25-30.png"
+        }          
+        else if (currentTemp > 30) {
+          var deviceImage = "../images/temp-gt-30.png"
+        }        
       break;
+      //case "Temp + Humidity":
+      //  var deviceImage = "../images/temp48.png"
+      //break;
+      //case "Temp + Humidity + Baro":
+      //  var deviceImage = "../images/gauge48.png"
+      //break;
       case "Rain":
         var deviceImage = "../images/rain48.png"
       break;
@@ -726,7 +758,7 @@
     SetupTabs.Variables = 1
     SetupTabs.Devices = 1
     SetupTabs.Links = 0
-    SetupTabs.Magic = 1
+    SetupTabs.Magic = 0
   
     
     $("<div></div>")
