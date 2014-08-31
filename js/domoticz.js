@@ -1463,7 +1463,14 @@
     device = combinedDeviceList
     
     device.forEach(function(value, key){
-      if((value.Type == "Usage") || (value.Type == "Energy")){
+      if((value.Type == "Usage") || (value.Type == "Energy") || 
+         (value.SubType == "Gas")||(value.SubType == "RFXMeter counter") || 
+         (value.Type == "Current")||(value.Type == "Current/Energy") || 
+         (value.Type == "Fan") || (value.SubType == "Percentage") ||
+         (value.Type == "Air Quality") || (value.SubType == "Soil Moisture") ||
+         (value.SubType == "Leaf Wetness") || (value.Type == "Lux") ||
+         (value.SubType == "Voltage")||(value.SubType == "A/D")||(value.SubType == "Pressure") ||
+         (value.Type == "Weight") || ((value.Type == "Thermostat")&&(value.SubType=="SetPoint"))) {
         var deviceType = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
         var text = value.Data
         var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
