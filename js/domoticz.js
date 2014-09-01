@@ -280,6 +280,10 @@
     device.forEach(function(value, key){
       var deviceName = value.VirtualDeivceName
       var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+      var counterToday = value.CounterToday
+      if (typeof(counterToday)  === "undefined"){
+        counterToday = "0.0 kWh"
+      }
     
       //Use status for lighting devices and data for rest
       switch(value.SwitchType){
@@ -290,125 +294,12 @@
           var text = value.Status
         break;
       }
-      var tileColor
-      var counterToday = value.CounterToday
-      if (typeof(counterToday)  === "undefined"){
-        counterToday = "0.0 kWh"
-      }
-      if (value.Type == "Usage") {
-        var currentPower = parseFloat(value.Data.split(' ')[0])
-        if (currentPower <= 50) {
-          tileColor = "bg-green"
-        }          
-        else if ((currentPower > 50) && (currentPower <= 500)) {
-          tileColor = "bg-lime"
-        }          
-        else if ((currentPower > 500) && (currentPower <= 1000)) {
-          tileColor = "bg-orange"
-        }          
-        else if ((currentPower > 1000) && (currentPower <= 1500)) {
-          tileColor = "bg-darkOrange"
-        }          
-        else if ((currentPower > 1500) && (currentPower <= 2000)) {
-          tileColor = "bg-darkRed"
-        }
-        else if (currentPower > 2000) {
-          tileColor = "bg-violet"
-        }        
-      }
-      else if (value.Type == "Energy"){
-        var energyToday = parseFloat(counterToday.split(' ')[0])
-        if (energyToday <= 0.5) {
-          tileColor = "bg-green"
-        }          
-        else if ((energyToday > 0.5) && (energyToday <= 1.0)) {
-          tileColor = "bg-lime"
-        }          
-        else if ((energyToday > 1.0) && (energyToday <= 1.5)) {
-          tileColor = "bg-orange"
-        }          
-        else if ((energyToday > 1.5) && (energyToday <= 2.0)) {
-          tileColor = "bg-darkOrange"
-        }          
-        else if ((energyToday > 2.0) && (energyToday <= 2.5)) {
-          tileColor = "bg-darkRed"
-        }
-        else if (energyToday > 2.5) {
-          tileColor = "bg-violet"
-        }         
-      }
-      else if ((value.Type == "Temp") || (value.Type == "Temp + Humidity") || (value.Type == "Temp + Humidity + Baro")) {
-        var currentTemp = parseFloat(value.Data.split(' ')[0])
-        if (currentTemp <= 5) {
-          tileColor = "bg-lightTeal"
-        }
-        else if ((currentTemp > 5) && (currentTemp <= 10)) {
-          tileColor = "bg-lightBlue"
-        }          
-        else if ((currentTemp > 10) && (currentTemp <= 15)) {
-          tileColor = "bg-lightGreen"
-        }          
-        else if ((currentTemp > 15) && (currentTemp <= 20)) {
-          tileColor = "bg-yellow"
-        }          
-        else if ((currentTemp > 20) && (currentTemp <= 25)) {
-          tileColor = "bg-amber"
-        }          
-        else if ((currentTemp > 25) && (currentTemp <= 30)) {
-          tileColor = "bg-orange"
-        }          
-        else if (currentTemp > 30) {
-          tileColor = "bg-lightRed"
-        }
-        else {
-          tileColor = "bg-lightBlue"
-        }    
-      }   
-      else if (value.Type == "Lighting 2"){
-        switch (value.SwitchType){
-          case "On/Off":
-            if (text == "On")
-              tileColor = "bg-lightRed"
-            else
-              tileColor = "bg-lightGreen"
-          break;
-          case "Contact":
-            if (text == "Open")
-              tileColor = "bg-lightRed"
-            else
-              tileColor = "bg-lightGreen"
-          break;
-          case "Motion Sensor":
-            if (text == "On")
-              tileColor = "bg-lightRed"
-            else
-              tileColor = "bg-lightGreen"
-          break;
-          case "Smoke Detector":
-            if (text == "On")
-              tileColor = "bg-lightRed"
-            else
-              tileColor = "bg-lightGreen"
-            break;
-          case "Dimmer":
-            if (text == "Off")
-              tileColor = "bg-lightGreen"
-            else
-              tileColor = "bg-lightRed"
-          break;
-          default:
-              tileColor = "bg-lightBlue"
-          break;    
-        }
-      }
-      else {
-        tileColor = "bg-lightBlue"
-      }      
                   
 
 
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       
       // update text if not the same
       if ($("#" +"Lights-" +value.idx +"-tile-content-email-data-title").text() != text){
@@ -432,7 +323,7 @@
       // Update the tile color
       $("#" +"Lights-" +value.idx +"-tile")
         .removeClass($("#" +"Lights-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +tileColor)
+        .addClass("tile double live " +deviceTileColor)
         
       // update text if not the same
       if ($("#" +"Utility-" +value.idx +"-tile-content-email-data-title").text() != text){
@@ -464,7 +355,7 @@
       // Update the tile color
       $("#" +"Utility-" +value.idx +"-tile")
         .removeClass($("#" +"Utility-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +tileColor)
+        .addClass("tile double live " +deviceTileColor)
         
       // update text if not the same
       if ($("#" +"Temp-" +value.idx +"-tile-content-email-data-title").text() != text){
@@ -489,7 +380,7 @@
       // Update the tile color
       $("#" +"Temp-" +value.idx +"-tile")
         .removeClass($("#" +"Temp-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +tileColor)
+        .addClass("tile double live " +deviceTileColor)
       
       // update text if not the same
       if ($("#" +"Weather-" +value.idx +"-tile-content-email-data-title").text() != text){
@@ -514,7 +405,7 @@
       // Update the tile color
       $("#" +"Weather-" +value.idx +"-tile")
         .removeClass($("#" +"Weather-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +tileColor)
+        .addClass("tile double live " +deviceTileColor)
 
       // Dashboard
       // update text if not the same
@@ -551,10 +442,126 @@
       if ((value.Type == "Usage") || (value.Type == "Temp") || (value.Type == "Temp + Humidity")) {
         $("#" +virtualDeviceName +"-tile")
           .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-          .addClass("tile double live " +tileColor)
+          .addClass("tile double live " +deviceTileColor)
       }
     })
   }
+  
+  getDeviceTileColor = function(deviceType, deviceSubType, switchType, currentValue, currentCounterToday){
+    var tileColor
+    var counterToday = currentCounterToday
+    if (deviceType == "Usage") {
+      var currentPower = parseFloat(currentValue.split(' ')[0])
+      if (currentPower <= 50) {
+        tileColor = "bg-green"
+      }          
+      else if ((currentPower > 50) && (currentPower <= 500)) {
+        tileColor = "bg-lime"
+      }          
+      else if ((currentPower > 500) && (currentPower <= 1000)) {
+        tileColor = "bg-orange"
+      }          
+      else if ((currentPower > 1000) && (currentPower <= 1500)) {
+        tileColor = "bg-darkOrange"
+      }          
+      else if ((currentPower > 1500) && (currentPower <= 2000)) {
+        tileColor = "bg-darkRed"
+      }
+      else if (currentPower > 2000) {
+        tileColor = "bg-violet"
+      }        
+    }
+    else if (deviceType == "Energy"){
+      var energyToday = parseFloat(counterToday.split(' ')[0])
+      if (energyToday <= 0.5) {
+        tileColor = "bg-green"
+      }          
+      else if ((energyToday > 0.5) && (energyToday <= 1.0)) {
+        tileColor = "bg-lime"
+      }          
+      else if ((energyToday > 1.0) && (energyToday <= 1.5)) {
+        tileColor = "bg-orange"
+      }          
+      else if ((energyToday > 1.5) && (energyToday <= 2.0)) {
+        tileColor = "bg-darkOrange"
+      }          
+      else if ((energyToday > 2.0) && (energyToday <= 2.5)) {
+        tileColor = "bg-darkRed"
+      }
+      else if (energyToday > 2.5) {
+        tileColor = "bg-violet"
+      }         
+    }
+    else if ((deviceType == "Temp") || (deviceType == "Temp + Humidity") || (deviceType == "Temp + Humidity + Baro")) {
+      var currentTemp = parseFloat(currentValue.split(' ')[0])
+      if (currentTemp <= 5) {
+        tileColor = "bg-lightTeal"
+      }
+      else if ((currentTemp > 5) && (currentTemp <= 10)) {
+        tileColor = "bg-lightBlue"
+      }          
+      else if ((currentTemp > 10) && (currentTemp <= 15)) {
+        tileColor = "bg-lightGreen"
+      }          
+      else if ((currentTemp > 15) && (currentTemp <= 20)) {
+        tileColor = "bg-yellow"
+      }          
+      else if ((currentTemp > 20) && (currentTemp <= 25)) {
+        tileColor = "bg-amber"
+      }          
+      else if ((currentTemp > 25) && (currentTemp <= 30)) {
+        tileColor = "bg-orange"
+      }          
+      else if (currentTemp > 30) {
+        tileColor = "bg-lightRed"
+      }
+      else {
+        tileColor = "bg-lightBlue"
+      }    
+    }   
+    else if (deviceType == "Lighting 2"){
+      switch (switchType){
+        case "On/Off":
+          if (currentValue == "On")
+            tileColor = "bg-lightRed"
+          else
+            tileColor = "bg-lightGreen"
+        break;
+        case "Contact":
+          if (currentValue == "Open")
+            tileColor = "bg-lightRed"
+          else
+            tileColor = "bg-lightGreen"
+        break;
+        case "Motion Sensor":
+          if (currentValue == "On")
+            tileColor = "bg-lightRed"
+          else
+            tileColor = "bg-lightGreen"
+        break;
+        case "Smoke Detector":
+          if (currentValue == "On")
+            tileColor = "bg-lightRed"
+          else
+            tileColor = "bg-lightGreen"
+          break;
+        case "Dimmer":
+          if (currentValue == "Off")
+            tileColor = "bg-lightGreen"
+          else
+            tileColor = "bg-lightRed"
+        break;
+        default:
+            tileColor = "bg-lightBlue"
+        break;    
+      }
+    }
+    else {
+      tileColor = "bg-lightBlue"
+    }   
+    return tileColor   
+  }  
+  
   
   getDeviceImage = function(deviceType, deviceSubType, switchType, currentValue){
     switch (deviceType){
@@ -1848,10 +1855,11 @@
           }
         break;
         
-        //case "Rain"
-        //  tabName = "Utility"
-        //  var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-        //break;        
+        case "Rain":
+        case "Wind":
+          tabName = "Weather"
+          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+        break;        
       }
       switch(value.SubType){
         case "Gas":
@@ -1868,14 +1876,19 @@
             counterToday = "0.0 kWh"
           }
         break;
-      }
-      switch(value.HardwareName){
-        case "Forecast IO":
-        case "Weather Underground":
+        case "Solar Radiation":
           tabName = "Weather"
-          var tileGroupName = value.HardwareName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-        break;
+          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+        break;        
+        
       }
+      //switch(value.HardwareName){
+      //  case "Forecast IO":
+      //  case "Weather Underground":
+      //    tabName = "Weather"
+      //    var tileGroupName = value.HardwareName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+      //  break;
+      //}
 
       //Read the data or status      
       switch(value.SwitchType){
@@ -1891,6 +1904,7 @@
       //Create The live Tiles
         var idx = value.idx
         var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+        var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       
         if(!$("#" +tabName +"-tile-area").length) {
           $("<div></div>")
@@ -1900,7 +1914,7 @@
           $("<h1></h1>")
             .appendTo("#" +tabName +"-tile-area")
             .addClass("tile-area-title fg-white")
-            .text(tabName)
+            //.text(tabName)
         }
         if(!$("#" +tabName +"-" +tileGroupName +"-tile-group").length) {
           $("<div></div>")
@@ -1919,7 +1933,7 @@
           $("<a></a>")
             .attr("id", tabName +"-" +value.idx +"-tile")
             .appendTo("#" +tabName +"-" +tileGroupName +"-tile-group")
-            .addClass("tile double bg-lightBlue live")
+            .addClass("tile double live " +deviceTileColor)
             .attr("data-role","live-tile")
             .attr("data-effect","slideUpDown")
             .data("deviceIdx", value.idx)
@@ -2021,7 +2035,13 @@
           var text = value.Status
         break;
       }
+      var counterToday = value.CounterToday
+      if (typeof(counterToday)  === "undefined"){
+        counterToday = "0.0 kWh"
+      }
+      
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       
       // pretty cattegory labels AFTER defining
       switch(virtualDeviceType){
@@ -2124,7 +2144,7 @@
         $("<a></a>")
           .attr("id", virtualDeviceName +"-tile")
           .appendTo("#" +virtualDeviceType +"-tile-group")
-          .addClass("tile double bg-lightBlue live")
+          .addClass("tile double live " +deviceTileColor)
           .attr("data-role","live-tile")
           .attr("data-effect","slideUpDown")
           .attr("data-click","transform")
