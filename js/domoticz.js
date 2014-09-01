@@ -294,8 +294,6 @@
           var text = value.Status
         break;
       }
-                  
-
 
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
@@ -2124,7 +2122,20 @@
           .attr("id", "tile-area-title")
           .appendTo("#tile-area")
           .addClass("tile-area-title fg-white")
-          //.text("Dashboard")
+        //  .text("Dashboard")
+        //$(“<a></a>")
+        //  .attr("id", "tile-area-title-href")
+        //  .attr("href", "#tab-Lights")
+        //  .appendTo("#tile-area-title")
+        //$(“<i></i>")
+        //  .attr("id", "tile-area-title-href-image")
+        //  .appendTo("#tile-area-title-href")
+        //  .addClass("icon-arrow-right-3 fg-white smaller")
+        //$(“<i></i>")
+        //  .attr("id", "tile-area-title-href-image")
+        //  .appendTo("#tile-area-title-href")
+        //  .addClass("on-left icon-arrow-left-3 fg-white smaller")
+
       }
       if(!$("#" +virtualDeviceType +"-tile-group").length) {
         $("<div></div>")
@@ -2236,49 +2247,26 @@ $(document).ready(function() {
   updateDashboard()
   updateDomoticzTabs()
 
-  //updateLights()
-
-  //updateUtility()
-  
-  //updateTemp()
-
-  //updateWeather()
-  
-  //updateScenes()
 
   $('a[data-toggle="tab"]').on("click", function(event) {
     //alert("I am here")
 
     var targetTab = event.currentTarget.hash
-    //deviceGroup = targetTab.split('-')[1]
-    //alert(deviceGroup)
     switch(targetTab){
       case "#tab-Dashboard":
-        updateDashboard()
-        //$.StartScreen()
       break;
       case "#tab-Lights":
-        //updateLights()
-        //$.StartScreen()
       break;
       case "#tab-Utility":
-        //updateUtility()
-        //$.StartScreen()
       break;
       case "#tab-Temp":
-        //updateTemp()
-        //$.StartScreen()
       break;
       case "#tab-Weather":
-        //updateWeather()
-        //$.StartScreen()
       break;
       case "#tab-Scenes":
-        updateScenes()
-        //$.StartScreen()
       break;
       default:
-       break;
+      break;
     }  
   });
 });
