@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Domoticz Metro UI</title>
+
+		<!-- CSS -->
+		<link href="css/site.css" rel="stylesheet" type="text/css" />
+		<link href="http:///maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+		<link href="css/MetroJs.min.css" rel="stylesheet" type="text/css" />
+
+		<script type="text/javascript" src="js/modernizr-2.6.2.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+	</head>
+	<body class="desktop dark home">
+		<header>
+			<div class="site-title">
+				<a href="#">domoticz</a>
+			</div>
+		</header>
+		<section class="main-content panorama clear-fix">
+			<div class="content-wrapper tiles blue" id="content-wrapper">
+<!--				
+				<section class="tile-group four-wide first">
+					<h2>Welcome</h2>
+					<div class="live-tile">
+						<div style="background-color:Red;">
+							test 1
+						</div>
+					</div>
+					<div class="live-tile" data-mode="flip">
+						<div style="background-color:green;">
+							test 2
+						</div>
+						<div style="background-color:blue;">
+							test 2 - back
+						</div>
+					</div>
+					<div class="list-tile">
+						<ul class="flip-list fourTiles" data-mode="flip-list">
+							<li>
+								<div style="background-color:Blue;"></div><div style="background-color:Orange;"></div>
+							</li>
+							<li>
+								<div style="background-color:Orange;"></div><div style="background-color:Blue;"></div>
+							</li>
+							<li>
+								<div style="background-color:Green;"></div><div style="background-color:Red;"></div>
+							</li>
+							<li>
+								<div style="background-color:Red;"></div><div style="background-color:Green;"></div>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tile-group three-wide">
+					<h2>Metro JS</h2>
+					<div class="live-tile two-wide two-tall float-right metrojs-carousel" data-bounce="true" data-bounce-dir="edges" data-mode="carousel" data-direction="horizontal" data-slide-direction="forward" data-pause-onhover="true">
+						<div class="first" data-link="/projects/metrojs">
+							<p>
+								<span class="clear-fix text-right"><strong>Metro JS</strong></span>
+								<span class="clear-fix text-left">a <strong>jQuery</strong></span>
+								<span class="clear-fix text-left"><strong>plugin</strong> for</span>
+								<span class="clear-fix text-right"><strong>metro</strong></span>
+							</p>
+						</div>
+						<div class="accent blue" data-direction="vertical" data-link="/projects/metrojs">
+							<p>
+								<a href="/projects/metrojs">Metro JS</a> is a JavaScript plugin for jQuery developed to easily enable hardware accelerated <a href="http://en.wikipedia.org/wiki/Metro_Design_Language" target="_blank" onclick="javascript:trackExternal(this);">Metro</a> interfaces on the web. <span class="compat"><a href="/projects/metrojs">Metro JS</a> is compatibile with:</span>
+							</p>
+							<ul class="copy-list tight">
+								<li>
+									IE7+ Windows / Windows Phone
+								</li>
+								<li>
+									Firefox
+								</li>
+								<li>
+									Chrome
+								</li>
+								<li>
+									Android
+								</li>
+								<li>
+									Opera
+								</li>
+								<li>
+									Safari
+								</li>
+							</ul>
+							<p>
+								<span>Want to make a 'Me' tile or a 'People' tile like you see on Windows Phone for your website? <a href="/projects/metrojs">Metro JS</a> makes it easy!</span>
+							</p>
+						</div>
+						<div class="theming-slide accent red" data-link="/projects/metrojs/themes">
+							<p>
+								<span class="metroExtraLarge">Theming Metro JS is easy!</span>
+							</p>
+							<div class="theme-block">
+								<img src="/images/sample/theme-block-two-wide.png" alt="A screenshot example of the colors available in Metro JS Themes" />
+							</div>
+							<span class="metroExtraLarge p-bottom">Learn More Here</span>
+						</div>
+						<div class="accent cobalt last" data-direction="vertical" data-ani-direction="backward">
+							<p>
+								<span class="metroExtraLarge nobr">[ Your Site Here ]</span>
+							</p>
+						</div>
+					</div>
+					<div class="tile-strip one-tile">
+						<div class="live-tile half-tile prev" data-mode="none" data-bounce="true" data-bounce-dir="*,l">
+							<div>
+								<i class="icon icon-arrow-left"></i>
+							</div>
+						</div>
+						<div class="live-tile half-tile next" data-mode="none" data-bounce="true" data-bounce-dir="*,r">
+							<div>
+								<i class="icon icon-arrow-right"></i>
+							</div>
+						</div>
+						<div class="live-tile half-tile info accent" data-mode="none" data-bounce="true">
+							<span class="p-bottom metroLarge">more
+								<br />
+								info</span>
+						</div>
+						<div class="live-tile half-tile theme" data-mode="none" data-bounce="true">
+							<div><img src="/images/projects/metro-js-theming_small.png" alt="Painters Pallete - Theming Metro JS" class="full" />
+							</div>
+						</div>
+					</div>
+					<div class="live-tile exclude">
+						<ul class="flip-list nineTiles" data-mode="flip-list" data-flip-onhover="true" data-swap="" data-delay="6000">
+							<li>
+								<div class="accent white"></div><div></div>
+							</li>
+							<li>
+								<div class="accent white"></div><div></div>
+							</li>
+							<li>
+								<div></div><div class="accent white"></div>
+							</li>
+							<li>
+								<div class="accent white"></div><div></div>
+							</li>
+							<li>
+								<div></div><div class="accent white"></div>
+							</li>
+							<li>
+								<div class="accent white"></div><div></div>
+							</li>
+							<li>
+								<div></div><div class="accent white"></div>
+							</li>
+							<li>
+								<div class="accent white"></div><div></div>
+							</li>
+							<li>
+								<div class="accent white"></div><div></div>
+							</li>
+						</ul>
+					</div>
+					<div class="live-tile half-tall three-wide accent" data-mode="none" data-bounce="true" data-link="/projects/metrojs" data-bounce-dir="l,r">
+						<div>
+							<span class="p-bottom metroExtraLarge">Get Started with Metro JS</span>
+						</div>
+					</div>
+				</section>
+-->				
+			</div>
+		</section>
+		<footer class="appbar">
+			<nav class="clear">
+				<ul class="appbar-buttons" id="menu">
+					<li>
+						<a class="home" href="/"><img alt="home" src="images/1pixel.gif"></a>
+						<span class="charm-title">Home</span>
+					</li>
+					<li>
+						<a class="about" href="#"><img alt="about" src="images/1pixel.gif"></a>
+						<span class="charm-title">About</span>
+					</li>
+					<li>
+						<a class="twitter" target="_blank" onclick="javascript:trackExternal(this);" href="#"><img alt="twitter" src="images/1pixel.gif"></a>
+						<span class="charm-title">Twitter</span>
+					</li>
+				</ul>
+			</nav>
+			<a class="etc">&bull;&bull;&bull;</a>
+			<div class="tray">
+				<section class="base-theme-options">
+					<h2>Base Theme</h2>
+					<ul></ul>
+				</section>
+				<section class="theme-options">
+					<h2>Accent Color</h2>
+					<ul></ul>
+				</section>
+			</div>
+		</footer>
+
+		<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/MetroJs.min.js"></script>
+		<script type="text/javascript" src="js/domoticz.js"></script>
+		<script type="text/javascript">
+			var metroJs, appBar;
+			// remove the default theme set for noscript and apply user theme
+			$(document).ready(function() {
+				$("body,.tiles").removeClass("dark blue");
+				metroJs = jQuery.fn.metrojs;
+				metroJs.theme.loadDefaultTheme();
+			});
+		</script>
+
+		<!--script type="text/javascript" src="js/home.index.js"></script-->
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var doBind = ( typeof (window.bindAppBarKeyboard) === "undefined" || window.bindAppBarKeyboard);
+				// create the app bar
+				appBar = $(".appbar").applicationBar({
+					applyTheme : false, // apply theme example below
+					preloadAltBaseTheme : true, // load both sets of images so there isn't a flicker when base theme is changed
+					metroLightUrl : 'images/metroIcons_light.jpg',
+					metroDarkUrl : 'images/metroIcons.jpg',
+					bindKeyboard : doBind // bind the keyboard unless specified in an included script
+				});
+				// add the accents and base colors to the appbar
+				metroJs.theme.appendAccentColors();
+				metroJs.theme.appendBaseThemes();
+			});
+
+		</script>
+		<script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+		<!--script type="text/javascript" src="js/global.js"></script-->
+
+	</body>
+</html>
