@@ -678,20 +678,20 @@
       
   updateDomoticzTabs = function(){
     var device = combinedDeviceList
-    var tabName
+    var tileGroupName
     device.forEach(function(value, key){
     
       switch(value.Type){
         case "Lighting 2":
-          tabName = "Lights"
-          var tileGroupName = value.SwitchType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+          tileGroupName = "Switches"
+          //var tileGroupName = value.SwitchType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
         break;
         
         case "Temp":
         case "Temp + Humidity":
         case "Temp + Humidity + Baro":
-          tabName = "Temp"
-          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+          tileGroupName = "Temperature"
+          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
         break;
         
         case "Usage":
@@ -703,8 +703,8 @@
         case "Lux":
         case "Weight":
         case "Thermostat":
-          tabName = "Utility"
-          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+          tileGroupName = "Utility"
+          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
           if (typeof(counterToday)  === "undefined"){
             counterToday = "0.0 kWh"
           }
@@ -712,8 +712,8 @@
         
         case "Rain":
         case "Wind":
-          tabName = "Weather"
-          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+          tileGroupName = "Weather"
+          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
         break;        
       }
       switch(value.SubType){
@@ -724,23 +724,23 @@
         case "Voltage":
         case "A/D":
         case "Pressure":
-          tabName = "Utility"
-          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+          tileGroupName = "Utility"
+          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
           var counterToday = value.CounterToday
           if (typeof(counterToday)  === "undefined"){
             counterToday = "0.0 kWh"
           }
         break;
         case "Solar Radiation":
-          tabName = "Weather"
-          var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+          tileGroupName = "Weather"
+          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
         break;        
         
       }
       //switch(value.HardwareName){
       //  case "Forecast IO":
       //  case "Weather Underground":
-      //    tabName = "Weather"
+      //    tileGroupName = "Weather"
       //    var tileGroupName = value.HardwareName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       //  break;
       //}
@@ -761,20 +761,20 @@
         var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
         var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       
-        if(!$("#" +tabName +"-tile-group").length) {
+        if(!$("#" +tileGroupName +"-tile-group").length) {
           $("<section></section>")
-            .attr("id", tabName +"-tile-group")
+            .attr("id", tileGroupName +"-tile-group")
             .appendTo("#content-wrapper")
-            .addClass("tile-group four-wide red")
+            .addClass("tile-group eight-wide")
           $("<h2></h2>")
-            .appendTo("#" +tabName +"-tile-group")
-            .text(tabName)
+            .appendTo("#" +tileGroupName +"-tile-group")
+            .text(tileGroupName)
         }
         
-        if(!$("#" +tabName +"-" +value.idx +"-tile-group-live-tile").length) {
+        if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile").length) {
           $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-group-live-tile")
-            .appendTo("#" +tabName +"-tile-group")
+            .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+            .appendTo("#" +tileGroupName +"-tile-group")
             .addClass("live-tile two-wide float-right metrojs-carousel")
             .attr("data-bounce", "true")
             .attr("data-bounce-dir", "edges")
@@ -785,35 +785,43 @@
             .attr("data-swap", "image")
             .attr("data-stops", "100%")
             .attr("data-delay","3500")
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-group-live-tile-title")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile")
-            .addClass("accent orange") // +tileColor)
+            .data("deviceIdx", value.idx)
+            .data("deviceStatus", text)
+            .data("deviceSetLevel", value.LevelInt)
+            .attr("onclick", "switchLights(this)")
           $("<span></span>")
-          	.appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile-title")
-            .addClass("tile-title") // +tileColor)
+          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-title")
+            .addClass("tile-title")
             .text(value.Name)
+        }  
+        if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").length) {
+          $("<div></div>")
+            .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+            .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+            .addClass("accent " +deviceTileColor)
           $("<p></p>")
-          	.attr("id", tabName +"-" +value.idx +"-tile-group-live-tile-title-p")
-          	.appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile-title")
+          	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
           $("<img></img>")
-          	.attr("id", tabName +"-" +value.idx +"-tile-group-live-tile-title-p-img")
-          	.appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile-title-p")
-          	.addClass("full")
+          	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          	.addClass("clear-fix")
           	.attr("src", deviceImage)
-          	//.text(text)
           $("<span></span>")
-          	.attr("id", tabName +"-" +value.idx +"-tile-group-live-tile-title-p-span")
-          	.appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile-title-p")
+          	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
           	.addClass("clear-fix metroExtraLarge")
           	.text(text)
-          //$("<strong></strong>")
-          //	.appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile-title-p-span")
-          //	.addClass("clear-fix")
-          //	.text(text)
+          if(value.Type == "Energy"){
+            $("<span></span>")
+            	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+            	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+            	.addClass("clear-fix") // metroExtraLarge")
+            	.text("Today: " +counterToday)
+          }
           $("<span></span>")
-          	.attr("id", tabName +"-" +value.idx +"-tile-group-live-tile-title-p")
-          	.appendTo("#" +tabName +"-" +value.idx +"-tile-group-live-tile-title-p")
+          	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
           	.addClass("clear-fix")
           	.text(value.LastUpdate)
           
@@ -1005,6 +1013,73 @@
           var virtualDeviceTypeClass = "icon-none"
         break;      
       }
+      
+      var tileGroupName = "Dashboard"
+      
+      if(!$("#" +tileGroupName +"-tile-group").length) {
+        $("<section></section>")
+          .attr("id", tileGroupName +"-tile-group")
+          .appendTo("#content-wrapper")
+          .addClass("tile-group ten-wide")
+        $("<h2></h2>")
+          .appendTo("#" +tileGroupName +"-tile-group")
+          .text(tileGroupName)
+      }
+      
+      if(!$("#" +tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile").length) {
+        $("<div></div>")
+          .attr("id", tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile")
+          .appendTo("#" +tileGroupName +"-tile-group")
+          .addClass("live-tile two-wide float-right metrojs-carousel")
+          .attr("data-bounce", "true")
+          .attr("data-bounce-dir", "edges")
+          .attr("data-mode", "carousel")
+          .attr("data-direction", "horizontal")
+          .attr("data-slide-direction", "forward")
+          .attr("data-pause-onhover", "true")
+          //.attr("data-delay", "1000")
+          //.attr("data-swap", "image")
+          //.attr("data-stops", "100%")
+          //.attr("data-delay","3500")
+          //.data("deviceIdx", value.idx)
+          //.data("deviceStatus", text)
+          //.data("deviceSetLevel", value.LevelInt)
+          //.attr("onclick", "switchLights(this)")
+        $("<span></span>")
+        	.appendTo("#" +tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile")
+          .addClass("tile-title")
+          .text(deviceName)
+      }
+      if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").length) {
+        $("<div></div>")
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+          .appendTo("#" +tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile")
+          .addClass("accent " +deviceTileColor)
+          .attr("data-direction", "horizontal")
+          
+        $("<p></p>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+              	
+        $("<img></img>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix")
+        	.attr("src", deviceImage)
+        	//.text(text)
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix metroExtraLarge")
+        	.text(text)
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix")
+        	.text(value.LastUpdate)
+        
+      }   
+/*           
       //Here create a panorama for each virtual device type
       //and add all the virtual devices of that type to it
       // create a tile group for each virtual device type
@@ -1128,13 +1203,13 @@
           .addClass("email-data-text fg-gray")
           .text(value.LastUpdate)
       }
-
+*/
     })        
   }
 }(jQuery, window, document));
 
 $(document).ready(function() {
   updateDevices()
-  //updateDashboard()
+  updateDashboard()
   updateDomoticzTabs()
 });
