@@ -994,6 +994,14 @@
         	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
         	.addClass("clear-fix text-right metroLarge")
         	.text(text)
+          if(value.Type == "Energy"){
+            $("<span></span>")
+            	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+            	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+            	.addClass("clear-fix") // metroExtraLarge")
+            	.text("Today: " +counterToday)
+          }
+        	
         $("<span></span>")
         	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
         	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
