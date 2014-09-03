@@ -269,7 +269,7 @@
       }  
     })
     //return combinedDeviceList 
-    //refreshTabs() 
+    refreshTabs() 
     //updateScenes()
   }
   
@@ -298,136 +298,88 @@
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      
-      // update text if not the same
-      if ($("#" +"Lights-" +value.idx +"-tile-content-email-data-title").text() != text){
-        $("#" +"Lights-" +value.idx +"-tile-content-email-data-title")
-          .hide()
-          .text(text)
-          .fadeIn(1500)
-      }
-      if ($("#" +"Lights-" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
-        $("#" +"Lights-" +value.idx +"-tile-content-email-image-data")
-          .hide()
-          .attr("src", deviceImage)
-          .fadeIn(1500)
-      }
-      if ($("#" +"Lights-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
-        $("#" +"Lights-" +value.idx +"-tile-content-email-data-text")
-          .hide()
-          .text(value.LastUpdate)
-          .fadeIn(1500)        
-      }
-      // Update the tile color
-      $("#" +"Lights-" +value.idx +"-tile")
-        .removeClass($("#" +"Lights-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +deviceTileColor)
-        
-      // update text if not the same
-      if ($("#" +"Utility-" +value.idx +"-tile-content-email-data-title").text() != text){
-        $("#" +"Utility-" +value.idx +"-tile-content-email-data-title")
-          .hide()
-          .text(text)
-          .fadeIn(1500)
-      }
-      // Update the image in case of status chage
-      if ($("#" +"Utility-" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
-        $("#" +"Utility-" +value.idx +"-tile-content-email-image-data")
-          .hide()
-          .attr("src", deviceImage)
-          .fadeIn(1500)
-      }
-      // Update the today counter in case of chage
-      if ($("#" +"Utility-" +value.idx +"-tile-content-email-data-subtitle").text() != "Today: " +counterToday){
-        $("#" +"Utility-" +value.idx +"-tile-content-email-data-subtitle")
-          .hide()
-          .text("Today: " +counterToday)
-          .fadeIn(1500)
-      }
-      if ($("#" +"Utility-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
-        $("#" +"Utility-" +value.idx +"-tile-content-email-data-text")
-          .hide()
-          .text(value.LastUpdate)
-          .fadeIn(1500)        
-      }
-      // Update the tile color
-      $("#" +"Utility-" +value.idx +"-tile")
-        .removeClass($("#" +"Utility-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +deviceTileColor)
-        
-      // update text if not the same
-      if ($("#" +"Temp-" +value.idx +"-tile-content-email-data-title").text() != text){
-        $("#" +"Temp-" +value.idx +"-tile-content-email-data-title")
-          .hide()
-          .text(text)
-          .fadeIn(1500)
-      }
-      // Update the image in case of status chage
-      if ($("#" +"Temp-" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
-        $("#" +"Temp-" +value.idx +"-tile-content-email-image-data")
-          .hide()
-          .attr("src", deviceImage)
-          .fadeIn(1500)
-      }
-      if ($("#" +"Temp-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
-        $("#" +"Temp-" +value.idx +"-tile-content-email-data-text")
-          .hide()
-          .text(value.LastUpdate)
-          .fadeIn(1500)        
-      }
-      // Update the tile color
-      $("#" +"Temp-" +value.idx +"-tile")
-        .removeClass($("#" +"Temp-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +deviceTileColor)
-      
-      // update text if not the same
-      if ($("#" +"Weather-" +value.idx +"-tile-content-email-data-title").text() != text){
-        $("#" +"Weather-" +value.idx +"-tile-content-email-data-title")
-          .hide()
-          .text(text)
-          .fadeIn(1500)
-      }
-      // Update the image in case of status chage
-      if ($("#" +"Weather-" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
-        $("#" +"Weather-" +value.idx +"-tile-content-email-image-data")
-          .hide()
-          .attr("src", deviceImage)
-          .fadeIn(1500)
-      }
-      if ($("#" +"Weather-" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
-        $("#" +"Weather-" +value.idx +"-tile-content-email-data-text")
-          .hide()
-          .text(value.LastUpdate)
-          .fadeIn(1500)        
-      }
-      // Update the tile color
-      $("#" +"Weather-" +value.idx +"-tile")
-        .removeClass($("#" +"Weather-" +value.idx +"-tile").attr('class'))
-        .addClass("tile double live " +deviceTileColor)
 
       // Dashboard
+      // tileGroupName = "Dashboard"
+      
+      switch(value.Type){
+        case "Lighting 2":
+          tileGroupName = "Switches"
+        break;
+        
+        case "Temp":
+        case "Temp + Humidity":
+        case "Temp + Humidity + Baro":
+          tileGroupName = "Temperature"
+        break;
+        
+        case "Usage":
+        case "Energy":
+        case "Current":
+        case "Current/Energy":
+        case "Fan":
+        case "Air Quality":
+        case "Lux":
+        case "Weight":
+        case "Thermostat":
+          tileGroupName = "Utility"
+          if (typeof(counterToday)  === "undefined"){
+            counterToday = "0.0 kWh"
+          }
+        break;
+        
+        case "Rain":
+        case "Wind":
+          tileGroupName = "Weather"
+        break;        
+      }
+      switch(value.SubType){
+        case "Gas":
+        case "RFXMeter counter":
+        case "Percentage":
+        case "Soil Moisture":
+        case "Voltage":
+        case "A/D":
+        case "Pressure":
+          tileGroupName = "Utility"
+          var counterToday = value.CounterToday
+          if (typeof(counterToday)  === "undefined"){
+            counterToday = "0.0 kWh"
+          }
+        break;
+        case "Solar Radiation":
+          tileGroupName = "Weather"
+        break;        
+      }
+      
       // update text if not the same
-      if ($("#" +value.idx +"-tile-content-email-data-title").text() != text){
-        $("#" +value.idx +"-tile-content-email-data-title")
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
           .hide()
           .text(text)
           .fadeIn(1500)
-        setTimeout(function(){
-          $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
-        }, 3000);
+        //setTimeout(function(){
+        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+        //}, 3000);
               
       }
       // Update the image in case of status chage
-      if ($("#" +value.idx +"-tile-content-email-image-data").attr('src') != deviceImage){
-        $("#" +value.idx +"-tile-content-email-image-data")
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
           .hide()
           .attr("src", deviceImage)
           .fadeIn(1500)
       }
-      if ($("#" +value.idx +"-tile-content-email-data-text").text() != value.LastUpdate){        
-        $("#" +value.idx +"-tile-content-email-data-text")
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
           .hide()
           .text(value.LastUpdate)
+          .fadeIn(1500)        
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+          .hide()
+          .text(counterToday)
           .fadeIn(1500)        
       }
       //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
@@ -437,11 +389,9 @@
       //  .fadeIn(1500)
       //}
       // Update the tile color
-      if ((value.Type == "Usage") || (value.Type == "Temp") || (value.Type == "Temp + Humidity")) {
-        $("#" +virtualDeviceName +"-tile")
-          .removeClass($("#" +virtualDeviceName +"-tile").attr('class'))
-          .addClass("tile double live " +deviceTileColor)
-      }
+      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+        .removeClass($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr('class'))
+        .addClass("accent " +deviceTileColor)
     })
   }
   
