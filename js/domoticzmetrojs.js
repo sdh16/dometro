@@ -775,22 +775,22 @@
           $("<div></div>")
             .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile")
             .appendTo("#" +tileGroupName +"-tile-group")
-            .addClass("live-tile two-wide float-right metrojs-carousel")
+            .addClass("live-tile float-right metrojs-carousel")
             .attr("data-bounce", "true")
             .attr("data-bounce-dir", "edges")
             .attr("data-mode", "carousel")
             .attr("data-direction", "horizontal")
             .attr("data-slide-direction", "forward")
             .attr("data-pause-onhover", "true")
-            .attr("data-swap", "image")
-            .attr("data-stops", "100%")
-            .attr("data-delay","3500")
+            //.attr("data-swap", "image")
+            //.attr("data-stops", "100%")
+            //.attr("data-delay","3500")
             .data("deviceIdx", value.idx)
             .data("deviceStatus", text)
             .data("deviceSetLevel", value.LevelInt)
             .attr("onclick", "switchLights(this)")
           $("<span></span>")
-          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-title")
+          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
             .addClass("tile-title")
             .text(value.Name)
         }  
@@ -807,10 +807,14 @@
           	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
           	.addClass("clear-fix")
           	.attr("src", deviceImage)
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix text-right")          	
           $("<span></span>")
           	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
           	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          	.addClass("clear-fix metroExtraLarge")
+          	.addClass("clear-fix metroLarge")
           	.text(text)
           if(value.Type == "Energy"){
             $("<span></span>")
@@ -822,96 +826,10 @@
           $("<span></span>")
           	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
           	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          	.addClass("clear-fix")
+          	.addClass("clear-fix metroSmaller")
           	.text(value.LastUpdate)
           
         }
-        /*
-        // create a tile for each virtual device
-        if(!$("#" +tabName +"-" +value.idx +"-tile").length) {
-          // Create the tile for the virtual deivce
-          $("<a></a>")
-            .attr("id", tabName +"-" +value.idx +"-tile")
-            .appendTo("#" +tabName +"-" +tileGroupName +"-tile-group")
-            .addClass("tile double live " +deviceTileColor)
-            .attr("data-role","live-tile")
-            .attr("data-effect","slideUpDown")
-            .data("deviceIdx", value.idx)
-            .data("deviceStatus", text)
-            .data("deviceSetLevel", value.LevelInt)
-            //.attr("data-click","transform")
-            //.attr("draggable","true")
-            .attr("onclick", "switchLights(this)")
-        }
-        if(!$("#" +tabName +"-" +value.idx +"-tile-brand").length){
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-brand")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile")
-            .addClass("brand")
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-brand-label")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-brand")
-            .addClass("label")
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-brand-label-heading")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-brand-label")
-            .addClass("no-margin fg-white")
-            .text(value.Name)
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-brand-badge")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-brand")
-            .addClass("badge")
-          $("<span></span>")
-            .attr("id", tabName +"-" +value.idx +"-tile-brand-badge-data")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-brand-badge")
-            .text(value.idx)
-        }
-
-        // add a tile content block each real device in the virtual device tile
-        if(!$("#" +tabName +"-" +value.idx +"-tile-content").length){
-          $("<div></div>")
-          .attr("id", tabName +"-" +value.idx +"-tile-content")
-          .appendTo("#" +tabName +"-" +value.idx +"-tile")
-          .addClass("tile-content email")
-          .attr("style", "display: block;")
-        }
-    
-        // add the icon and value
-        if(!$("#" +tabName +"-" +value.idx +"-tile-content-email-image").length){
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-content-email-image")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-content")
-            .addClass("email-image")
-          $("<img></img>")
-            .attr("id", tabName +"-" +value.idx +"-tile-content-email-image-data")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-content-email-image")
-            .attr("src", deviceImage)
-        }      
-        if(!$("#" +tabName +"-" +value.idx +"-tile-content-email-data").length){
-          // add data or status
-          $("<div></div>")
-            .attr("id", tabName +"-" +value.idx +"-tile-content-email-data")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-content")
-            .addClass("email-data")
-          $("<span></span>")
-            .attr("id", tabName +"-" +value.idx +"-tile-content-email-data-title")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-content-email-data" )
-            .addClass("email-data-title")
-            .text(text)
-          if(value.Type == "Energy"){
-            $("<span></span>")
-              .attr("id", tabName +"-" +value.idx +"-tile-content-email-data-subtitle")
-              .appendTo("#" +tabName +"-" +value.idx +"-tile-content-email-data" )
-              .addClass("email-data-subtitle fg-darkCobalt")
-              .text("Today: " +counterToday)
-            }
-          $("<span></span>")
-            .attr("id", tabName +"-" +value.idx +"-tile-content-email-data-text")
-            .appendTo("#" +tabName +"-" +value.idx +"-tile-content-email-data" )
-            .addClass("email-data-text fg-gray")
-            .text(value.LastUpdate)
-        }        
-        */
     })  
   }
   
@@ -1020,7 +938,7 @@
         $("<section></section>")
           .attr("id", tileGroupName +"-tile-group")
           .appendTo("#content-wrapper")
-          .addClass("tile-group ten-wide")
+          .addClass("tile-group eight-wide")
         $("<h2></h2>")
           .appendTo("#" +tileGroupName +"-tile-group")
           .text(tileGroupName)
@@ -1030,11 +948,11 @@
         $("<div></div>")
           .attr("id", tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile")
           .appendTo("#" +tileGroupName +"-tile-group")
-          .addClass("live-tile two-wide float-right metrojs-carousel")
+          .addClass("live-tile float-right metrojs-carousel")
           .attr("data-bounce", "true")
           .attr("data-bounce-dir", "edges")
           .attr("data-mode", "carousel")
-          .attr("data-direction", "horizontal")
+          //.attr("data-direction", "horizontal")
           .attr("data-slide-direction", "forward")
           .attr("data-pause-onhover", "true")
           //.attr("data-delay", "1000")
@@ -1048,14 +966,14 @@
         $("<span></span>")
         	.appendTo("#" +tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile")
           .addClass("tile-title")
-          .text(deviceName)
+          //.text(deviceName)
       }
       if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").length) {
         $("<div></div>")
           .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
           .appendTo("#" +tileGroupName +"-" +virtualDeviceName +"-tile-group-live-tile")
           .addClass("accent " +deviceTileColor)
-          .attr("data-direction", "horizontal")
+          //.attr("data-direction", "horizontal")
           
         $("<p></p>")
         	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
@@ -1064,146 +982,29 @@
         $("<img></img>")
         	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
         	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix")
+        	//.addClass("clear-fix")
         	.attr("src", deviceImage)
-        	//.text(text)
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix text-right")
         $("<span></span>")
         	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
         	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix metroExtraLarge")
+        	.addClass("clear-fix text-right metroLarge")
         	.text(text)
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix text-right")
+        	.text(value.Name)
         $("<span></span>")
         	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
         	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix")
+        	.addClass("clear-fix text-right metroSmaller")
         	.text(value.LastUpdate)
         
-      }   
-/*           
-      //Here create a panorama for each virtual device type
-      //and add all the virtual devices of that type to it
-      // create a tile group for each virtual device type
-      if(!$("#" +"tile-area").length) {
-        $("<div></div>")
-          .attr("id", "tile-area")
-          .appendTo("#tab-Dashboard")
-          .addClass("tile-area tile-area-dark")
-        $("<h1></h1>")
-          .attr("id", "tile-area-title")
-          .appendTo("#tile-area")
-          .addClass("tile-area-title fg-white")
-        //  .text("Dashboard")
-        //$(“<a></a>")
-        //  .attr("id", "tile-area-title-href")
-        //  .attr("href", "#tab-Lights")
-        //  .appendTo("#tile-area-title")
-        //$(“<i></i>")
-        //  .attr("id", "tile-area-title-href-image")
-        //  .appendTo("#tile-area-title-href")
-        //  .addClass("icon-arrow-right-3 fg-white smaller")
-        //$(“<i></i>")
-        //  .attr("id", "tile-area-title-href-image")
-        //  .appendTo("#tile-area-title-href")
-        //  .addClass("on-left icon-arrow-left-3 fg-white smaller")
-
       }
-      if(!$("#" +virtualDeviceType +"-tile-group").length) {
-        $("<div></div>")
-          .attr("id", virtualDeviceType +"-tile-group")
-          //.appendTo("#dashboard")
-          .appendTo("#tile-area")
-          .addClass("tile-group")
-        $("<div></div>")
-          .attr("id", "tile-group-title")
-          .appendTo("#" +virtualDeviceType +"-tile-group")
-          .addClass("tile-group-title")
-          .text(virtualDeviceType)
-      }
-      // create a tile for each virtual device
-      if(!$("#" +virtualDeviceName +"-tile").length) {
-        // Create the tile for the virtual deivce
-        $("<a></a>")
-          .attr("id", virtualDeviceName +"-tile")
-          .appendTo("#" +virtualDeviceType +"-tile-group")
-          .addClass("tile double live " +deviceTileColor)
-          .attr("data-role","live-tile")
-          .attr("data-effect","slideUpDown")
-          .attr("data-click","transform")
-
-      }
-      if(!$("#" +virtualDeviceName +"-tile-brand").length){
-        $("<div></div>")
-          .attr("id", virtualDeviceName +"-tile-brand")
-          .appendTo("#" +virtualDeviceName +"-tile")
-          .addClass("brand")
-        $("<div></div>")
-          .attr("id", virtualDeviceName +"-tile-brand-label")
-          .appendTo("#" +virtualDeviceName +"-tile-brand")
-          .addClass("label")
-        //$("<h3></h3>")
-        $("<div></div>")
-          .attr("id", virtualDeviceName +"-tile-brand-label-heading")
-          .appendTo("#" +virtualDeviceName +"-tile-brand-label")
-          .addClass("no-margin fg-white")
-          .text(deviceName)
-        //$("<span></span>")
-          //.attr("id", virtualDeviceName +"-tile-brand-label-heading-data")
-          //.appendTo("#" +virtualDeviceName +"-tile-brand-label-heading")
-          //.addClass(virtualDeviceTypeClass)
-          //.text(virtualDeviceName)
-        $("<div></div>")
-          .attr("id", virtualDeviceName +"-tile-brand-badge")
-          .appendTo("#" +virtualDeviceName +"-tile-brand")
-          .addClass("badge")
-        $("<span></span>")
-          .attr("id", virtualDeviceName +"-tile-brand-badge-data")
-          .appendTo("#" +virtualDeviceName +"-tile-brand-badge")
-          .text(value.VirtualDeiceIdx)
-      }
-      
-      // add a tile content block each real device in the virtual device tile
-      if(!$("#" +value.idx +"-tile-content").length){
-        $("<div></div>")
-          .attr("id", value.idx +"-tile-content")
-          .appendTo("#" +virtualDeviceName +"-tile")
-          .addClass("tile-content email")
-      }
-      
-      // add the icon and value
-      if(!$("#" +value.idx +"-tile-content-email-image").length){
-        $("<div></div>")
-          .attr("id", value.idx +"-tile-content-email-image")
-          .appendTo("#" +value.idx +"-tile-content")
-          .addClass("email-image")
-          //.addClass(deviceImage)
-        $("<img></img>")
-          .attr("id", value.idx +"-tile-content-email-image-data")
-          .appendTo("#" +value.idx +"-tile-content-email-image")
-          .attr("src", deviceImage)
-      }      
-      if(!$("#" +value.idx +"-tile-content-email-data").length){
-        // add data or status
-        $("<div></div>")
-          .attr("id", value.idx +"-tile-content-email-data")
-          .appendTo("#" +value.idx +"-tile-content")
-          .addClass("email-data")
-        $("<span></span>")
-          .attr("id", value.idx +"-tile-content-email-data-title")
-          .appendTo("#" +value.idx +"-tile-content-email-data" )
-          .addClass("email-data-title")
-          .text(text)
-        $("<span></span>")
-          .attr("id", value.idx +"-tile-content-email-data-subtitle")
-          .appendTo("#" +value.idx +"-tile-content-email-data" )
-          .addClass("email-data-subtitle fg-darkCobalt")
-          .text(value.Name)
-        $("<span></span>")
-          .attr("id", value.idx +"-tile-content-email-data-text")
-          .appendTo("#" +value.idx +"-tile-content-email-data" )
-          .addClass("email-data-text fg-gray")
-          .text(value.LastUpdate)
-      }
-*/
     })        
   }
 }(jQuery, window, document));
