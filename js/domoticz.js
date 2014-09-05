@@ -298,59 +298,8 @@
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-
-      // Dashboard
-      // tileGroupName = "Dashboard"
-      
-      switch(value.Type){
-        case "Lighting 2":
-          tileGroupName = "Switches"
-        break;
-        
-        case "Temp":
-        case "Temp + Humidity":
-        case "Temp + Humidity + Baro":
-          tileGroupName = "Temperature"
-        break;
-        
-        case "Usage":
-        case "Energy":
-        case "Current":
-        case "Current/Energy":
-        case "Fan":
-        case "Air Quality":
-        case "Lux":
-        case "Weight":
-        case "Thermostat":
-          tileGroupName = "Utility"
-          if (typeof(counterToday)  === "undefined"){
-            counterToday = "0.0 kWh"
-          }
-        break;
-        
-        case "Rain":
-        case "Wind":
-          tileGroupName = "Weather"
-        break;        
-      }
-      switch(value.SubType){
-        case "Gas":
-        case "RFXMeter counter":
-        case "Percentage":
-        case "Soil Moisture":
-        case "Voltage":
-        case "A/D":
-        case "Pressure":
-          tileGroupName = "Utility"
-          var counterToday = value.CounterToday
-          if (typeof(counterToday)  === "undefined"){
-            counterToday = "0.0 kWh"
-          }
-        break;
-        case "Solar Radiation":
-          tileGroupName = "Weather"
-        break;        
-      }
+      var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       
       // update text if not the same
       if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
@@ -392,6 +341,49 @@
       $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
         .removeClass($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr('class'))
         .addClass("accent " +deviceTileColor)
+        
+      // Update Dashboard tile content
+      tileGroupName = "Dashboard"
+      // update text if not the same
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          .hide()
+          .text(text)
+          .fadeIn(1500)
+        //setTimeout(function(){
+        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+        //}, 3000);
+              
+      }
+      // Update the image in case of status chage
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          .hide()
+          .attr("src", deviceImage)
+          .fadeIn(1500)
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          .hide()
+          .text(value.LastUpdate)
+          .fadeIn(1500)        
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+          .hide()
+          .text(counterToday)
+          .fadeIn(1500)        
+      }
+      //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
+      //  $("#BatteryStatus-"+value.idx)
+      //  .hide()
+      //  .text(value.BatteryStatus)
+      //  .fadeIn(1500)
+      //}
+      // Update the tile color
+      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+        //.removeClass($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr('class'))
+        //.addClass("accent " +deviceTileColor)      
     })
   }
   
@@ -625,75 +617,65 @@
     }
     return deviceImage
   }
+  
+  getTileGrouping = function(deviceType, deviceSubType, switchType){
+    var tileGroupNameText
+    switch(deviceType){
+      case "Lighting 2":
+        tileGroupNameText = switchType
+      break;
+      
+      case "Temp":
+      case "Temp + Humidity":
+      case "Temp + Humidity + Baro":
+        tileGroupNameText = "Temperature Sensors"
+      break;
+      
+      case "Usage":
+      case "Current":
+        tileGroupNameText = "Power Sensors"
+      break;      
+
+      case "Energy":
+      case "Current/Energy":
+        tileGroupNameText = "Energy Sensors"
+      break;      
+      case "Fan":
+      case "Air Quality":
+      case "Lux":
+      case "Weight":
+      case "Thermostat":
+        tileGroupNameText = "Other Utility Sensors"
+      break;
+      
+      case "Rain":
+      case "Wind":
+        tileGroupNameText = "Weather"
+      break;        
+    }
+    switch(deviceSubType){
+      case "Gas":
+      case "RFXMeter counter":
+      case "Percentage":
+      case "Soil Moisture":
+      case "Voltage":
+      case "A/D":
+      case "Pressure":
+        tileGroupNameText = "Other Utility Sensors"
+      break;
+      case "Solar Radiation":
+        tileGroupNameText = "Weather"
+      break;        
+      
+    }
+    return tileGroupNameText
+  }
+
       
   updateDomoticzTabs = function(){
     var device = combinedDeviceList
-    var tileGroupName
     device.forEach(function(value, key){
     
-      switch(value.Type){
-        case "Lighting 2":
-          tileGroupName = "Switches"
-          //var tileGroupName = value.SwitchType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-        break;
-        
-        case "Temp":
-        case "Temp + Humidity":
-        case "Temp + Humidity + Baro":
-          tileGroupName = "Temperature"
-          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-        break;
-        
-        case "Usage":
-        case "Energy":
-        case "Current":
-        case "Current/Energy":
-        case "Fan":
-        case "Air Quality":
-        case "Lux":
-        case "Weight":
-        case "Thermostat":
-          tileGroupName = "Utility"
-          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-          if (typeof(counterToday)  === "undefined"){
-            counterToday = "0.0 kWh"
-          }
-        break;
-        
-        case "Rain":
-        case "Wind":
-          tileGroupName = "Weather"
-          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-        break;        
-      }
-      switch(value.SubType){
-        case "Gas":
-        case "RFXMeter counter":
-        case "Percentage":
-        case "Soil Moisture":
-        case "Voltage":
-        case "A/D":
-        case "Pressure":
-          tileGroupName = "Utility"
-          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-          var counterToday = value.CounterToday
-          if (typeof(counterToday)  === "undefined"){
-            counterToday = "0.0 kWh"
-          }
-        break;
-        case "Solar Radiation":
-          tileGroupName = "Weather"
-          //var tileGroupName = value.Type.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-        break;        
-        
-      }
-      //switch(value.HardwareName){
-      //  case "Forecast IO":
-      //  case "Weather Underground":
-      //    tileGroupName = "Weather"
-      //    var tileGroupName = value.HardwareName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-      //  break;
-      //}
 
       //Read the data or status      
       switch(value.SwitchType){
@@ -704,21 +686,26 @@
           var text = value.Status
         break;
       }
-      
+      var counterToday = value.CounterToday
+      if (typeof(counterToday)  === "undefined"){
+        counterToday = "0.0 kWh"
+      }
       
       //Create The live Tiles
         var idx = value.idx
         var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
         var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      
+        var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+        var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+
         if(!$("#" +tileGroupName +"-tile-group").length) {
           $("<section></section>")
             .attr("id", tileGroupName +"-tile-group")
             .appendTo("#content-wrapper")
-            .addClass("tile-group ten-wide")
+            .addClass("tile-group six-wide")
           $("<h2></h2>")
             .appendTo("#" +tileGroupName +"-tile-group")
-            .text(tileGroupName)
+            .text(tileGroupNameText)
         }
         
         if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile").length) {
@@ -732,9 +719,6 @@
             .attr("data-direction", "horizontal")
             .attr("data-slide-direction", "forward")
             .attr("data-pause-onhover", "true")
-            //.attr("data-swap", "image")
-            //.attr("data-stops", "100%")
-            //.attr("data-delay","3500")
             .data("deviceIdx", value.idx)
             .data("deviceStatus", text)
             .data("deviceSetLevel", value.LevelInt)
@@ -906,8 +890,8 @@
           .attr("data-slide-direction", "forward")
           .attr("data-pause-onhover", "true")
           //.attr("data-stack", "true")
-          .attr("data-delay", "5000")
-          .attr("data-speed","1000")
+          .attr("data-delay", "3000")
+          .attr("data-speed","1500")
           //.attr("data-swap", "image")
           //.attr("data-stops", "100%")
           //.attr("data-delay","3500")
