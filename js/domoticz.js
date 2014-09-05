@@ -383,7 +383,8 @@
       // Update the tile color
       $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
         //.removeClass($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr('class'))
-        //.addClass("accent " +deviceTileColor)      
+        //.addClass("accent " +deviceTileColor)   
+   
     })
   }
   
