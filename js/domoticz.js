@@ -881,25 +881,27 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
           .hide()
           .attr("src", deviceImage)
-          .fadeIn(1500)
+          .fadeIn(500)
       }
       if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
           .hide()
           .text(value.LastUpdate)
-          .fadeIn(1500)        
+          .fadeIn(500)        
       }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
-          .hide()
-          .text("Todat: " +counterToday)
-          .fadeIn(1500)        
-      }
+      //if(value.Type == "Energy"){
+        if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != "Today: " +counterToday){        
+          $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+            .hide()
+            .text("Today: " +counterToday)
+            .fadeIn(500)        
+        }
+      //}
       //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
       //  $("#BatteryStatus-"+value.idx)
       //  .hide()
       //  .text(value.BatteryStatus)
-      //  .fadeIn(1500)
+      //  .fadeIn(500)
       //}
 
       // Update the tile color
@@ -929,25 +931,27 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
           .hide()
           .attr("src", deviceImage)
-          .fadeIn(1500)
+          .fadeIn(500)
       }
       if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
           .hide()
           .text(value.LastUpdate)
-          .fadeIn(1500)        
+          .fadeIn(500)        
       }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
-          .hide()
-          .text("Today: " +counterToday)
-          .fadeIn(1500)        
-      }
+      //if(value.Type == "Energy"){
+        if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != "Today: " +counterToday){        
+          $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+            .hide()
+            .text("Today: " +counterToday)
+            .fadeIn(500)        
+        }
+      //}
       //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
       //  $("#BatteryStatus-"+value.idx)
       //  .hide()
       //  .text(value.BatteryStatus)
-      //  .fadeIn(1500)
+      //  .fadeIn(500)
       //}
       // Update the tile color
       $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").addClass(deviceTileColor);
