@@ -268,126 +268,10 @@
         }
       }  
     })
-    //return combinedDeviceList 
-    refreshTabs() 
     //updateScenes()
   }
   
-  
-  refreshTabs = function(){
-    // Refresh DOM objects showing data
-    var device = combinedDeviceList
-    device.forEach(function(value, key){
-      var deviceName = value.VirtualDeivceName
-      var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-      var counterToday = value.CounterToday
-      if (typeof(counterToday)  === "undefined"){
-        counterToday = "0.0 kWh"
-      }
-    
-      //Use status for lighting devices and data for rest
-      switch(value.SwitchType){
-        case undefined:
-          var text = value.Data
-        break;
-        default:
-          var text = value.Status
-        break;
-      }
 
-      // Create Device Type icons
-      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
-      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-      
-      // update text if not the same
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
-          .hide()
-          .text(text)
-          .fadeIn(1500)
-        //setTimeout(function(){
-        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
-        //}, 3000);
-              
-      }
-      // Update the image in case of status chage
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
-          .hide()
-          .attr("src", deviceImage)
-          .fadeIn(1500)
-      }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
-          .hide()
-          .text(value.LastUpdate)
-          .fadeIn(1500)        
-      }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
-          .hide()
-          .text(counterToday)
-          .fadeIn(1500)        
-      }
-      //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
-      //  $("#BatteryStatus-"+value.idx)
-      //  .hide()
-      //  .text(value.BatteryStatus)
-      //  .fadeIn(1500)
-      //}
-      // Update the tile color
-      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
-        .removeClass($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr('class'))
-        .addClass("accent " +deviceTileColor)
-        
-      // Update Dashboard tile content
-      tileGroupName = "Dashboard"
-      // update text if not the same
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
-          .hide()
-          .text(text)
-          .fadeIn(1500)
-        //setTimeout(function(){
-        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
-        //}, 3000);
-              
-      }
-      // Update the image in case of status chage
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
-          .hide()
-          .attr("src", deviceImage)
-          .fadeIn(1500)
-      }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
-          .hide()
-          .text(value.LastUpdate)
-          .fadeIn(1500)        
-      }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
-          .hide()
-          .text(counterToday)
-          .fadeIn(1500)        
-      }
-      //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
-      //  $("#BatteryStatus-"+value.idx)
-      //  .hide()
-      //  .text(value.BatteryStatus)
-      //  .fadeIn(1500)
-      //}
-      // Update the tile color
-      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
-        //.removeClass($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr('class'))
-        //.addClass("accent " +deviceTileColor)   
-   
-    })
-  }
-  
   getDeviceTileColor = function(deviceType, deviceSubType, switchType, currentValue, currentCounterToday){
     var tileColor
     var counterToday = currentCounterToday
@@ -457,7 +341,7 @@
         tileColor = "red"
       }
       else {
-        tileColor = "blue"
+        //tileColor = "blue"
       }    
     }   
     else if (deviceType == "Lighting 2"){
@@ -493,12 +377,12 @@
             tileColor = "red"
         break;
         default:
-            tileColor = "blue"
+            //tileColor = "blue"
         break;    
       }
     }
     else {
-      tileColor = "blue"
+      //tileColor = "blue"
     }   
     return tileColor   
   }  
@@ -708,7 +592,7 @@
             .appendTo("#" +tileGroupName +"-tile-group")
             .text(tileGroupNameText)
         }
-        
+          
         if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile").length) {
           $("<div></div>")
             .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile")
@@ -948,9 +832,133 @@
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
           .addClass("clear-fix text-right metroSmaller")
           .text(value.LastUpdate)
-        
       }
-    })        
+    })
+  }
+    
+  refreshTabs = function(){
+    // Refresh DOM objects showing data
+    timerRefreshTabs = setTimeout(refreshTabs, 5000)
+    
+    var device = combinedDeviceList
+    device.forEach(function(value, key){
+      var deviceName = value.VirtualDeivceName
+      var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+      var counterToday = value.CounterToday
+      if (typeof(counterToday)  === "undefined"){
+        counterToday = "0.0 kWh"
+      }
+    
+      //Use status for lighting devices and data for rest
+      switch(value.SwitchType){
+        case undefined:
+          var text = value.Data
+        break;
+        default:
+          var text = value.Status
+        break;
+      }
+
+      // Create Device Type icons
+      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
+      var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+      
+      // update text if not the same
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          .hide()
+          .text(text)
+          .fadeIn(1500)
+        //setTimeout(function(){
+        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+        //}, 3000);
+              
+      }
+      // Update the image in case of status chage
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          .hide()
+          .attr("src", deviceImage)
+          .fadeIn(1500)
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          .hide()
+          .text(value.LastUpdate)
+          .fadeIn(1500)        
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+          .hide()
+          .text("Todat: " +counterToday)
+          .fadeIn(1500)        
+      }
+      //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
+      //  $("#BatteryStatus-"+value.idx)
+      //  .hide()
+      //  .text(value.BatteryStatus)
+      //  .fadeIn(1500)
+      //}
+
+      // Update the tile color
+      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").addClass(deviceTileColor);
+      var dAccent = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent");
+      if (dAccent != deviceTileColor) {
+        var cleanClass = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class").replace(dAccent, "");
+        cleanClass = cleanClass.replace(/(\s)+/, ' ');
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class", cleanClass);
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
+      }        
+      // Update Dashboard tile content
+      tileGroupName = "Dashboard"
+      // update text if not the same
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          .hide()
+          .text(text)
+          .fadeIn(1500)
+        //setTimeout(function(){
+        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+        //}, 3000);
+              
+      }
+      // Update the image in case of status chage
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          .hide()
+          .attr("src", deviceImage)
+          .fadeIn(1500)
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          .hide()
+          .text(value.LastUpdate)
+          .fadeIn(1500)        
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != counterToday){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+          .hide()
+          .text("Today: " +counterToday)
+          .fadeIn(1500)        
+      }
+      //if ($("#BatteryStatus-"+value.idx).text() != value.BatteryStatus) {
+      //  $("#BatteryStatus-"+value.idx)
+      //  .hide()
+      //  .text(value.BatteryStatus)
+      //  .fadeIn(1500)
+      //}
+      // Update the tile color
+      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").addClass(deviceTileColor);
+      var dAccent = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent");
+      if (dAccent != deviceTileColor) {
+        var cleanClass = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class").replace(dAccent, "");
+        cleanClass = cleanClass.replace(/(\s)+/, ' ');
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class", cleanClass);
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
+      }
+    })
   }
 }(jQuery, window, document));
 
@@ -958,4 +966,5 @@ $(document).ready(function() {
   updateDevices()
   updateDashboard()
   updateDomoticzTabs()
+  refreshTabs()
 });
