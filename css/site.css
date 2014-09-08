@@ -117,7 +117,7 @@ h6 { font-size: 1.15em; }
 .site-title
 {    
     float:left;
-    margin:-20px auto 0 40px;    
+    margin:-10px auto 0 40px;    
     -moz-transition:font-size .3s; /* Firefox 4 */    
     -webkit-transition:font-size .3s; /* Safari and Chrome */
     -o-transition:font-size .3s; /* Opera */
