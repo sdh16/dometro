@@ -379,6 +379,22 @@
         break;    
       }
     }
+    else if ((deviceType == "Scene") || (deviceType == "Group")){
+      switch (deviceType){
+        case "Scene":
+          if (currentValue == "On")
+            tileColor = "red"
+          else
+            tileColor = "green"
+        break;
+        case "Group":
+          if (currentValue == "On")
+            tileColor = "red"
+          else
+            tileColor = "green"
+        break;
+      }
+    }
     else {
       //tileColor = "blue"
     }   
@@ -501,7 +517,12 @@
       case "Lighting 2":
         tileGroupNameText = switchType
       break;
-      
+      case "Scene":
+        tileGroupNameText = "Scenes"
+      break;
+      case "Group":
+        tileGroupNameText = "Groups"
+      break;
       case "Temp":
       case "Temp + Humidity":
       case "Temp + Humidity + Baro":
@@ -548,6 +569,87 @@
     return tileGroupNameText
   }
 
+  //Create Scenes Tab
+  updateScenes = function(){
+
+    var scenes = $.getScenes()
+    scenes.result.forEach(function(value, key){
+    if((value.Type == "Scene") || (value.Type == "Group")){
+      var text = value.Status
+      var idx = value.idx
+      var sceneType = value.Type
+      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text)
+      var tileGroupNameText = "Scenes and Groups"
+      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+
+      if(!$("#" +tileGroupName +"-tile-group").length) {
+        $("<section></section>")
+          .attr("id", tileGroupName +"-tile-group")
+          .appendTo("#content-wrapper")
+          .addClass("tile-group two-wide")
+        $("<h2></h2>")
+          .appendTo("#" +tileGroupName +"-tile-group")
+          .text(tileGroupNameText)
+      }
+        
+      if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile").length) {
+        $("<div></div>")
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+          .appendTo("#" +tileGroupName +"-tile-group")
+          .addClass("live-tile metrojs-carousel")
+          .attr("data-bounce", "true")
+          .attr("data-bounce-dir", "edges")
+          .attr("data-mode", "carousel")
+          .attr("data-direction", "horizontal")
+          .attr("data-slide-direction", "forward")
+          .attr("data-pause-onhover", "true")
+          .data("deviceIdx", value.idx)
+          .data("deviceStatus", text)
+          //.data("deviceSetLevel", value.LevelInt)
+          .attr("onclick", "switchScenes(this)")
+        $("<span></span>")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+          .addClass("tile-title")
+          .text(value.Type)
+      }  
+      if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").length) {
+        $("<div></div>")
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+          .addClass("accent " +deviceTileColor)
+        $("<p></p>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+        $("<img></img>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix")
+        	.attr("src", deviceImage)
+        $("<span></span>")
+      	  .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
+      	  .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+      	  .addClass("clear-fix text-right")          	
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix text-right metroLarge")
+        	.text(text)
+        $("<span></span>")
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right")
+          .text(value.Name)        	
+        $("<span></span>")
+        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+        	.addClass("clear-fix text-right metroSmaller")
+        	.text(value.LastUpdate)
+        
+        }
+      }
+    })
+  }
       
   updateDomoticzTabs = function(){
     var device = combinedDeviceList
@@ -832,7 +934,8 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
       }        
       // Update Dashboard tile content
-      tileGroupName = "Dashboard"
+      var tileGroupNameText = "Dashboard"
+      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       // update text if not the same
       if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
@@ -886,12 +989,58 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
       }
     })
+    var scenes = $.getScenes()
+    scenes.result.forEach(function(value, key){
+      // Update Scenses and Groups tile content
+      var text = value.Status
+      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text)
+      var tileGroupNameText = "Scenes and Groups"
+      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
+      // update text if not the same
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          .hide()
+          .text(text)
+          //.fadeIn(500)
+          .show()
+        //setTimeout(function(){
+        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
+        //}, 3000);
+              
+      }
+      // Update the image in case of status chage
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          .hide()
+          .attr("src", deviceImage)
+          //.fadeIn(500)
+          .show()
+      }
+      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          .hide()
+          .text(value.LastUpdate)
+          //.fadeIn(500)        
+          .show()
+      }
+      // Update the tile color
+      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").addClass(deviceTileColor);
+      var dAccent = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent");
+      if (dAccent != deviceTileColor) {
+        var cleanClass = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class").replace(dAccent, "");
+        cleanClass = cleanClass.replace(/(\s)+/, ' ');
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class", cleanClass);
+        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
+      }      
+    })
   }
 }(jQuery, window, document));
 
 $(document).ready(function() {
   updateDevices()
   updateDashboard()
+  updateScenes()
   updateDomoticzTabs()
   refreshTabs()
 });
