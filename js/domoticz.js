@@ -679,7 +679,7 @@
         $("<section></section>")
           .attr("id", tileGroupName +"-tile-group")
           .appendTo("#content-wrapper")
-          .addClass("tile-group six-wide")
+          .addClass("tile-group five-wide")
         $("<h2></h2>")
           .appendTo("#" +tileGroupName +"-tile-group")
           .text(tileGroupNameText)

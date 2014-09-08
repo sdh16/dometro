@@ -78,11 +78,6 @@ h5 { font-size: 1.25em; }
 h6 { font-size: 1.15em; }
     h5 a:link, h5 a:visited, h5 a:active { padding: 0; text-decoration: none; }
 
-.projects-metrojs h2 { font-size: 3em; }
-.projects-metrojs h3 { font-size: 2.75em; }
-.projects-metrojs h4 { font-size: 2.5em; }
-.projects-metrojs h5 { font-size: 2.25em; }
-
 .smallNote
 {
     font-size:.9em;
@@ -122,7 +117,7 @@ h6 { font-size: 1.15em; }
 .site-title
 {    
     float:left;
-    margin:-60px auto 0 40px;    
+    margin:-20px auto 0 40px;    
     -moz-transition:font-size .3s; /* Firefox 4 */    
     -webkit-transition:font-size .3s; /* Safari and Chrome */
     -o-transition:font-size .3s; /* Opera */
@@ -280,20 +275,6 @@ i.icon {
     -webkit-transform: rotateZ(180deg) translateY(70px);
     transform: rotateZ(180deg) translateY(70px);
 }
-.live-tile.projects .head
-{
-    left: 0;
-    position: absolute;
-    top: 45%;
-}
-.live-tile.projects .head.top {
-    top: -93px;
-}
-.live-tile.projects .title
-{
-    display:block;
-    padding-top:0.5em;
-}
 .dark .metrojs-carousel > div.first
 {
     background-color:#fff;
@@ -378,470 +359,6 @@ ul.copy-list.tight.fat > li {
 	font-size: 14px;
 	padding: 12px 0;
 }
-.projects-metrojs ol {
-    list-style-type: decimal;
-    padding-left: 30px;
-}
-.projects-metrojs .interior-content
-{
-    margin:0px auto 0px 0px;
-    min-width:800px;
-    max-width:1024px;
-    padding-bottom:100px;
-    padding-left:40px;
-    width:90%;
-}
-.projects-metrojs.theme-gen .interior-content
-{
-    padding-left:20px;
-}
-.projects-metrojs .interior-content h3 {
-    padding: 0.5em 0 0.25em;
-}
-.projects-metrojs .interior-content h4,
-.projects-metrojs .interior-content h5 {
-    padding: .25em 0;
-}
-    .projects-metrojs .interior-content .return
-    {
-        border-bottom: 1px dashed #FFF;
-        font-size: 13px;
-        margin-left: 60px;
-        text-decoration: none;
-    }
-.light.projects-metrojs .interior-content .return
-{
-    border-color: #000;
-}
-.projects-metrojs .interior-content .footnote {
-    display: block;
-    font-size: 0.9em;
-}
-.projects-metrojs .about
-{
-    overflow:auto;
-    padding-bottom:20px;
-    position:relative;
-}
-    .projects-metrojs .about nav ul li
-    {
-        margin-top: 5px;
-    }
-       .projects-metrojs .about nav > ul > li ul > li {
-        padding-left: 16px;
-    }
-    .projects-metrojs .about nav > ul
-    {
-        list-style-position: inside;
-    }
-        .projects-metrojs .about nav > ul a
-        {
-            border-left-style: solid;
-            border-left-width: 3px;
-            font-size: 1.2em;
-            padding: 0 0 3px 7px;
-            text-decoration: none;
-        }
-.projects-metrojs #pageNav
-{
-    width:320px;
-}
-.projects-metrojs .tile-group
-{    
-    margin:0px;
-}
-#whatsIncluded > ul, #whatsPlanned > ul, #liveTileFeatures > ul {
-    list-style-type: square;
-    padding: 4px 0 4px 20px;
-}
-.projects-metrojs .live-tile-fiddles, .projects-metrojs .live-tile-fiddles .fiddleNav{
-    overflow: auto;
-    position: relative;
-    padding-bottom:20px;
-}   
-    .projects-metrojs .live-tile-fiddles .fiddleNav > ul {
-        float: left;
-        margin:10px 0 0 30px;
-    }
-        .projects-metrojs .live-tile-fiddles .fiddleNav > ul.first
-        {
-            margin-left:0px;
-        }
-        .projects-metrojs .live-tile-fiddles .fiddleNav > ul > li ul li
-        {
-            font-size:1em;
-            padding:3px 0;
-        }
-        .projects-metrojs .live-tile-fiddles .fiddleNav > ul > li > span
-        {
-            font-size:2em;
-        }
-        .projects-metrojs .live-tile-fiddles .fiddleNav > ul a:link
-        {
-            text-decoration:none;
-            border-bottom-width:1px;
-            border-bottom-style:dashed;
-        }
-
-.projects-metrojs .filter-by .count
-{
-    font-size:.9em;
-    font-style:italic; 
-    padding-left:1em;   
-}
-.projects-metrojs .filter-by .sort-by-label
-{
-    padding-right:20px;
-}
-
-.projects-metrojs .filter-by .jump-to {
-    font-size: 90%;
-    padding-left: 30px;
-}
-.projects-metrojs .filter-by .jump-to > a {
-    border-bottom: 1px dashed #FFF;
-    text-decoration: none;
-}
-.light.projects-metrojs .filter-by .jump-to > a
-{
-    border-bottom: 1px dashed #000;
-    text-decoration: none;
-}
-.projects-metrojs .option {
-    border: 1px solid #fff;
-    border-left:4px solid;
-    height:20px;
-    margin: 15px 0 0;
-    overflow: hidden;
-    padding: 5px;
-    position: relative;
-    -webkit-transition: all linear .25s;
-    -moz-transition: all linear .25s;
-    -o-transition: all linear .25s;
-    transition: all linear .25s;
-}
-    .projects-metrojs .option.expanded
-    {
-        max-height:2000px;
-        height:auto !important;
-    }
-    .projects-metrojs .option > .content > .expand
-    {
-        display:block;
-        height:100%;
-        padding-right:10px;
-        position:absolute;
-        right:0px;
-        text-align:right;
-        top:4px;
-        width:20px;
-    }
-        .projects-metrojs .option > .content > .expand > i
-        {
-            -webkit-transition: all linear .45s;
-            -moz-transition: all linear .45s;
-            -o-transition: all linear .45s;
-            transition: all linear .45s;
-            -webkit-transform-origin: center;
-            -ms-transform-origin: center;
-            -moz-transform-origin: center;
-            -o-transform-origin: center;
-            transform-origin: center;
-        }
-        .projects-metrojs .option > .content > .expand.expanded > i
-        {
-            -webkit-transform: rotate(-90deg);
-            -ms-transform: rotate(-90deg);
-            -moz-transform: rotate(-90deg);
-            -o-transform: rotate(-90deg);
-            transform:  rotate(-90deg);
-        }
-.projects-metrojs.light .option
-{
-    border-bottom-color:#000;
-    border-top-color:#000;
-    border-right-color:#000;
-}
-.projects-metrojs .option > .content > span {
-    display: block;
-    float:left;
-    font-size:.9em;
-    width:40%;
-}
-    .projects-metrojs .option > .content > .name
-    {
-        width:30%;
-    }
-        .projects-metrojs .option > .content > .name > .label
-        {
-            display:none;
-        } 
-        .projects-metrojs .option > .content > .name > .value
-        {
-            font-size: 1.4em;
-            line-height: 1em;
-        }           
-    .projects-metrojs .option > .content > .data-attribute
-    {
-        width:50%;
-    }
-.projects-metrojs #liveTileMethods .option > .content > .data-attribute > .label,
-.projects-metrojs #fnMetrojsThemeMethods .option > .content > .data-attribute > .label
-{
-    display:none;
-}
-    .projects-metrojs .option > .content > .type
-    {
-        width:20%;
-    }
-    .projects-metrojs .option > .content > .modes
-    {                
-        font-style:italic;
-        width:30%;
-    }
-        .projects-metrojs .option > .content > .modes > .value
-        {
-            font-size:.8em
-        }    
-    .projects-metrojs .option > .content > .default-value > .label,
-    .projects-metrojs .option > .content > .default-value > .value    
-    {
-        font-size:.9em;
-        width:70%;
-    }
-    .projects-metrojs .option > .content > .options
-    {
-	width:100%;
-    } 
-    .projects-metrojs .option > .content > .description
-    {
-        clear:both;
-    }
-        .projects-metrojs .option > .content > .description dl
-        {
-            font-size:.9em;
-        }
-        .projects-metrojs .option > .content > .description dt
-        {
-            display: block;
-            float: left;
-            font-style: italic;
-            min-width: 60px;
-        }
-    .projects-metrojs .option > .content > .example
-    {
-        clear:both;
-    }
-    
-.projects-metrojs .option > .content > span > .label, .projects-metrojs .option  > .content > div > .label {
-    color:#404040;
-    font-size:.85em;
-    font-weight: bold;
-    text-transform:lowercase;
-}
-.projects-metrojs .option > .content > .modes, .projects-metrojs .option > .content > .type, .projects-metrojs .option > .content > .default-value {
-    font-size:.9em;
-    
-}
-.projects-metrojs .download-options
-{
-    clear:both;
-    overflow:auto;
-    position:relative;
-}
-.projects-metrojs .download-options label { position:relative; top:7px; padding:0px 10px; font-size:18px; }
-.projects-metrojs .download-btn { 
-    color:#fff; 
-    float:left; 
-    padding:10px 10px 10px 20px;
-    -webkit-box-shadow: 1px 1px 5px #3c3c3c;
-    box-shadow: 1px 1px 5px #3c3c3c;
-    border-radius:6px;
-    display:block;
-    margin:20px 0 20px 30px;
-    min-height:72px;
-    width:180px;
-    text-decoration:none !important;
-    font-size:18px;
-	-webkit-transition:background-color .5s ease;
-	-moz-transition:background-color .5s ease;
-	-ms-transition:background-color .5s ease;
-	-o-transition:background-color .5s ease;
-	transition:background-color .5s ease;
-}
-.projects-metrojs .download-btn:hover { background-color:rgb(240,150,9) !important; }
-.projects-metrojs.light .download-btn:link, body.light .download-btn, .download-btn:hover { color:#fff; }
-.projects-metrojs .download-btn .modules { display:block; font-size:12px; padding-top:4px; }
-
-.projects-metrojs .whats-changed li {
-    list-style-type: square;
-    margin-left: 20px;
-    font-size:1em;
-}
-/* Theme Generator */
-.theme-gen .interior-content
-{
-    padding-bottom:100px;
-    position:relative;
-    overflow:auto;
-}
-
-.theme-gen h3
-{
-    padding-bottom:12px;
-    
-}
-.theme-gen legend
-{
-    color:#000;
-}
-.dark.theme-gen legend
-{
-    color:#fff;
-}
-.theme-gen h3 .smallNote, .theme-gen h3 label
-{
-    font-size:16px;
-}
-.theme-gen .interior-content > fieldset
-{
-    margin-top:20px;
-}
-.theme-gen fieldset,
-.theme-gen fieldset.colors
-{
-    min-height: 220px;
-    overflow:auto;
-    position:relative;
-    width:275px;
-}
-
-.theme-gen .field-row { overflow: auto; padding-bottom: 10px; position: relative; margin-bottom: 5px; }
-.theme-gen .field-row.template { display: none; }
-.theme-gen .field-row.custom { border-top-style: solid; border-top-width: 2px; }
-.theme-gen .field-row .field-row { border-bottom-width: 0px; }
-.theme-gen .field-row.row-options { font-size:13px; border-bottom-width: 0px; }
-.theme-gen .field-row p { margin-top: 8px; }
-.theme-gen .field-row p input { display:inline-block; float: none; margin-bottom: 10px;  }
-.theme-gen .field-row p label { display:inline-block; float: none; top: 9px; padding-right: 8px; min-width:20px; }
-.theme-gen .field-row p input[type='checkbox'] { top: 7px; margin-left: 8px; }
-.theme-gen .field-row p .and-query { display:none; }
-.theme-gen .field-row .field label { padding-right: 20px; min-width: inherit; width: auto; }
-.theme-gen .field-row .field label,
-.theme-gen .field-row .field input { margin-top: 0px; }
-
-.theme-gen fieldset.size-options ,
-.theme-gen .less-files fieldset,
-.theme-gen .less-files .field
-{
-	width: 100%;
-}
-
-.theme-gen .advanced { font-weight:bold; padding-top: 10px; }
-
-    .theme-gen .colors .field,
-    .theme-gen .colors .opt {
-        clear: none;
-        float: left;
-        width: 125px;
-    }
-    .theme-gen .custom-colors .field {
-        clear: none;
-        float: left;
-        width: 150px;
-    }
-	.theme-gen .field.float-left {
-		clear: none;
-        	float: left;
-	}
-    .theme-gen .custom-colors .field label {
-        padding: 0;
-        width: 45px;
-        min-width: 45px;
-    }
-    .theme-gen .custom-colors fieldset input[type=text] {
-        width: 90px;
-    }
-    .theme-gen .custom-colors .add
-    {
-        margin-top:35px;
-    }
-    .theme-gen .custom-colors .field.color {
-        clear:left;
-        padding-top: 10px;
-        width: auto !important;
-    }
-    .theme-gen .custom-colors .field.color .value{
-        padding: 0 4px;
-    }
-    .theme-gen fieldset legend
-    {
-        font-size:1.75em;
-        padding:12px 0;
-    }
-    .theme-gen fieldset label
-    {
-        cursor: pointer;
-    }
-    .theme-gen fieldset p
-    {
-        font-size:.9em;
-        padding-right:20px;
-    }
-.theme-gen .field, .theme-gen .opt
-{
-    clear:both;
-    position:relative;
-    overflow:auto;
-    width:180px;
-}
-.theme-gen .field.submit {
-    padding: 20px;
-    text-align: right;
-    width: 70%;
-}
-.theme-gen label
-{    
-    padding-right:20px;
-	min-width: 65px;
-	display:inline-block;
-}
-.theme-gen .less-files label
-{
-    padding-right:20px;
-}
-.theme-gen fieldset label, .theme-gen fieldset input
-{
-    display:block;
-    float:left;
-    margin:8px 0 0 0;
-    height:25px;
-    overflow:auto;
-    position:relative;    
-}
-    .theme-gen fieldset input[type=text]
-    {
-        height:20px;
-        width:75px;
-    }
-    .theme-gen fieldset input[type=checkbox]
-    {
-        margin-top:6px;
-    }
-    .theme-gen fieldset input.generate
-    {
-        float:right;
-    }
-.theme-gen fieldset .message
-{
-    clear:both;
-    font-size:.85em;
-}
-.theme-gen .preview
-{
-    clear:both;
-    width:946px;
-}
 
 /* views from wordstreamer */
 .ws .appbar
@@ -857,13 +374,10 @@ ul.copy-list.tight.fat > li {
         {
             margin-top:-45px;
         }
-            .site-title a
-            {
-                font-size:6em;
-            }
-	.projects-metrojs .live-tile-fiddles .fiddleNav > ul {
-            margin-left:20px;
-	}
+        .site-title a
+        {
+            font-size:6em;
+        }
     }
     @media (max-width:1024px) {
         body
@@ -879,10 +393,10 @@ ul.copy-list.tight.fat > li {
         {
             margin-top:-33px;
         }
-            .site-title a
-            {
-                font-size:5em;
-            }
+        .site-title a
+        {
+            font-size:5em;
+        }
         .site-mode
         {
             margin-top:10px;
@@ -900,10 +414,10 @@ ul.copy-list.tight.fat > li {
         {
             margin-top:-25px;
         }
-            .site-title a
-            {
-                font-size:4em;
-            }
+        .site-title a
+        {
+            font-size:4em;
+        }
         .site-mode
         {
             
@@ -936,10 +450,10 @@ ul.copy-list.tight.fat > li {
         {
             margin: 4px auto 0 4px;
         }
-            .site-title a
-            {
-                font-size:1em;
-            }    
+        .site-title a
+        {
+            font-size:1em;
+        }    
        
         #twitterFeed
         {
