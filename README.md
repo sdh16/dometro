@@ -24,13 +24,13 @@ As an example, from my Aeon MSES, I can combine the Binary Switch idx, Power idx
 
 All the virtual devices are rendered under 'Dashboard' tile-group and animate data from the included devices.
 
-All Scenses and groups are rendered under 'Scenes and Groups' tile-group.
+All Scenses and Groups are rendered under 'Scenes and Groups' tile-group.
 
 All the devices in domoticz (used ones) are then rendered under tile-groups derived using Domoticz DeviceType.
 
-The tiles get colored based on the on/off, power, temperature or energy values.
+The tiles get colored based on the on/off status, power consumption, temperature or energy consumption (current) values.
 
-Clicking on Sences, Groups or On/Off devic tile with toggle the state fo the scene, group or light (the tile is refreshed after a bit of delay for now).
+Clicking on Sences, Groups or On/Off device tile will toggle the state fo the scene, group or light (the tile is refreshed after a bit of delay for now).
 
 NOTE: Not all Domoticz devices may get grouped correctly. This is due to the limitation that I could only test with my device list. I am ready to enhance the grouping and tile coloring based on inputs from other users.
 
