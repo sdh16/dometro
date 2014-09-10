@@ -47,18 +47,19 @@
   
   DeleteVariable = function(idx)
   {
-	  confirm("Are you sure you want to remove this variable?", function(result) {
-		  if (result==true) {
-			  $.ajax({
-				  url: "json.htm?type=command&param=deleteuservariable&idx=" + idx,
-				  async: false, 
-				  dataType: 'json',
-				  success: function(data) {
-					  RefreshUserVariablesTable();
-				  }
-			  });
-		  }
-	  });
+	  //confirm("Are you sure you want to remove this variable?", function(result) {
+	  var result = confirm("Are you sure you want to remove this variable?")
+	  if (result==true) {
+		  $.ajax({
+			  url: "/json.htm?type=command&param=deleteuservariable&idx=" + idx,
+			  async: false, 
+			  dataType: 'json',
+			  success: function(data) {
+				  RefreshUserVariablesTable();
+			  }
+		  });
+	  }
+	  //});
   }
 	
 
@@ -111,8 +112,8 @@
   {
     $('#modal').show();
 
-	  $('#uservariablesedittable #uservariableupdate').attr("class", "button-dis");
-	  $('#uservariablesedittable #uservariabledelete').attr("class", "button-dis");
+	  //$('#uservariablesedittable #uservariableupdate').attr("class", "button-dis");
+	  //$('#uservariablesedittable #uservariabledelete').attr("class", "button-dis");
 
     $.varNames = [];	
     var oTable = $('#Variables-table').dataTable();
@@ -172,9 +173,9 @@
       .attr("id", "Variables-table")
       .appendTo("#fibaromain")
       .addClass("table striped hovered dataTable")
-      .attr("border","0")
-      .attr("cellpadding","0")
-      .attr("cellspacing","20")
+      //.attr("border","0")
+      //.attr("cellpadding","0")
+      //.attr("cellspacing","20")
     
     $("<thead><thead")
       .attr("id","Variables-table-thead")
@@ -186,15 +187,23 @@
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Variable name")
+      .attr("width", "120")
+      .attr("align", "left")
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Variable type")
+      .attr("width", "60")
+      .attr("align", "left")
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Current value")
+      .attr("width", "120")
+      .attr("align", "left")
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Last update")
+      .attr("width", "120")
+      .attr("align", "left")
     var oTable = $('#Variables-table').dataTable( {
       "sDom": '<"H"lfrC>t<"F"ip>',
       "oTableTools": {
@@ -206,15 +215,15 @@
        function(){
 	  $(nTrs).removeClass('row_selected');
 	  $(this).addClass('row_selected');
-	  $('#uservariablesedittable #uservariableupdate').attr("class", "bg-darkRed fg-white");
-	  $('#uservariablesedittable #uservariabledelete').attr("class", "bg-darkRed fg-white");
+	  //$('#uservariablesedittable #uservariableupdate').attr("class", "bg-darkRed fg-white");
+	  //$('#uservariablesedittable #uservariabledelete').attr("class", "bg-darkRed fg-white");
 	  var anSelected = fnGetSelected( oTable );
 	  if ( anSelected.length !== 0 ) {
 		  var data = oTable.fnGetData( anSelected[0] );
 		  var idx= data["DT_RowId"];
 		  $.userVariableIdx=idx;	
-		  $("#uservariablesedittable #uservariableupdate").attr("href", "javascript:AddLink('u')");
-		  $("#uservariablesedittable #uservariabledelete").attr("href", "javascript:DeleteVariable(" + idx + ")");
+		  $("#uservariablesedittable #uservariableupdate").attr("onClick", "AddLink('u')");
+		  $("#uservariablesedittable #uservariabledelete").attr("onClick", "DeleteVariable(" + idx + ")");
 		  $("#uservariablesedittable #uservariablename").val(data["0"]);
 		  $("#uservariablesedittable #uservariabletype").val(data["DT_ItemType"]);
 		  $("#uservariablesedittable #uservariablevalue").val(data["2"]);
@@ -253,13 +262,13 @@
     $("<label><label>")
       .appendTo("#uservariablenamelabel")
       .attr("for", "uservariablename")
-      .text("Variable name")
+      .text("Variable name:")
     $("<td><td")
-      .attr("id","uservariablename")
-      .appendTo("#uservariablenamerow")
-    $("<input><input")
       .attr("id","uservariablenameinput")
       .appendTo("#uservariablenamerow")
+    $("<input><input")
+      .attr("id","uservariablename")
+      .appendTo("#uservariablenameinput")
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
       
@@ -273,33 +282,33 @@
       .attr("style", "width:200px")
     $("<label><label>")
       .appendTo("#uservariabletypelabel")
-      .text("Variable type")
+      .text("Variable type:")
     $("<td><td")
-      .attr("id","uservariabletypeinput")
-      .appendTo("#uservariabletyperow")
-    $("<select><select")
       .attr("id","uservariabletypeselect")
       .appendTo("#uservariabletyperow")
+    $("<select><select")
+      .attr("id","uservariabletype")
+      .appendTo("#uservariabletypeselect")
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
     $("<option><option")
-      .appendTo("#uservariabletypeselect")
+      .appendTo("#uservariabletype")
       .attr("value", "0")
       .text("Integer")
     $("<option><option")
-      .appendTo("#uservariabletypeselect")
+      .appendTo("#uservariabletype")
       .attr("value", "1")
       .text("Float")
     $("<option><option")
-      .appendTo("#uservariabletypeselect")
+      .appendTo("#uservariabletype")
       .attr("value", "2")
       .text("String")
     $("<option><option")
-      .appendTo("#uservariabletypeselect")
+      .appendTo("#uservariabletype")
       .attr("value", "3")
       .text("Date")
     $("<option><option")
-      .appendTo("#uservariabletypeselect")
+      .appendTo("#uservariabletype")
       .attr("value", "4")
       .text("Time")
 
@@ -314,15 +323,37 @@
       .attr("style", "width:200px")
     $("<label><label>")
       .appendTo("#uservariablevaluelabel")
-      .text("Variable value")
+      .text("Variable value:")
     $("<td><td")
       .attr("id","uservariablevalueinput")
       .appendTo("#uservariablevaluerow")
     $("<input><input")
-      .attr("id","uservariablencalueinputdata")
-      .appendTo("#uservariablevaluerow")
+      .attr("id","uservariablevalue")
+      .appendTo("#uservariablevalueinput")
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
+      
+    $("<tr><tr")
+      .attr("id","uservariableactions")
+      .appendTo("#uservariablesedittable")      
+    $("<td><td")
+      .attr("id","uservariableactionstd")
+      .appendTo("#uservariableactions")
+      .attr("colspan", "2")
+    $("<button><button")
+      .appendTo("#uservariableactionstd")
+			.attr("onclick","AddLink('a');")
+			.text("Add")
+    $("<button><button")
+      .attr("id","uservariableupdate")
+      .appendTo("#uservariableactionstd")
+      //.attr("href", "javascript:AddLink('u')")
+			.text("Update")
+    $("<button><button")
+      .attr("id","uservariabledelete")
+      .appendTo("#uservariableactionstd")
+      //.attr("href", "javascript:DeleteVariable(32)")
+			.text("Delete")
       
 /*    
 	<table class="display" id="uservariablesedittable" border="0" cellpadding="0" cellspacing="20">
