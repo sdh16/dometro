@@ -29,7 +29,8 @@
 	  } else {
 		  $("#notification").css("background-color","#204060");
 	  }
-	  $("#notification").center();
+	  //$("#notification").center();
+	  $("#notification").attr("align", "center")
 	  $("#notification").fadeIn("slow");
 
 	  if (typeof timeout != 'undefined') {
@@ -107,6 +108,32 @@
 		
   }
 	
+  RefreshDevicesComboArray = function()
+  {
+	  $.usedDevices = [];
+	  $("#settings #comboactivedevice").empty();
+	  $.ajax({
+		  url: "/json.htm?type=devices&used=true", 
+		  async: false, 
+		  dataType: 'json',
+		  success: function(data) {
+			  if (typeof data.result != 'undefined') {
+				  $.each(data.result, function(i,item) {
+					  $.usedDevices.push({
+						  type: item.type,
+						  idx: item.idx,
+						  name: item.Name
+					  });
+				  });
+				  $.each($.usedDevices, function(i,item){
+					  var option = $('<option />');
+					  option.attr('value', item.idx).text(item.name);
+					  $("#settings #comboactivedevice").append(option);
+				  });
+			  }
+		  }
+	  });
+  }	
 	
   RefreshUserVariablesTable = function()
   {
@@ -171,7 +198,7 @@
       
     $("<table></table>")
       .attr("id", "Variables-table")
-      .appendTo("#fibaromain")
+      .appendTo("#settings")
       .addClass("table striped hovered dataTable")
       //.attr("border","0")
       //.attr("cellpadding","0")
@@ -187,22 +214,22 @@
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Variable name")
-      .attr("width", "120")
+      .attr("width", "240")
       .attr("align", "left")
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Variable type")
-      .attr("width", "60")
+      .attr("width", "150")
       .attr("align", "left")
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Current value")
-      .attr("width", "120")
+      .attr("width", "240")
       .attr("align", "left")
     $("<th></th>")
       .appendTo("#Variables-table-thead-row")
       .text("Last update")
-      .attr("width", "120")
+      .attr("width", "200")
       .attr("align", "left")
     var oTable = $('#Variables-table').dataTable( {
       "sDom": '<"H"lfrC>t<"F"ip>',
@@ -243,12 +270,12 @@
     
     $("<h2></h2>")
     .attr("id", "Edit-variables")
-    .appendTo("#fibaromain")
+    .appendTo("#settings")
     .text("Edit variable")
     
     $("<table></table>")
       .attr("id", "uservariablesedittable")
-      .appendTo("#fibaromain")
+      .appendTo("#settings")
       .addClass("table")
       
     $("<tr><tr")
@@ -347,47 +374,43 @@
     $("<button><button")
       .attr("id","uservariableupdate")
       .appendTo("#uservariableactionstd")
-      //.attr("href", "javascript:AddLink('u')")
 			.text("Update")
     $("<button><button")
       .attr("id","uservariabledelete")
       .appendTo("#uservariableactionstd")
-      //.attr("href", "javascript:DeleteVariable(32)")
 			.text("Delete")
-      
-/*    
-	<table class="display" id="uservariablesedittable" border="0" cellpadding="0" cellspacing="20">
-		<tr id="uservariablenamerow">
-			<td align="right" style="width:110px"><label for="uservariablename"><span>Variable name</span>:</label></td>
-			<td><input type="text" id="uservariablename" style="width: 250px; padding: .2em;" class="text ui-widget-content ui-corner-all" /></td>
-		</tr>
-		<tr>
-			<td align="right" style="width:110px"><label for="uservariabletype"><span>Variable type</span>:</label></td>
-			<td><select id="uservariabletype" style="width:160px" class="combobox ui-corner-all">
-					<option value="0" data-i18n="Integer">Integer</option>
-					<option value="1" data-i18n="Float">Float</option>
-					<option value="2" data-i18n="String">String</option>
-					<option value="3" data-i18n="Date">Date</option>
-					<option value="4" data-i18n="Time">Time</option>
-				</select>
-			</td>
-		</tr>
-		<tr id="uservariablevaluerow">
-			<td align="right" style="width:110px"><label for="uservariablevalue"><span>Variable value</span>:</label></td>
-			<td><input type="text" id="uservariablevalue" style="width: 250px; padding: .2em;" class="text ui-widget-content ui-corner-all" /></td>
-		</tr>
 
-		<tr>
-			<td colspan="2">
-				<button class="bg-darkRed fg-white" onclick="AddLink('a');"">Add</button>
-				<button class="bg-darkRed fg-white" id="uservariableupdate">Update</button>&nbsp;&nbsp;&nbsp;
-				<button class="bg-darkRed fg-white" id="uservariabledelete">Delete</button>
-			</td>
-		</tr>	
-	</table>
-*/    
+    $("<h2></h2>")
+    .attr("id", "Device-list")
+    .appendTo("#settings")
+    .text("Devices:")
     
+    $("<table></table>")
+      .attr("id", "activeparamstable")
+      .appendTo("#settings")
+      .addClass("table")
+    $("<tr><tr")
+      .attr("id","activeparamstablerow")
+      .appendTo("#activeparamstable")      
+    $("<td><td")
+      .attr("id","activeparamstablerowtd")
+      .appendTo("#activeparamstablerow")
+      .attr("align", "right")
+      .attr("style", "width:200px")
+    $("<label><label")
+      .appendTo("#activeparamstablerowtd")
+      .text("Device")
+    $("<select><select")
+      .attr("id","comboactivedevice")
+      .appendTo("#activeparamstablerowtd")
+      .attr("style", "width:500p")
+      .addClass("combobox ui-corner-all")
+    $("<button><button")
+      .appendTo("#activeparamstablerowtd")
+			.attr("onclick","AddActiveDevice();")
+			.text("Add")
 
+    RefreshDevicesComboArray()      
   }
   
 }(jQuery, window, document));
