@@ -14,6 +14,21 @@
 ;(function ( $, window, document, undefined ){
   //Settings
   
+  // get a used device's data
+  $.getDevice = function(idx){
+    var device = [];
+    $.ajax({
+      url: '/json.htm?type=devices&rid=' +idx,
+      async: false,
+      dataType: 'json',
+      success: function (json) {
+        device = json;
+      }
+    });
+    return device.result;
+  }
+  
+  
   /* Get the rows which are currently selected */
   fnGetSelected =function( oTableLocal )
   {
@@ -137,56 +152,43 @@
 	
   RefreshActiveDevicesTable = function(idx)
   {
-	  $.LastPlan=idx;
-	  $('#modal').show();
+    $.LastPlan=idx;
+    $('#modal').show();
 
-	  $('#plancontent #delclractive #activedevicedelete').attr("class", "btnstyle3-dis");
+    $('#settings #activedevicedelete').attr("class", "btnstyle3-dis");
 
-	  var oTable = $('#plancontent #activetable').dataTable();
-	  oTable.fnClearTable();
+    var oTable = $('#settings #activetable').dataTable();
+    oTable.fnClearTable();
     
-	  $.ajax({
-		  url: "/json.htm?type=command&param=getplandevices&idx=" + idx, 
-		  async: false, 
-		  dataType: 'json',
-		  success: function(data) {
-			  if (typeof data.result != 'undefined') {
-				  var totalItems=data.result.length;
-				  $.each(data.result, function(i,item){
-					  var updownImg="";
-					  if (i!=totalItems-1) {
-						  //Add Down Image
-						  if (updownImg!="") {
-							  updownImg+="&nbsp;";
-						  }
-						  updownImg+='<img src="images/down.png" onclick="ChangeDeviceOrder(1,' + item.idx + ');" onmouseover="cursorhand()" onmouseout="cursordefault()" width="16" height="16"></img>';
-					  }
-					  else {
-						  updownImg+='<img src="images/empty16.png" width="16" height="16"></img>';
-					  }
-					  if (i!=0) {
-						  //Add Up image
-						  if (updownImg!="") {
-							  updownImg+="&nbsp;";
-						  }
-						  updownImg+='<img src="images/up.png" onclick="ChangeDeviceOrder(0,' + item.idx + ');" onmouseover="cursorhand()" onmouseout="cursordefault()" width="16" height="16"></img>';
-					  }
-					  var addId = oTable.fnAddData( {
-						  "DT_RowId": item.idx,
-						  "Order": item.Order,
-						  "0": item.devidx,
-						  "1": item.Name,
-						  "2": updownImg
-					  } );
-				  });
-			  }
-		  }
-	  });
+    $.ajax({
+      url: "/json.htm?type=command&param=getuservariable&idx=" + idx, 
+	async: false, 
+	dataType: 'json',
+	success: function(data) {
+	  if (typeof data.result != 'undefined') {
+            data.result.forEach(function(valueVirtualDevice, index){
+              if(valueVirtualDevice.Name.match(/vd_/)){    
+                var deviceidx = valueVirtualDevice.Value.split(",")
+                for(i = 1; i < deviceidx.length; i++) {
+                  var device = $.getDevice(deviceidx[i])
+		  var addId = oTable.fnAddData({
+		    "DT_RowId": device[0].idx,
+		    //"Order": device.Order,
+		    "0": device[0].idx,
+		    "1": device[0].Name,
+		  });
+		}
+	      }  
+	    });
+          }
+	}
+    });
   }
+  
   AddActiveDevice = function()
   {
 	  if ($.devIdx==-1) {
-		  bootbox.alert('No Plan Selected!');
+		  alert('No Vierual Device Selected!');
 		  return;
 	  }
 
@@ -201,7 +203,7 @@
 		  return ;
 	  }
 	  $.ajax({
-		  url: "json.htm?type=command&param=addplanactivedevice&idx=" + $.devIdx + 
+		  url: "/json.htm?type=command&param=addplanactivedevice&idx=" + $.devIdx + 
 			  "&activetype=" + ADType +
 			  "&activeidx=" + ActiveDeviceIdx,
 		  async: false, 
@@ -228,7 +230,7 @@
 	  bootbox.confirm($.i18n("Are you sure to delete this Active Device?\n\nThis action can not be undone..."), function(result) {
 		  if (result==true) {
 			  $.ajax({
-				   url: "json.htm?type=command&param=deleteplandevice&idx=" + idx,
+				   url: "/json.htm?type=command&param=deleteplandevice&idx=" + idx,
 				   async: false, 
 				   dataType: 'json',
 				   success: function(data) {
@@ -299,8 +301,6 @@
 
   ShowUserVariables = function()
   {
-  
-      
     $("<table></table>")
       .attr("id", "Variables-table")
       .appendTo("#settings")
@@ -336,6 +336,53 @@
       .text("Last update")
       .attr("width", "200")
       .attr("align", "left")
+      
+    $("<h2></h2>")
+    .attr("id", "Devices-list")
+    .appendTo("#settings")
+    .text("Devices:")
+    $("<div></div>")
+    .appendTo("#Devices-list")
+    .text("(Select Virtual Device first to Edit...)")
+    $("<table></table>")
+      .attr("id", "activetable")
+      .appendTo("#settings")
+      .addClass("table striped hovered dataTable")
+    $("<thead><thead")
+      .attr("id","activetable-thead")
+      .appendTo("#activetable")
+      .addClass("text-left")
+    $("<tr><tr")
+      .attr("id","activetable-thead-row")
+      .appendTo("#activetable-thead")
+    $("<th></th>")
+      .appendTo("#activetable-thead-row")
+      .text("Idx")
+      .attr("width", "40")
+      .attr("align", "left")
+    $("<th></th>")
+      .appendTo("#activetable-thead-row")
+      .text("Name")
+      .attr("width", "250")
+      .attr("align", "left")  
+      
+    $("<table></table>")
+      .attr("id", "activetable-actions")
+      .appendTo("#settings")
+      .addClass("table")
+    $("<tr><tr")
+      .attr("id","activetableactions")
+      .appendTo("#activetable-actions")      
+    $("<td><td")
+      .attr("id","activetableactionstd")
+      .appendTo("#activetableactions")
+      .attr("colspan", "2")
+    $("<button><button")
+      .attr("id","activedevicedelete")
+      .appendTo("#activetableactionstd")
+      //.attr("onclick","AddLink('a');")
+      .text("Delete")        
+      
     var oTable = $('#Variables-table').dataTable( {
       "sDom": '<"H"lfrC>t<"F"ip>',
       "oTableTools": {
@@ -352,6 +399,7 @@
 	  var anSelected = fnGetSelected( oTable );
 	  if ( anSelected.length !== 0 ) {
 		  var data = oTable.fnGetData( anSelected[0] );
+                  $.devIdx=idx;
 		  var idx= data["DT_RowId"];
 		  $.userVariableIdx=idx;	
 		  $("#uservariablesedittable #uservariableupdate").attr("onClick", "AddLink('u')");
@@ -359,6 +407,8 @@
 		  $("#uservariablesedittable #uservariablename").val(data["0"]);
 		  $("#uservariablesedittable #uservariabletype").val(data["DT_ItemType"]);
 		  $("#uservariablesedittable #uservariablevalue").val(data["2"]);
+		  $("#uservariablesedittable #uservariablevdtype").val(data["2"].split(",")[0]);
+                  RefreshActiveDevicesTable(idx);
 	  }
         });
       },    
@@ -372,11 +422,10 @@
       "sPaginationType": "full_numbers"
     } );
     RefreshUserVariablesTable()
-    //RefreshActiveDevicesTable(idx);    
     $("<h2></h2>")
     .attr("id", "Edit-variables")
     .appendTo("#settings")
-    .text("Edit variable")
+    .text("Edit Virtual Device")
     
     $("<table></table>")
       .attr("id", "uservariablesedittable")
@@ -394,7 +443,7 @@
     $("<label><label>")
       .appendTo("#uservariablenamelabel")
       .attr("for", "uservariablename")
-      .text("Variable name:")
+      .text("Virtual Device Name:")
     $("<td><td")
       .attr("id","uservariablenameinput")
       .appendTo("#uservariablenamerow")
@@ -404,6 +453,27 @@
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
       
+    $("<tr><tr")
+      .attr("id","uservariablevdtyperow")
+      .appendTo("#uservariablesedittable")      
+    $("<td><td")
+      .attr("id","uservariablevdtypelabel")
+      .appendTo("#uservariablevdtyperow")
+      .attr("align", "right")
+      .attr("style", "width:200px")
+    $("<label><label>")
+      .appendTo("#uservariablevdtypelabel")
+      .attr("for", "uservariablevdtype")
+      .text("Virtual Device Type: ")
+    $("<td><td")
+      .attr("id","uservariablevdtypeinput")
+      .appendTo("#uservariablevdtyperow")
+    $("<input><input")
+      .attr("id","uservariablevdtype")
+      .appendTo("#uservariablevdtypeinput")
+      .attr("style", "width: 250px; padding: .2em;")
+      .addClass("text ui-widget-content ui-corner-all")
+
     $("<tr><tr")
       .attr("id","uservariabletyperow")
       .appendTo("#uservariablesedittable")      
@@ -489,52 +559,6 @@
       .appendTo("#uservariableactionstd")
 			.text("Delete")
 
-    $("<h2></h2>")
-    .attr("id", "Devices-list")
-    .appendTo("#settings")
-    .text("Devices:")
-    $("<div></div>")
-    .appendTo("#Devices-list")
-    .text("(Select Virtual Device first to Edit...)")
-    $("<table></table>")
-      .attr("id", "activetable")
-      .appendTo("#settings")
-      .addClass("table striped hovered dataTable")
-    $("<thead><thead")
-      .attr("id","activetable-thead")
-      .appendTo("#activetable")
-      .addClass("text-left")
-    $("<tr><tr")
-      .attr("id","activetable-thead-row")
-      .appendTo("#activetable-thead")
-    $("<th></th>")
-      .appendTo("#activetable-thead-row")
-      .text("Idx")
-      .attr("width", "40")
-      .attr("align", "left")
-    $("<th></th>")
-      .appendTo("#activetable-thead-row")
-      .text("Name")
-      .attr("width", "250")
-      .attr("align", "left")  
-      
-    $("<table></table>")
-      .attr("id", "activetable-actions")
-      .appendTo("#settings")
-      .addClass("table")
-    $("<tr><tr")
-      .attr("id","activetableactions")
-      .appendTo("#activetable-actions")      
-    $("<td><td")
-      .attr("id","activetableactionstd")
-      .appendTo("#activetableactions")
-      .attr("colspan", "2")
-    $("<button><button")
-      .attr("id","activedevicedelete")
-      .appendTo("#activetableactionstd")
-			//.attr("onclick","AddLink('a');")
-			.text("Delete")
-        
 /*
 	<h2 data-i18n="Devices">Devices:</h2><span data-i18n="(Select Plan first to Edit...)"></span><br>
 	<br>
