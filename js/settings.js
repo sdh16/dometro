@@ -135,6 +135,111 @@
 	  });
   }	
 	
+  RefreshActiveDevicesTable = function(idx)
+  {
+	  $.LastPlan=idx;
+	  $('#modal').show();
+
+	  $('#plancontent #delclractive #activedevicedelete').attr("class", "btnstyle3-dis");
+
+	  var oTable = $('#plancontent #activetable').dataTable();
+	  oTable.fnClearTable();
+    
+	  $.ajax({
+		  url: "/json.htm?type=command&param=getplandevices&idx=" + idx, 
+		  async: false, 
+		  dataType: 'json',
+		  success: function(data) {
+			  if (typeof data.result != 'undefined') {
+				  var totalItems=data.result.length;
+				  $.each(data.result, function(i,item){
+					  var updownImg="";
+					  if (i!=totalItems-1) {
+						  //Add Down Image
+						  if (updownImg!="") {
+							  updownImg+="&nbsp;";
+						  }
+						  updownImg+='<img src="images/down.png" onclick="ChangeDeviceOrder(1,' + item.idx + ');" onmouseover="cursorhand()" onmouseout="cursordefault()" width="16" height="16"></img>';
+					  }
+					  else {
+						  updownImg+='<img src="images/empty16.png" width="16" height="16"></img>';
+					  }
+					  if (i!=0) {
+						  //Add Up image
+						  if (updownImg!="") {
+							  updownImg+="&nbsp;";
+						  }
+						  updownImg+='<img src="images/up.png" onclick="ChangeDeviceOrder(0,' + item.idx + ');" onmouseover="cursorhand()" onmouseout="cursordefault()" width="16" height="16"></img>';
+					  }
+					  var addId = oTable.fnAddData( {
+						  "DT_RowId": item.idx,
+						  "Order": item.Order,
+						  "0": item.devidx,
+						  "1": item.Name,
+						  "2": updownImg
+					  } );
+				  });
+			  }
+		  }
+	  });
+  }
+  AddActiveDevice = function()
+  {
+	  if ($.devIdx==-1) {
+		  bootbox.alert('No Plan Selected!');
+		  return;
+	  }
+
+	  var ADType=0;
+	  if ($("#plancontent #comboactivedevice option:selected").text().indexOf("[Scene]") == 0) {
+		  ADType=1;
+	  }
+
+	  var ActiveDeviceIdx=$("#plancontent #comboactivedevice option:selected").val();
+	  if (typeof ActiveDeviceIdx == 'undefined') {
+		  bootbox.alert('No Active Device Selected!');
+		  return ;
+	  }
+	  $.ajax({
+		  url: "json.htm?type=command&param=addplanactivedevice&idx=" + $.devIdx + 
+			  "&activetype=" + ADType +
+			  "&activeidx=" + ActiveDeviceIdx,
+		  async: false, 
+		  dataType: 'json',
+		  success: function(data) {
+			  if (data.status == 'OK') {
+				  RefreshActiveDevicesTable($.devIdx);
+				  //RefreshUnusedDevicesComboArray();
+			  }
+			  else {
+				  ShowNotify('Problem adding Device!', 2500, true);
+			  }
+		  },
+		  error: function(){
+			  HideNotify();
+			  ShowNotify('Problem adding Device!', 2500, true);
+		  }     
+	  });
+	
+  }
+
+  DeleteActiveDevice = function(idx)
+  {
+	  bootbox.confirm($.i18n("Are you sure to delete this Active Device?\n\nThis action can not be undone..."), function(result) {
+		  if (result==true) {
+			  $.ajax({
+				   url: "json.htm?type=command&param=deleteplandevice&idx=" + idx,
+				   async: false, 
+				   dataType: 'json',
+				   success: function(data) {
+					  RefreshActiveDevicesTable($.devIdx);
+					  //RefreshUnusedDevicesComboArray();
+				   }
+			  });
+		  }
+	  });
+  }	
+	
   RefreshUserVariablesTable = function()
   {
     $('#modal').show();
@@ -267,7 +372,7 @@
       "sPaginationType": "full_numbers"
     } );
     RefreshUserVariablesTable()
-    
+    //RefreshActiveDevicesTable(idx);    
     $("<h2></h2>")
     .attr("id", "Edit-variables")
     .appendTo("#settings")
@@ -359,10 +464,14 @@
       .appendTo("#uservariablevalueinput")
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
-      
+
+    $("<table></table>")
+      .attr("id", "uservariablesedittable-actions")
+      .appendTo("#settings")
+      .addClass("table")
     $("<tr><tr")
       .attr("id","uservariableactions")
-      .appendTo("#uservariablesedittable")      
+      .appendTo("#uservariablesedittable-actions")      
     $("<td><td")
       .attr("id","uservariableactionstd")
       .appendTo("#uservariableactions")
@@ -381,9 +490,74 @@
 			.text("Delete")
 
     $("<h2></h2>")
-    .attr("id", "Device-list")
+    .attr("id", "Devices-list")
     .appendTo("#settings")
     .text("Devices:")
+    $("<div></div>")
+    .appendTo("#Devices-list")
+    .text("(Select Virtual Device first to Edit...)")
+    $("<table></table>")
+      .attr("id", "activetable")
+      .appendTo("#settings")
+      .addClass("table striped hovered dataTable")
+    $("<thead><thead")
+      .attr("id","activetable-thead")
+      .appendTo("#activetable")
+      .addClass("text-left")
+    $("<tr><tr")
+      .attr("id","activetable-thead-row")
+      .appendTo("#activetable-thead")
+    $("<th></th>")
+      .appendTo("#activetable-thead-row")
+      .text("Idx")
+      .attr("width", "40")
+      .attr("align", "left")
+    $("<th></th>")
+      .appendTo("#activetable-thead-row")
+      .text("Name")
+      .attr("width", "250")
+      .attr("align", "left")  
+      
+    $("<table></table>")
+      .attr("id", "activetable-actions")
+      .appendTo("#settings")
+      .addClass("table")
+    $("<tr><tr")
+      .attr("id","activetableactions")
+      .appendTo("#activetable-actions")      
+    $("<td><td")
+      .attr("id","activetableactionstd")
+      .appendTo("#activetableactions")
+      .attr("colspan", "2")
+    $("<button><button")
+      .attr("id","activedevicedelete")
+      .appendTo("#activetableactionstd")
+			//.attr("onclick","AddLink('a');")
+			.text("Delete")
+        
+/*
+	<h2 data-i18n="Devices">Devices:</h2><span data-i18n="(Select Plan first to Edit...)"></span><br>
+	<br>
+	<table class="display" id="activetable" border="0" cellpadding="0" cellspacing="0" width="100%">
+		<thead>
+				<tr valign="middle">
+					<th width="40" align="center" data-i18n="Idx">Idx</th>
+					<th align="left" data-i18n="Name">Name</th>
+					<th width="60" align="center" data-i18n="Order">Order</th>
+				</tr>
+		</thead>
+	</table>
+    <table id="delclractive" border="0" cellpadding="0" cellspacing="0" width="100%">
+		<tr>
+			<td>
+				<a class="btnstyle3-dis" id="activedevicedelete" data-i18n="Delete">Delete</a>
+			</td>
+			<td align="right">
+				<a class="btnstyle3-dis" id="activedeviceclear" onclick="ClearActiveDevices();" data-i18n="Clear">Clear</a>
+			</td>
+		</tr>
+	</table>
+*/    
     
     $("<table></table>")
       .attr("id", "activeparamstable")
