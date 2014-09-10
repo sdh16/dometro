@@ -245,8 +245,8 @@
   RefreshUserVariablesTable = function()
   {
     $('#modal').show();
-    $('#uservariablesedittable #uservariableupdate').attr("class", "button-dis");
-    $('#uservariablesedittable #uservariabledelete').attr("class", "button-dis");
+    $('#uservariablesedittable #uservariableupdate').attr("class", "button disabled");
+    $('#uservariablesedittable #uservariabledelete').attr("class", "button disabled");
 
     $.varNames = [];	
     var oTable = $('#Variables-table').dataTable();
@@ -340,13 +340,13 @@
     .attr("id", "Devices-list")
     .appendTo("#settings")
     .text("Devices:")
-    $("<div></div>")
+    $("<p></p>")
     .appendTo("#Devices-list")
     .text("(Select Virtual Device first to Edit...)")
     $("<table></table>")
       .attr("id", "activetable")
       .appendTo("#settings")
-      .addClass("table table-striped table-bordered table-hovered dataTable")
+      .addClass("table table-striped table-bordered table-hover table-condensed dataTable")
     $("<thead><thead>")
       .attr("id","activetable-thead")
       .appendTo("#activetable")
@@ -379,8 +379,8 @@
     $("<button><button")
       .attr("id","activedevicedelete")
       .appendTo("#activetableactionstd")
-      .attr("type", "button-dis")
-      .addClass("btn btn-default")
+      .attr("type", "button")
+      .addClass("btn btn-primary disabled")
       .text("Delete")        
       
     var oTable = $('#Variables-table').dataTable( {
@@ -453,7 +453,7 @@
       .appendTo("#activeparamstablerowtd")
       .attr("onclick","AddActiveDevice();")
       .attr("type", "button")
-      .addClass("btn btn-default")
+      .addClass("btn btn-primary")
       .text("Add")
 
     RefreshDevicesComboArray()      
@@ -586,19 +586,19 @@
       .appendTo("#uservariableactionstd")
       .attr("onclick","AddLink('a');")
       .attr("type", "button")
-      .addClass("btn btn-default")
+      .addClass("btn btn-primary")
       .text("Add")
     $("<button><button")
       .attr("id","uservariableupdate")
       .appendTo("#uservariableactionstd")
       .attr("type", "button")
-      .addClass("btn btn-default")
+      .addClass("btn btn-primary disabled")
       .text("Update")
     $("<button><button")
       .attr("id","uservariabledelete")
       .appendTo("#uservariableactionstd")
       .attr("type", "button")
-      .addClass("btn btn-default")
+      .addClass("btn btn-primary disabled")
       .text("Delete")
 
     
