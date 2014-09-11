@@ -153,7 +153,6 @@
 	
   RefreshActiveDevicesTable = function(idx)
   {
-    $.LastPlan=idx;
     $('#modal').show();
 
     $('#settings #activedevicedelete').toggleClass("disabled")
@@ -225,8 +224,8 @@
   RefreshUserVariablesTable = function()
   {
     $('#modal').show();
-    //$('#uservariablesedittable #uservariableupdate').toggleClass("disabled");
-    //$('#uservariablesedittable #uservariabledelete').toggleClass("disabled");
+    $('#uservariablesedittable #uservariableupdate').toggleClass("disabled");
+    $('#uservariablesedittable #uservariabledelete').toggleClass("disabled");
 
     $.varNames = [];	
     var oTable = $('#Variables-table').dataTable();
@@ -301,8 +300,8 @@
           //$(nTrs).removeClass('selected');
           $(this).addClass('row_selected');
           //$(this).addClass('selected');
-          //$('#uservariablesedittable #uservariableupdate').toggleClass("disabled")
-          //$('#uservariablesedittable #uservariabledelete').toggleClass("disabled")
+          $('#uservariablesedittable #uservariableupdate').toggleClass("disabled")
+          $('#uservariablesedittable #uservariabledelete').toggleClass("disabled")
           var anSelected = fnGetSelected( oTable );
           if ( anSelected.length !== 0 ){
             var data = oTable.fnGetData( anSelected[0] );
@@ -579,13 +578,14 @@
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
 
-    $("<table></table>")
-      .attr("id", "uservariablesedittable-actions")
-      .appendTo("#settings")
-      .addClass("table")
+    //$("<table></table>")
+    //  .attr("id", "uservariablesedittable-actions")
+    //  .appendTo("#settings")
+    //  .addClass("table")
     $("<tr><tr")
       .attr("id","uservariableactions")
-      .appendTo("#uservariablesedittable-actions")      
+      //.appendTo("#uservariablesedittable-actions")  
+      .appendTo("#uservariablesedittable")    
     $("<td><td")
       .attr("id","uservariableactionstd")
       .appendTo("#uservariableactions")
