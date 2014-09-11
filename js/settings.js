@@ -79,15 +79,15 @@
   }
 	
 
-  AddLink = function(type)
+  AddUpdateVariable = function(type)
   {
 	  var idx = $.userVariableIdx;
-	  var uservariablename = "vd_" +$('#uservariablesedittable #uservariablename').val();
+	  var uservariablename = "vd_" +($('#uservariablesedittable #uservariablename').val());
 	  var uservariabletype = 2 //$('#uservariablesedittable #uservariabletype option:selected').val();
 	  var uservariablevalue = $('#uservariablesedittable #uservariablevalue').val();
 	
 	  if((type=="a") && (jQuery.inArray(uservariablename,$.varNames) != -1)){
-		  ShowNotify('Variable name already exists!', 2500, true);
+		  alert('Variable name already exists!', 2500, true);
 	  }
 	  else {
 		  if (type == "a") {
@@ -155,22 +155,13 @@
     $.LastPlan=idx;
     $('#modal').show();
 
-    $('#settings #activedevicedelete').attr("class", "button");
+    $('#settings #activedevicedelete').toggleClass("disabled")
 
     var oTable = $('#settings #activetable').dataTable();
     oTable.fnClearTable();
-    
-    $.ajax({
-      url: "/json.htm?type=command&param=getuservariable&idx=" + idx, 
-	async: false, 
-	dataType: 'json',
-	success: function(data) {
-	  if (typeof data.result != 'undefined') {
-            data.result.forEach(function(valueVirtualDevice, index){
-              if(valueVirtualDevice.Name.match(/vd_/)){    
-                var deviceidx = valueVirtualDevice.Value.split(",")
-                for(i = 1; i < deviceidx.length; i++) {
-                  var device = $.getDevice(deviceidx[i])
+    //var deviceidx = $('#uservariablesedittable #uservariablevalue').val().split(",")
+    for(i = 1; i < $.virtualDeviceString.length; i++) {
+      var device = $.getDevice($.virtualDeviceString[i])
 		  var addId = oTable.fnAddData({
 		    "DT_RowId": device[0].idx,
 		    //"Order": device.Order,
@@ -178,11 +169,31 @@
 		    "1": device[0].Name,
 		  });
 		}
-	      }  
-	    });
-          }
-	}
-    });
+    
+	  /* Add a click handler to the rows - this could be used as a callback */
+	  $("#settings #activetable tbody").off();
+	  $("#settings #activetable tbody").on( 'click', 'tr', function () {
+		  if ( $(this).hasClass('row_selected') ) {
+			  $(this).removeClass('row_selected');
+			  $('#settings #activedevicedelete').toggleClass("disabled");
+		  }
+		  else {
+			  var oTable = $('#settings #activetable').dataTable();
+			  oTable.$('tr.row_selected').removeClass('row_selected');
+			  $(this).addClass('row_selected');
+			  $('#settings #activedevicedelete').toggleClass("disabled");
+			
+			  var anSelected = fnGetSelected( oTable );
+			  if ( anSelected.length !== 0 ) {
+				  var data = oTable.fnGetData( anSelected[0] );
+				  var idx= data["DT_RowId"];
+				  //alert(idx)
+				  $("#settings #activedevicedelete").attr("onClick", "DeleteActiveDevice(" + idx + ")");
+			  }
+		  }
+	  }); 
+
+    $('#modal').hide();
   }
   
   AddActiveDevice = function()
@@ -191,7 +202,7 @@
 		  alert('No Vierual Device Selected!');
 		  return;
 	  }
-
+/*
 	  var ADType=0;
 	  if ($("#plancontent #comboactivedevice option:selected").text().indexOf("[Scene]") == 0) {
 		  ADType=1;
@@ -199,7 +210,7 @@
 
 	  var ActiveDeviceIdx=$("#plancontent #comboactivedevice option:selected").val();
 	  if (typeof ActiveDeviceIdx == 'undefined') {
-		  bootbox.alert('No Active Device Selected!');
+		  alert('No Active Device Selected!');
 		  return ;
 	  }
 	  $.ajax({
@@ -222,31 +233,39 @@
 			  ShowNotify('Problem adding Device!', 2500, true);
 		  }     
 	  });
-	
+*/	
+    var ActiveDeviceIdx=$("#settings #comboactivedevice option:selected").val();
+    //alert(ActiveDeviceIdx)
+    var currentVal = $('#uservariablesedittable #uservariablevalue').val();
+    newVal = currentVal +"," +ActiveDeviceIdx
+    //alert(newVal)
+    $.virtualDeviceString.push(ActiveDeviceIdx)
+    $('#uservariablesedittable #uservariablevalue').val(newVal)
+	  RefreshActiveDevicesTable();
+	  
+
   }
 
   DeleteActiveDevice = function(idx)
   {
-	  bootbox.confirm($.i18n("Are you sure to delete this Active Device?\n\nThis action can not be undone..."), function(result) {
-		  if (result==true) {
-			  $.ajax({
-				   url: "/json.htm?type=command&param=deleteplandevice&idx=" + idx,
-				   async: false, 
-				   dataType: 'json',
-				   success: function(data) {
-					  RefreshActiveDevicesTable($.devIdx);
-					  //RefreshUnusedDevicesComboArray();
-				   }
-			  });
-		  }
-	  });
+	  var result = confirm("Are you sure to delete this Active Device?\n\nThis action can not be undone...")
+	  if (result==true) {
+      var currentVal = $('#uservariablesedittable #uservariablevalue').val();
+      //alert("current value is " +currentVal +" device being deleted is " +idx)
+      var strToDelete = "," +idx
+      var index = currentVal.indexOf(strToDelete)
+      var newVal = currentVal.substr(0,index) +currentVal.substr(index+strToDelete.length,currentVal.length -(index+strToDelete.length))
+    $('#uservariablesedittable #uservariablevalue').val(newVal)
+	  RefreshActiveDevicesTable();
+
+	  }
   }	
 	
   RefreshUserVariablesTable = function()
   {
     $('#modal').show();
-    $('#uservariablesedittable #uservariableupdate').attr("class", "button disabled");
-    $('#uservariablesedittable #uservariabledelete').attr("class", "button disabled");
+    $('#uservariablesedittable #uservariableupdate').toggleClass("disabled");
+    $('#uservariablesedittable #uservariabledelete').toggleClass("disabled");
 
     $.varNames = [];	
     var oTable = $('#Variables-table').dataTable();
@@ -256,59 +275,113 @@
        async: false, 
        dataType: 'json',
        success: function(data) {   
-        if (typeof data.result != 'undefined') {
+        if (typeof data.result != 'undefined'){
           $.each(data.result, function(i,item){
-			  $.varNames.push(item.Name);
-			  var typeWording;
-			  switch( item.Type ) {
-				  case "0" :
-					  typeWording = 'Integer';
-					  break;
-				  case "1" :
-					  typeWording = 'Float';
-					  break;
-				  case "2" :
-					  typeWording = 'String';
-					  break;					
-				  case "3" :
-					  typeWording = 'Date';
-					  break;				
-				  case "4" :
-					  typeWording = 'Time'
-					  break;
-				  case "5" :
-					  typeWording = 'DateTime';
-					  break;
-				  default:
-					  typeWording = "undefined";
-			  }
-			  var addId = oTable.fnAddData( {
-				  "DT_RowId": item.idx,
-				  "DT_ItemType": item.Type,
-				  "0": item.Name,
-				  "1": typeWording,
-				  "2": item.Value,
-				  "3": item.LastUpdate
-			  } );
+			      $.varNames.push(item.Name);
+			      var typeWording;
+			      switch( item.Type ) {
+				      case "0" :
+					      typeWording = 'Integer';
+					      break;
+				      case "1" :
+					      typeWording = 'Float';
+					      break;
+				      case "2" :
+					      typeWording = 'String';
+					      break;					
+				      case "3" :
+					      typeWording = 'Date';
+					      break;				
+				      case "4" :
+					      typeWording = 'Time'
+					      break;
+				      case "5" :
+					      typeWording = 'DateTime';
+					      break;
+				      default:
+					      typeWording = "undefined";
+			      }
+			      var addId = oTable.fnAddData({
+				      "DT_RowId": item.idx,
+				      "DT_ItemType": item.Type,
+				      "0": item.Name,
+				      "1": typeWording,
+				      "2": item.Value,
+				      "3": item.LastUpdate
+			      });
           });
-	    }
+	      }
        }
     });
     $('#modal').hide();
   }
-
-
+  
   ShowUserVariables = function()
+  {
+    var oTable = $('#Variables-table').dataTable({
+      "sDom": '<"H"lfrC>t<"F"ip>',
+      "oTableTools": {
+        "sRowSelect": "single",
+      },
+      "fnDrawCallback": function (oSettings){
+        var nTrs = this.fnGetNodes();
+        $(nTrs).click(function(){
+          $(nTrs).removeClass('row_selected');
+          //$(nTrs).removeClass('selected');
+          $(this).addClass('row_selected');
+          //$(this).addClass('selected');
+          $('#uservariablesedittable #uservariableupdate').toggleClass("disabled")
+          $('#uservariablesedittable #uservariabledelete').toggleClass("disabled")
+          var anSelected = fnGetSelected( oTable );
+          if ( anSelected.length !== 0 ){
+            var data = oTable.fnGetData( anSelected[0] );
+            var idx= data["DT_RowId"];
+            $.devIdx=idx;
+            $.userVariableIdx=idx;	
+            $("#uservariablesedittable #uservariableupdate").attr("onClick", "AddUpdateVariable('u')");
+            $("#uservariablesedittable #uservariabledelete").attr("onClick", "DeleteVariable(" + idx + ")");
+            $("#uservariablesedittable #uservariablename").val(data["0"].split('_')[1]);
+            $("#uservariablesedittable #uservariabletype").val(data["DT_ItemType"]);
+            //$("#uservariablesedittable #uservariablevalue").val(data["2"]);
+            //$("#uservariablesedittable #uservariablevdtype").val(data["2"].split(",")[0]);
+            $.virtualDeviceString = data["2"].split(",");
+            $("#uservariablesedittable #uservariablevdtype").val($.virtualDeviceString[0])
+            var deviceIdx = ""
+            for(i = 1; i < $.virtualDeviceString.length; i++) {
+              deviceIdx = deviceIdx + $.virtualDeviceString[i] +"," 
+            }
+            deviceIdx = deviceIdx.substr(0, deviceIdx.length -1)
+            $("#uservariablesedittable #uservariablevalue").val(deviceIdx)
+            RefreshActiveDevicesTable(idx);
+
+          }
+        });
+      },    
+      "aaSorting": [[ 0, "desc" ]],
+      "bSortClasses": false,
+      "bProcessing": true,
+      "bStateSave": true,
+      //"bJQueryUI": true,
+      //"iDisplayLength" : 10,
+      //'bLengthChange': false,
+      //"sPaginationType": "full_numbers"
+    });
+    RefreshUserVariablesTable()    
+  }
+  
+
+
+  ShowSettingsPage = function()
   {
     $("<table></table>")
       .attr("id", "Variables-table")
       .appendTo("#settings")
-      .addClass("table table-striped table-bordered table-hovered dataTable")
+      .addClass("table table-bordered table-hovered dataTable")
       .attr("border","0")
       .attr("cellpadding","0")
       .attr("cellspacing","20")
     
-    $("<thead><thead>")
+    $("<thead><thead")
       .attr("id","Variables-table-thead")
       .appendTo("#Variables-table")
       .addClass("text-left")
@@ -335,6 +408,9 @@
       .text("Last update")
       .attr("width", "200")
       .attr("align", "left")
+    $("<tbody></tbody")
+      .attr("id","Variables-table-tbody")
+      .appendTo("#Variables-table")    
       
     $("<h2></h2>")
     .attr("id", "Devices-list")
@@ -346,25 +422,28 @@
     $("<table></table>")
       .attr("id", "activetable")
       .appendTo("#settings")
-      .addClass("table table-striped table-bordered table-hover table-condensed dataTable")
-    $("<thead><thead>")
+      .addClass("table table-bordered table-hover table-condensed dataTable")
+    $("<thead><thead")
       .attr("id","activetable-thead")
       .appendTo("#activetable")
       .addClass("text-left")
-    $("<tr><tr>")
+    $("<tr><tr")
       .attr("id","activetable-thead-row")
       .appendTo("#activetable-thead")
     $("<th></th>")
       .appendTo("#activetable-thead-row")
       .text("Idx")
-      .attr("width", "100")
+      .attr("width", "75")
       .attr("align", "left")
     $("<th></th>")
       .appendTo("#activetable-thead-row")
       .text("Name")
       .attr("width", "250")
       .attr("align", "left")  
-      
+    $("<tbody></tbody")
+      .attr("id","activetable-tbody")
+      .appendTo("#activetable")    
+        
     $("<table></table>")
       .attr("id", "activetable-actions")
       .appendTo("#settings")
@@ -382,46 +461,6 @@
       .attr("type", "button")
       .addClass("btn btn-primary disabled")
       .text("Delete")        
-      
-    var oTable = $('#Variables-table').dataTable( {
-      //"sDom": '<"H"lfrC>t<"F"ip>',
-      "oTableTools": {
-      "sRowSelect": "single",
-    },
-    "fnDrawCallback": function (oSettings) {
-       var nTrs = this.fnGetNodes();
-       $(nTrs).click(
-       function(){
-	  $(nTrs).removeClass('row_selected');
-	  $(this).addClass('row_selected');
-	  $('#uservariablesedittable #uservariableupdate').attr("class", "button");
-	  $('#uservariablesedittable #uservariabledelete').attr("class", "button");
-	  var anSelected = fnGetSelected( oTable );
-	  if ( anSelected.length !== 0 ) {
-		  var data = oTable.fnGetData( anSelected[0] );
-                  $.devIdx=idx;
-		  var idx= data["DT_RowId"];
-		  $.userVariableIdx=idx;	
-		  $("#uservariablesedittable #uservariableupdate").attr("onClick", "AddLink('u')");
-		  $("#uservariablesedittable #uservariabledelete").attr("onClick", "DeleteVariable(" + idx + ")");
-		  $("#uservariablesedittable #uservariablename").val(data["0"].split('_')[1]);
-		  $("#uservariablesedittable #uservariabletype").val(data["DT_ItemType"]);
-		  $("#uservariablesedittable #uservariablevalue").val(data["2"]);
-		  $("#uservariablesedittable #uservariablevdtype").val(data["2"].split(",")[0]);
-                  RefreshActiveDevicesTable(idx);
-	  }
-        });
-      },    
-      "aaSorting": [[ 0, "desc" ]],
-      "bSortClasses": false,
-      "bProcessing": true,
-      "bStateSave": true,
-      //"bJQueryUI": true,
-      "iDisplayLength" : 10,
-      'bLengthChange': false,
-      "sPaginationType": "full_numbers"
-    } );
-    RefreshUserVariablesTable()
 
     $("<h2></h2>")
     .attr("id", "Device-list")
@@ -455,8 +494,6 @@
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Add")
-
-    RefreshDevicesComboArray()      
 
     $("<h2></h2>")
     .attr("id", "Edit-variables")
@@ -584,7 +621,7 @@
       .attr("colspan", "2")
     $("<button><button")
       .appendTo("#uservariableactionstd")
-      .attr("onclick","AddLink('a');")
+      .attr("onclick","AddUpdateVariable('a');")
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Add")
@@ -600,14 +637,18 @@
       .attr("type", "button")
       .addClass("btn btn-primary disabled")
       .text("Delete")
+    $("<tr><tr>")
+      .appendTo("#uservariablesedittable-actions")  
+      
+  }          
 
-    
-  }
-  
 }(jQuery, window, document));
 
 $(document).ready(function() {
   $.userVariableIdx=0;
   $.varNames = [];
+  $.virtualDeviceString = []
+  ShowSettingsPage();
+  RefreshDevicesComboArray()  
   ShowUserVariables();
 });
