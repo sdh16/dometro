@@ -84,7 +84,7 @@
 	  var idx = $.userVariableIdx;
 	  var uservariablename = "vd_" +($('#uservariablesedittable #uservariablename').val());
 	  var uservariabletype = 2 //$('#uservariablesedittable #uservariabletype option:selected').val();
-	  var uservariablevalue = $('#uservariablesedittable #uservariablevalue').val();
+	  var uservariablevalue = $('#uservariablesedittable #uservariablevdtype').val() +"," +($('#uservariablesedittable #uservariablevalue').val());
 	
 	  if((type=="a") && (jQuery.inArray(uservariablename,$.varNames) != -1)){
 		  alert('Variable name already exists!', 2500, true);
@@ -109,6 +109,7 @@
 						  $('#uservariablesedittable #uservariablename').val("");
 						  $('#uservariablesedittable #uservariablevalue').val("");
 						  $('#uservariablesedittable #uservariabletype').val("0");
+						  $('#uservariablesedittable #uservariablevdtype').val("0");
 					  }
 					  else {
 						  ShowNotify(data.status, 2500, true);
@@ -202,47 +203,12 @@
 		  alert('No Vierual Device Selected!');
 		  return;
 	  }
-/*
-	  var ADType=0;
-	  if ($("#plancontent #comboactivedevice option:selected").text().indexOf("[Scene]") == 0) {
-		  ADType=1;
-	  }
-
-	  var ActiveDeviceIdx=$("#plancontent #comboactivedevice option:selected").val();
-	  if (typeof ActiveDeviceIdx == 'undefined') {
-		  alert('No Active Device Selected!');
-		  return ;
-	  }
-	  $.ajax({
-		  url: "/json.htm?type=command&param=addplanactivedevice&idx=" + $.devIdx + 
-			  "&activetype=" + ADType +
-			  "&activeidx=" + ActiveDeviceIdx,
-		  async: false, 
-		  dataType: 'json',
-		  success: function(data) {
-			  if (data.status == 'OK') {
-				  RefreshActiveDevicesTable($.devIdx);
-				  //RefreshUnusedDevicesComboArray();
-			  }
-			  else {
-				  ShowNotify('Problem adding Device!', 2500, true);
-			  }
-		  },
-		  error: function(){
-			  HideNotify();
-			  ShowNotify('Problem adding Device!', 2500, true);
-		  }     
-	  });
-*/	
+	
     var ActiveDeviceIdx=$("#settings #comboactivedevice option:selected").val();
-    //alert(ActiveDeviceIdx)
-    var currentVal = $('#uservariablesedittable #uservariablevalue').val();
-    newVal = currentVal +"," +ActiveDeviceIdx
-    //alert(newVal)
     $.virtualDeviceString.push(ActiveDeviceIdx)
-    $('#uservariablesedittable #uservariablevalue').val(newVal)
 	  RefreshActiveDevicesTable();
-	  
+ 	  RefreshUserVariables();
+ 
 
   }
 
@@ -250,14 +216,10 @@
   {
 	  var result = confirm("Are you sure to delete this Active Device?\n\nThis action can not be undone...")
 	  if (result==true) {
-      var currentVal = $('#uservariablesedittable #uservariablevalue').val();
-      //alert("current value is " +currentVal +" device being deleted is " +idx)
-      var strToDelete = "," +idx
-      var index = currentVal.indexOf(strToDelete)
-      var newVal = currentVal.substr(0,index) +currentVal.substr(index+strToDelete.length,currentVal.length -(index+strToDelete.length))
-    $('#uservariablesedittable #uservariablevalue').val(newVal)
-	  RefreshActiveDevicesTable();
-
+      var index = $.virtualDeviceString.indexOf(idx.toString())
+      $.virtualDeviceString.splice(index,1)
+	    RefreshActiveDevicesTable();
+	    RefreshUserVariables();
 	  }
   }	
 	
@@ -314,6 +276,16 @@
        }
     });
     $('#modal').hide();
+  }
+
+  RefreshUserVariables = function()
+  {
+            var deviceIdx = ""
+            for(i = 1; i < $.virtualDeviceString.length; i++) {
+              deviceIdx = deviceIdx + $.virtualDeviceString[i] +"," 
+            }
+            deviceIdx = deviceIdx.substr(0, deviceIdx.length -1)
+            $("#uservariablesedittable #uservariablevalue").val(deviceIdx)  
   }
   
   ShowUserVariables = function()
@@ -647,7 +619,7 @@
 $(document).ready(function() {
   $.userVariableIdx=0;
   $.varNames = [];
-  $.virtualDeviceString = []
+  $.virtualDeviceString = [];
   ShowSettingsPage();
   RefreshDevicesComboArray()  
   ShowUserVariables();
