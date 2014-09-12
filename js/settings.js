@@ -37,7 +37,7 @@
   
   ShowNotify = function(txt, timeout, iserror)
   {
-	  $("#notification").html('<p>' + txt + '</p>');
+	  $("#notification").html('<strong>' + txt + '</strong>');
 	
 	  if (typeof iserror != 'undefined') {
 		  $("#notification").css("background-color","red");
@@ -63,8 +63,7 @@
   
   DeleteVariable = function(idx)
   {
-	  //confirm("Are you sure you want to remove this variable?", function(result) {
-	  var result = confirm("Are you sure you want to remove this virtual device?")
+	  bootbox.confirm("Are you sure you want to remove this variable?", function(result) {
 	  if (result==true) {
 		  $.ajax({
 			  url: "/json.htm?type=command&param=deleteuservariable&idx=" + idx,
@@ -83,7 +82,7 @@
 			  }
 		  });
 	  }
-	  //});
+	  });
   }
 	
 
@@ -91,15 +90,15 @@
   {
 	  var idx = $.userVariableIdx;
 	  if ($('#uservariablesedittable #uservariablename').val() == ""){
-      alert("Virtual device name can not be empty")
+      bootbox.alert('Virtual device name can not be empty!')
       return;
 	  }
 	  if ($('#uservariablesedittable #uservariablevdtype').val() == ""){
-      alert("Virtual device type can not be empty")
+      bootbox.alert("Virtual device type can not be empty")
       return;
     }	
 	  if ($('#uservariablesedittable #uservariablevalue').val() == ""){
-      alert("No devices have been included in the virtual device")
+      bootbox.alert("No devices have been included in the virtual device")
       return;
     }
           
@@ -124,7 +123,7 @@
 			   success: function(data) {
 				  if (typeof data != 'undefined') {
 					  if (data.status=="OK") {
-						  alert('Virtual device saved');
+						  bootbox.alert('Virtual device saved');
 						  RefreshUserVariablesTable();
 						  $('#uservariablesedittable #uservariablename').val("");
 						  $('#uservariablesedittable #uservariablevalue').val("");
@@ -228,13 +227,14 @@
 
   DeleteActiveDevice = function(idx)
   {
-	  var result = confirm("Are you sure to delete this Active Device?")
-	  if (result==true) {
-      var index = $.virtualDeviceString.indexOf(idx.toString())
-      $.virtualDeviceString.splice(index,1)
-	    RefreshActiveDevicesTable();
-	    RefreshUserVariables();
-	  }
+	  bootbox.confirm("Are you sure to delete this Active Device?", function(result) {
+	    if (result==true) {
+        var index = $.virtualDeviceString.indexOf(idx.toString())
+        $.virtualDeviceString.splice(index,1)
+	      RefreshActiveDevicesTable();
+	      RefreshUserVariables();
+	    }
+	  })
   }	
 	
   RefreshUserVariablesTable = function()
