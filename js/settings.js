@@ -196,20 +196,20 @@
 	  $("#settings #activetable tbody").on( 'click', 'tr', function () {
 		  if ( $(this).hasClass('selected') ) {
 			  $(this).removeClass('selected');
-			  $('#settings #activedevicedelete').addClass("disabled");
+			  $('#activetable-actions #activedevicedelete').addClass("disabled");
 		  }
 		  else {
 			  var oTable = $('#settings #activetable').dataTable();
 			  oTable.$('tr.selected').removeClass('selected');
 			  $(this).addClass('selected');
-			  $('#settings #activedevicedelete').removeClass("disabled");
+			  $('#activetable-actions #activedevicedelete').removeClass("disabled");
 			
 			  var anSelected = fnGetSelected( oTable );
 			  if ( anSelected.length !== 0 ) {
 				  var data = oTable.fnGetData( anSelected[0] );
 				  var idx= data["DT_RowId"];
 				  //alert(idx)
-				  $("#settings #activedevicedelete").attr("onClick", "DeleteActiveDevice(" + idx + ")");
+				  $("#activetable-actions #activedevicedelete").attr("onClick", "DeleteActiveDevice(" + idx + ")");
 			  }
 		  }
 	  }); 
