@@ -21,7 +21,7 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
 	</head>
-	<body class="desktop dark home">
+	<body class="desktop light home">
 		<header>
 			<div class="site-title">
 				<a href="#">Domoticz Metro UI</a>
@@ -49,6 +49,7 @@
 				</ul>
 			</nav>
 			<a class="etc">&bull;&bull;&bull;</a>
+<!--			
 			<div class="tray">
 				<section class="base-theme-options">
 					<h2>Base Theme</h2>
@@ -58,6 +59,7 @@
 					<h2>Accent Color</h2>
 					<ul></ul>
 				</section>
+-->				
 			</div>
 		</footer>
 		<script type="text/javascript" charset="utf8" src="js/jquery-2.1.1.min.js"></script>
@@ -71,9 +73,9 @@
 			var metroJs, appBar;
 			// remove the default theme set for noscript and apply user theme
 			$(document).ready(function() {
-				$("body,.tiles").removeClass("dark blue");
+				//$("body,.tiles").removeClass("dark blue");
 				metroJs = jQuery.fn.metrojs;
-				metroJs.theme.loadDefaultTheme();
+				//metroJs.theme.loadDefaultTheme();
 			});
 		</script>
 
@@ -89,8 +91,8 @@
 					bindKeyboard : doBind // bind the keyboard unless specified in an included script
 				});
 				// add the accents and base colors to the appbar
-				metroJs.theme.appendAccentColors();
-				metroJs.theme.appendBaseThemes();
+				//metroJs.theme.appendAccentColors();
+				//metroJs.theme.appendBaseThemes();
         $(".live-tile,.flip-list").liveTile();
         $( ".tile-group" ).sortable();
         $( ".tile-group" ).disableSelection();        
