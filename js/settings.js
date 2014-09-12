@@ -32,7 +32,7 @@
   /* Get the rows which are currently selected */
   fnGetSelected =function( oTableLocal )
   {
-    return oTableLocal.$('tr.row_selected');
+    return oTableLocal.$('tr.selected');
   }
   
   ShowNotify = function(txt, timeout, iserror)
@@ -64,7 +64,7 @@
   DeleteVariable = function(idx)
   {
 	  //confirm("Are you sure you want to remove this variable?", function(result) {
-	  var result = confirm("Are you sure you want to remove this variable?")
+	  var result = confirm("Are you sure you want to remove this virtual device?")
 	  if (result==true) {
 		  $.ajax({
 			  url: "/json.htm?type=command&param=deleteuservariable&idx=" + idx,
@@ -72,6 +72,14 @@
 			  dataType: 'json',
 			  success: function(data) {
 				  RefreshUserVariablesTable();
+          var oTable = $('#settings #activetable').dataTable();
+          oTable.fnClearTable();
+          $.virtualDeviceString = []
+			    $('#uservariablesedittable #uservariablename').val("");
+			    $('#uservariablesedittable #uservariablevalue').val("");
+			    $('#uservariablesedittable #uservariabletype').val("0");
+			    $('#uservariablesedittable #uservariablevdtype').val("");
+			    $.userVariableIdx = 0;				  
 			  }
 		  });
 	  }
@@ -82,12 +90,24 @@
   AddUpdateVariable = function(type)
   {
 	  var idx = $.userVariableIdx;
-	  var uservariablename = "vd_" +($('#uservariablesedittable #uservariablename').val());
+	  if ($('#uservariablesedittable #uservariablename').val() == ""){
+      alert("Virtual device name can not be empty")
+      return;
+	  }
+	  if ($('#uservariablesedittable #uservariablevdtype').val() == ""){
+      alert("Virtual device type can not be empty")
+      return;
+    }	
+	  if ($('#uservariablesedittable #uservariablevalue').val() == ""){
+      alert("No devices have been included in the virtual device")
+      return;
+    }
+          
+    var uservariablename = "vd_" +($('#uservariablesedittable #uservariablename').val());
 	  var uservariabletype = 2 //$('#uservariablesedittable #uservariabletype option:selected').val();
 	  var uservariablevalue = $('#uservariablesedittable #uservariablevdtype').val() +"," +($('#uservariablesedittable #uservariablevalue').val());
-	
 	  if((type=="a") && (jQuery.inArray(uservariablename,$.varNames) != -1)){
-		  alert('Variable name already exists!', 2500, true);
+		  alert('Virtual Device name already exists!', 2500, true);
 	  }
 	  else {
 		  if (type == "a") {
@@ -104,12 +124,15 @@
 			   success: function(data) {
 				  if (typeof data != 'undefined') {
 					  if (data.status=="OK") {
-						  alert('User variable saved');
+						  alert('Virtual device saved');
 						  RefreshUserVariablesTable();
 						  $('#uservariablesedittable #uservariablename').val("");
 						  $('#uservariablesedittable #uservariablevalue').val("");
 						  $('#uservariablesedittable #uservariabletype').val("0");
-						  $('#uservariablesedittable #uservariablevdtype').val("0");
+						  $('#uservariablesedittable #uservariablevdtype').val("");
+              var oTable = $('#settings #activetable').dataTable();
+              oTable.fnClearTable();
+						  
 					  }
 					  else {
 						  ShowNotify(data.status, 2500, true);
@@ -172,15 +195,15 @@
 	  /* Add a click handler to the rows - this could be used as a callback */
 	  $("#settings #activetable tbody").off();
 	  $("#settings #activetable tbody").on( 'click', 'tr', function () {
-		  if ( $(this).hasClass('row_selected') ) {
-			  $(this).removeClass('row_selected');
-			  $('#settings #activedevicedelete').toggleClass("disabled");
+		  if ( $(this).hasClass('selected') ) {
+			  $(this).removeClass('selected');
+			  $('#settings #activedevicedelete').addClass("disabled");
 		  }
 		  else {
 			  var oTable = $('#settings #activetable').dataTable();
-			  oTable.$('tr.row_selected').removeClass('row_selected');
-			  $(this).addClass('row_selected');
-			  $('#settings #activedevicedelete').toggleClass("disabled");
+			  oTable.$('tr.selected').removeClass('selected');
+			  $(this).addClass('selected');
+			  $('#settings #activedevicedelete').removeClass("disabled");
 			
 			  var anSelected = fnGetSelected( oTable );
 			  if ( anSelected.length !== 0 ) {
@@ -197,22 +220,15 @@
   
   AddActiveDevice = function()
   {
-	  if ($.devIdx==-1) {
-		  alert('No Vierual Device Selected!');
-		  return;
-	  }
-	
     var ActiveDeviceIdx=$("#settings #comboactivedevice option:selected").val();
-    $.virtualDeviceString.push(ActiveDeviceIdx)
+    $.virtualDeviceString.push(parseInt(ActiveDeviceIdx))
 	  RefreshActiveDevicesTable();
  	  RefreshUserVariables();
- 
-
   }
 
   DeleteActiveDevice = function(idx)
   {
-	  var result = confirm("Are you sure to delete this Active Device?\n\nThis action can not be undone...")
+	  var result = confirm("Are you sure to delete this Active Device?")
 	  if (result==true) {
       var index = $.virtualDeviceString.indexOf(idx.toString())
       $.virtualDeviceString.splice(index,1)
@@ -224,8 +240,8 @@
   RefreshUserVariablesTable = function()
   {
     $('#modal').show();
-    $('#uservariablesedittable #uservariableupdate').toggleClass("disabled");
-    $('#uservariablesedittable #uservariabledelete').toggleClass("disabled");
+    $('#uservariablesedittable #uservariableupdate').addClass("disabled");
+    $('#uservariablesedittable #uservariabledelete').addClass("disabled");
 
     $.varNames = [];	
     var oTable = $('#Variables-table').dataTable();
@@ -288,22 +304,35 @@
   
   ShowUserVariables = function()
   {
-    var oTable = $('#Variables-table').dataTable({
-      //"sDom": '<"H"lfrC>t<"F"ip>',
-      //"oTableTools": {
-      //  "sRowSelect": "single",
-      //},
-      "fnDrawCallback": function (oSettings){
-        var nTrs = this.fnGetNodes();
-        $(nTrs).click(function(){
-          $(nTrs).removeClass('row_selected');
-          //$(nTrs).removeClass('selected');
-          $(this).addClass('row_selected');
-          //$(this).addClass('selected');
-          $('#uservariablesedittable #uservariableupdate').toggleClass("disabled")
-          $('#uservariablesedittable #uservariabledelete').toggleClass("disabled")
-          var anSelected = fnGetSelected( oTable );
-          if ( anSelected.length !== 0 ){
+  
+    //var oTable = $('#settings #Variables-table').dataTable();
+    
+	  /* Add a click handler to the rows - this could be used as a callback */
+	  $("#settings #Variables-table tbody").off();
+	  $("#settings #Variables-table tbody").on( 'click', 'tr', function () {
+		  if ( $(this).hasClass('selected') ) {
+			  $(this).removeClass('selected');
+        $('#uservariablesedittable #uservariableupdate').addClass("disabled")
+        $('#uservariablesedittable #uservariabledelete').addClass("disabled")
+        var oTable = $('#settings #activetable').dataTable();
+        oTable.fnClearTable();
+        $.virtualDeviceString = []
+			  $('#uservariablesedittable #uservariablename').val("");
+			  $('#uservariablesedittable #uservariablevalue').val("");
+			  $('#uservariablesedittable #uservariabletype').val("0");
+			  $('#uservariablesedittable #uservariablevdtype').val("");
+			  $.userVariableIdx = 0;
+    
+		  }
+		  else {
+			  var oTable = $('#settings #Variables-table').dataTable();
+			  oTable.$('tr.selected').removeClass('selected');
+			  $(this).addClass('selected');
+        $('#uservariablesedittable #uservariableupdate').removeClass("disabled")
+        $('#uservariablesedittable #uservariabledelete').removeClass("disabled")
+			
+			  var anSelected = fnGetSelected( oTable );
+			  if ( anSelected.length !== 0 ) {
             var data = oTable.fnGetData( anSelected[0] );
             var idx= data["DT_RowId"];
             $.devIdx=idx;
@@ -322,20 +351,10 @@
             }
             deviceIdx = deviceIdx.substr(0, deviceIdx.length -1)
             $("#uservariablesedittable #uservariablevalue").val(deviceIdx)
-            RefreshActiveDevicesTable(idx);
-
+            RefreshActiveDevicesTable();
           }
-        });
-      },    
-      //"aaSorting": [[ 0, "desc" ]],
-      //"bSortClasses": false,
-      //"bProcessing": true,
-      //"bStateSave": true,
-      //"bJQueryUI": true,
-      //"iDisplayLength" : 10,
-      //'bLengthChange': false,
-      //"sPaginationType": "full_numbers"
-    });
+		  }
+	  }); 
     RefreshUserVariablesTable()    
   }
   
@@ -346,7 +365,7 @@
     $("<table></table>")
       .attr("id", "Variables-table")
       .appendTo("#settings")
-      .addClass("table table-bordered table-hovered dataTable")
+      .addClass("table table-bordered table-hover table-condensed dataTable")
       .attr("border","0")
       .attr("cellpadding","0")
       .attr("cellspacing","20")
@@ -385,10 +404,7 @@
     $("<h2></h2>")
     .attr("id", "Devices-list")
     .appendTo("#settings")
-    .text("Devices:")
-    $("<p></p>")
-    .appendTo("#Devices-list")
-    .text("(Select Virtual Device first to Edit...)")
+    .text("Included Devices:")
     $("<table></table>")
       .attr("id", "activetable")
       .appendTo("#settings")
@@ -429,7 +445,7 @@
       .attr("id","activedevicedelete")
       .appendTo("#activetableactionstd")
       .attr("type", "button")
-      .addClass("btn btn-primary disabled")
+      .addClass("btn btn-primary")
       .text("Delete")        
 
     $("<h2></h2>")
@@ -448,7 +464,7 @@
       .appendTo("#activeparamstablerow")
       .attr("align", "left")
       .attr("style", "width:200px")
-    $("<label><label")
+    $("<label><label>")
       .appendTo("#activeparamstablerowtd")
       .attr("align", "left")
       .attr("width", "240")
@@ -458,7 +474,7 @@
       .appendTo("#activeparamstablerowtd")
       .attr("style", "width:500px")
       .addClass("combobox ui-corner-all")
-    $("<button><button")
+    $("<button></button>")
       .appendTo("#activeparamstablerowtd")
       .attr("onclick","AddActiveDevice();")
       .attr("type", "button")
@@ -590,25 +606,25 @@
       .attr("id","uservariableactionstd")
       .appendTo("#uservariableactions")
       .attr("colspan", "2")
-    $("<button><button")
+    $("<button></button>")
       .appendTo("#uservariableactionstd")
       .attr("onclick","AddUpdateVariable('a');")
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Add")
-    $("<button><button")
+    $("<button></button>")
       .attr("id","uservariableupdate")
       .appendTo("#uservariableactionstd")
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Update")
-    $("<button><button")
+    $("<button></button>")
       .attr("id","uservariabledelete")
       .appendTo("#uservariableactionstd")
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Delete")
-    $("<tr><tr>")
+    $("<tr></tr>")
       .appendTo("#uservariablesedittable-actions")  
       
   }          
