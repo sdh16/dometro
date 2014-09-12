@@ -240,8 +240,8 @@
   RefreshUserVariablesTable = function()
   {
     $('#modal').show();
-    $('#uservariablesedittable #uservariableupdate').addClass("disabled");
-    $('#uservariablesedittable #uservariabledelete').addClass("disabled");
+    $('#uservariablesedittable-actions #uservariableupdate').addClass("disabled");
+    $('#uservariablesedittable-actions #uservariabledelete').addClass("disabled");
 
     $.varNames = [];	
     var oTable = $('#Variables-table').dataTable();
@@ -314,8 +314,8 @@
 	  $("#settings #Variables-table tbody").on( 'click', 'tr', function () {
 		  if ( $(this).hasClass('selected') ) {
 			  $(this).removeClass('selected');
-        $('#uservariablesedittable #uservariableupdate').addClass("disabled")
-        $('#uservariablesedittable #uservariabledelete').addClass("disabled")
+        $('#uservariablesedittable-actions #uservariableupdate').addClass("disabled")
+        $('#uservariablesedittable-actions #uservariabledelete').addClass("disabled")
         var oTable = $('#settings #activetable').dataTable();
         oTable.fnClearTable();
         $.virtualDeviceString = []
@@ -330,8 +330,8 @@
 			  var oTable = $('#settings #Variables-table').dataTable();
 			  oTable.$('tr.selected').removeClass('selected');
 			  $(this).addClass('selected');
-        $('#uservariablesedittable #uservariableupdate').removeClass("disabled")
-        $('#uservariablesedittable #uservariabledelete').removeClass("disabled")
+        $('#uservariablesedittable-actions #uservariableupdate').removeClass("disabled")
+        $('#uservariablesedittable-actions #uservariabledelete').removeClass("disabled")
 			
 			  var anSelected = fnGetSelected( oTable );
 			  if ( anSelected.length !== 0 ) {
@@ -339,8 +339,8 @@
             var idx= data["DT_RowId"];
             $.devIdx=idx;
             $.userVariableIdx=idx;	
-            $("#uservariablesedittable #uservariableupdate").attr("onClick", "AddUpdateVariable('u')");
-            $("#uservariablesedittable #uservariabledelete").attr("onClick", "DeleteVariable(" + idx + ")");
+            $("#uservariablesedittable-actions #uservariableupdate").attr("onClick", "AddUpdateVariable('u')");
+            $("#uservariablesedittable-actions #uservariabledelete").attr("onClick", "DeleteVariable(" + idx + ")");
             $("#uservariablesedittable #uservariablename").val(data["0"].split('_')[1]);
             //$("#uservariablesedittable #uservariabletype").val(data["DT_ItemType"]);
             //$("#uservariablesedittable #uservariablevalue").val(data["2"]);
@@ -403,13 +403,22 @@
       .attr("id","Variables-table-tbody")
       .appendTo("#Variables-table")    
       
+      
+    $("<div></div>")
+      .attr("id", "row1")
+      .appendTo("#settings")
+      .addClass("row")
+    $("<div></div>")
+      .attr("id", "col1")
+      .appendTo("#row1")
+      .addClass("col-md-6")
     $("<h2></h2>")
-    .attr("id", "Devices-list")
-    .appendTo("#settings")
-    .text("Included Devices:")
+      .attr("id", "Devices-list")
+      .appendTo("#col1")
+      .text("Included Devices:")
     $("<table></table>")
       .attr("id", "activetable")
-      .appendTo("#settings")
+      .appendTo("#col1")
       .addClass("table table-bordered table-hover table-condensed dataTable")
     $("<thead><thead")
       .attr("id","activetable-thead")
@@ -434,7 +443,7 @@
         
     $("<table></table>")
       .attr("id", "activetable-actions")
-      .appendTo("#settings")
+      .appendTo("#col1")
       .addClass("table")
     $("<tr><tr")
       .attr("id","activetableactions")
@@ -450,50 +459,20 @@
       .addClass("btn btn-primary")
       .text("Delete")        
 
-    $("<h2></h2>")
-    .attr("id", "Device-list")
-    .appendTo("#settings")
-    .text("Add New Device:")
-    $("<table></table>")
-      .attr("id", "activeparamstable")
-      .appendTo("#settings")
-      .addClass("table")
-    $("<tr><tr")
-      .attr("id","activeparamstablerow")
-      .appendTo("#activeparamstable")      
-    $("<td><td")
-      .attr("id","activeparamstablerowtd")
-      .appendTo("#activeparamstablerow")
-      .attr("align", "left")
-      //.attr("style", "width:200px")
-    $("<label><label>")
-      .appendTo("#activeparamstablerowtd")
-      .attr("align", "left")
-      .attr("width", "240")
-      .text("Device:")
-    $("<select><select")
-      .attr("id","comboactivedevice")
-      .appendTo("#activeparamstablerowtd")
-      .attr("style", "width:500px")
-      .addClass("combobox ui-corner-all")
-    $("<button></button>")
-      .appendTo("#activeparamstablerowtd")
-      .attr("onclick","AddActiveDevice();")
-      .attr("type", "button")
-      .addClass("btn btn-primary")
-      .text("Add")
-    //$("<tr></tr>")
-    //  .appendTo("#activeparamstable")  
 
+    $("<div></div>")
+      .attr("id", "col2")
+      .appendTo("#row1")
+      .addClass("col-md-6")
     $("<h2></h2>")
-    .attr("id", "Edit-variables")
-    .appendTo("#settings")
-    .text("Edit Virtual Device")
+      .attr("id", "Edit-variables")
+      .appendTo("#col2")
+      .text("Edit Virtual Device")
     
     $("<table></table>")
       .attr("id", "uservariablesedittable")
-      .appendTo("#settings")
-      .addClass("table")
+      .appendTo("#col2")
+      .addClass("table table-bordered")
       
     $("<tr><tr")
       .attr("id","uservariablenamerow")
@@ -598,14 +577,14 @@
       .attr("style", "width: 250px; padding: .2em;")
       .addClass("text ui-widget-content ui-corner-all")
 
-    //$("<table></table>")
-    //  .attr("id", "uservariablesedittable-actions")
-    //  .appendTo("#settings")
-    //  .addClass("table")
+    $("<table></table>")
+      .attr("id", "uservariablesedittable-actions")
+      .appendTo("#col2")
+      .addClass("table")
     $("<tr><tr")
       .attr("id","uservariableactions")
-      //.appendTo("#uservariablesedittable-actions")  
-      .appendTo("#uservariablesedittable")    
+      .appendTo("#uservariablesedittable-actions")  
+      //.appendTo("#uservariablesedittable")    
     $("<td><td")
       .attr("id","uservariableactionstd")
       .appendTo("#uservariableactions")
@@ -628,8 +607,45 @@
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Delete")
-    $("<tr></tr>")
-      .appendTo("#uservariablesedittable-actions")  
+    //$("<tr></tr>")
+    //  .appendTo("#uservariablesedittable-actions")  
+      
+    $("<h2></h2>")
+    .attr("id", "Device-list")
+    .appendTo("#settings")
+    .text("Add New Device:")
+    $("<table></table>")
+      .attr("id", "activeparamstable")
+      .appendTo("#settings")
+      .addClass("table")
+    $("<tr><tr")
+      .attr("id","activeparamstablerow")
+      .appendTo("#activeparamstable")      
+    $("<td><td")
+      .attr("id","activeparamstablerowtd")
+      .appendTo("#activeparamstablerow")
+      .attr("align", "left")
+      //.attr("style", "width:200px")
+    $("<label><label>")
+      .appendTo("#activeparamstablerowtd")
+      .attr("align", "left")
+      .attr("width", "240")
+      .text("Device:")
+    $("<select><select")
+      .attr("id","comboactivedevice")
+      .appendTo("#activeparamstablerowtd")
+      .attr("style", "width:500px")
+      .addClass("combobox ui-corner-all")
+    $("<button></button>")
+      .appendTo("#activeparamstablerowtd")
+      .attr("onclick","AddActiveDevice();")
+      .attr("type", "button")
+      .addClass("btn btn-primary")
+      .text("Add")
+    //$("<tr></tr>")
+    //  .appendTo("#activeparamstable")  
+
+
       
   }          
 
