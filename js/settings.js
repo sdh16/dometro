@@ -253,38 +253,40 @@
        success: function(data) {   
         if (typeof data.result != 'undefined'){
           $.each(data.result, function(i,item){
-			      $.varNames.push(item.Name);
-			      var typeWording;
-			      switch( item.Type ) {
-				      case "0" :
-					      typeWording = 'Integer';
-					      break;
-				      case "1" :
-					      typeWording = 'Float';
-					      break;
-				      case "2" :
-					      typeWording = 'String';
-					      break;					
-				      case "3" :
-					      typeWording = 'Date';
-					      break;				
-				      case "4" :
-					      typeWording = 'Time'
-					      break;
-				      case "5" :
-					      typeWording = 'DateTime';
-					      break;
-				      default:
-					      typeWording = "undefined";
-			      }
-			      var addId = oTable.fnAddData({
-				      "DT_RowId": item.idx,
-				      "DT_ItemType": item.Type,
-				      "0": item.Name,
-				      "1": typeWording,
-				      "2": item.Value,
-				      "3": item.LastUpdate
-			      });
+            if(item.Name.match(/vd_/)){
+			        $.varNames.push(item.Name);
+			        var typeWording;
+			        switch( item.Type ) {
+				        case "0" :
+					        typeWording = 'Integer';
+					        break;
+				        case "1" :
+					        typeWording = 'Float';
+					        break;
+				        case "2" :
+					        typeWording = 'String';
+					        break;					
+				        case "3" :
+					        typeWording = 'Date';
+					        break;				
+				        case "4" :
+					        typeWording = 'Time'
+					        break;
+				        case "5" :
+					        typeWording = 'DateTime';
+					        break;
+				        default:
+					        typeWording = "undefined";
+			        }
+			        var addId = oTable.fnAddData({
+				        "DT_RowId": item.idx,
+				        "DT_ItemType": item.Type,
+				        "0": item.Name,
+				        "1": typeWording,
+				        "2": item.Value,
+				        "3": item.LastUpdate
+			        });
+		        }
           });
 	      }
        }
@@ -463,7 +465,7 @@
       .attr("id","activeparamstablerowtd")
       .appendTo("#activeparamstablerow")
       .attr("align", "left")
-      .attr("style", "width:200px")
+      //.attr("style", "width:200px")
     $("<label><label>")
       .appendTo("#activeparamstablerowtd")
       .attr("align", "left")
@@ -480,6 +482,8 @@
       .attr("type", "button")
       .addClass("btn btn-primary")
       .text("Add")
+    //$("<tr></tr>")
+    //  .appendTo("#activeparamstable")  
 
     $("<h2></h2>")
     .attr("id", "Edit-variables")
