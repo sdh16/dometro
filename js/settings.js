@@ -282,9 +282,10 @@
 				        "DT_RowId": item.idx,
 				        "DT_ItemType": item.Type,
 				        "0": item.Name,
-				        "1": typeWording,
-				        "2": item.Value,
-				        "3": item.LastUpdate
+				        "1": item.Value,
+				        //"1": typeWording,
+				        //"2": item.Value,
+				        //"3": item.LastUpdate
 			        });
 		        }
           });
@@ -344,8 +345,8 @@
             $("#uservariablesedittable #uservariablename").val(data["0"].split('_')[1]);
             //$("#uservariablesedittable #uservariabletype").val(data["DT_ItemType"]);
             //$("#uservariablesedittable #uservariablevalue").val(data["2"]);
-            $("#uservariablesedittable #uservariablevdtype").val(data["2"].split(",")[0]);
-            $.virtualDeviceString = data["2"].split(",");
+            $("#uservariablesedittable #uservariablevdtype").val(data["1"].split(",")[0]);
+            $.virtualDeviceString = data["1"].split(",");
             $.virtualDeviceString.splice(0,1);
             var deviceIdx = ""
             for(i = 0; i < $.virtualDeviceString.length; i++){
@@ -364,9 +365,21 @@
 
   ShowSettingsPage = function()
   {
+    $("<div></div>")
+      .attr("id", "row1")
+      .appendTo("#settings")
+      .addClass("row")
+    $("<div></div>")
+      .attr("id", "col1")
+      .appendTo("#row1")
+      .addClass("col-md-6")
+    $("<h2></h2>")
+      .attr("id", "Edit-variables")
+      .appendTo("#col1")
+      .text("Virtual Devices:")
     $("<table></table>")
       .attr("id", "Variables-table")
-      .appendTo("#settings")
+      .appendTo("#col1")
       .addClass("table table-bordered table-hover table-condensed dataTable")
       .attr("border","0")
       .attr("cellpadding","0")
@@ -384,42 +397,39 @@
       .text("Variable name")
       .attr("width", "240")
       .attr("align", "left")
-    $("<th></th")
-      .appendTo("#Variables-table-thead-row")
-      .text("Variable type")
-      .attr("width", "150")
-      .attr("align", "left")
+    //$("<th></th")
+    //  .appendTo("#Variables-table-thead-row")
+    //  .text("Variable type")
+    //  .attr("width", "150")
+    //  .attr("align", "left")
     $("<th></th")
       .appendTo("#Variables-table-thead-row")
       .text("Current value")
       .attr("width", "240")
       .attr("align", "left")
-    $("<th></th")
-      .appendTo("#Variables-table-thead-row")
-      .text("Last update")
-      .attr("width", "200")
-      .attr("align", "left")
+    //$("<th></th")
+    //  .appendTo("#Variables-table-thead-row")
+    //  .text("Last update")
+    //  .attr("width", "200")
+    //  .attr("align", "left")
     $("<tbody></tbody")
       .attr("id","Variables-table-tbody")
       .appendTo("#Variables-table")    
       
       
     $("<div></div>")
-      .attr("id", "row1")
-      .appendTo("#settings")
-      .addClass("row")
-    $("<div></div>")
-      .attr("id", "col1")
+      .attr("id", "col2")
       .appendTo("#row1")
       .addClass("col-md-6")
+      
     $("<h2></h2>")
       .attr("id", "Edit-variables")
-      .appendTo("#col1")
+      .appendTo("#col2")
       .text("Edit Virtual Device:")
     
     $("<table></table>")
       .attr("id", "uservariablesedittable")
-      .appendTo("#col1")
+      .appendTo("#col2")
       .addClass("table table-bordered")
       
     $("<tr><tr")
@@ -527,7 +537,7 @@
 
     $("<table></table>")
       .attr("id", "uservariablesedittable-actions")
-      .appendTo("#col1")
+      .appendTo("#col2")
       .addClass("table")
     $("<tr><tr")
       .attr("id","uservariableactions")
@@ -558,11 +568,6 @@
     //$("<tr></tr>")
     //  .appendTo("#uservariablesedittable-actions")  
     
-    $("<div></div>")
-      .attr("id", "col2")
-      .appendTo("#row1")
-      .addClass("col-md-6")
-      
     $("<h2></h2>")
       .attr("id", "Devices-list")
       .appendTo("#col2")
