@@ -71,6 +71,20 @@
     return scenes;
   }
 
+
+  // get chart data
+  $.getchartData = function(idx, sensorType, range){
+    var chartdata = [];
+    $.ajax({
+      url: '/json.htm?type=graph&sensor=' +sensorType +'&idx=' +idx +'&range=' +range,
+      async: false,
+      dataType: 'json',
+      success: function (json) {
+        chartdata = json;
+      }
+    });
+    return chartdata;
+  }
   //get all uservariables return as array
   $.getUservariables = function() {
     var userVariables = [];
@@ -1043,4 +1057,6 @@ $(document).ready(function() {
   updateScenes()
   updateDomoticzTabs()
   refreshTabs()
+  //var chart = $.getchartData("67", "counter", "year")
+  //alert("check")
 });
