@@ -188,36 +188,36 @@
   }
   
   tileClickHandler = function(obj){
-  	var idx = $(obj).data("deviceIdx")
-  	var type = $(obj).data("deviceType")
-  	var name = $(obj).data("deviceName")
-  	var switchTypeVal = $(obj).data("deviceSwitchTypeVal")
-  	switch (type){
-  	  case "Lighting 2":
-      	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
-      	$.updateLightSwitch(idx,switchcmd)
-      	//store the new switch state in the object
-      	$(obj).data("deviceStatus", switchcmd)
-    	break;
-    	case "Energy":
-    	  //alert("Energy")
+    var idx = $(obj).data("deviceIdx")
+    var type = $(obj).data("deviceType")
+    var name = $(obj).data("deviceName")
+    var switchTypeVal = $(obj).data("deviceSwitchTypeVal")
+    switch (type){
+      case "Lighting 2":
+        var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
+        $.updateLightSwitch(idx,switchcmd)
+        //store the new switch state in the object
+        $(obj).data("deviceStatus", switchcmd)
+      break;
+      case "Energy":
+        //alert("Energy")
         ShowCounterLogSpline("#container",idx,name,switchTypeVal)
-	      $('#chartPopup').modal('show')
-    	break;
-    	case "Usage":
-    	  //alert("Usage")
+        $('#chartPopup').modal('show')
+      break;
+      case "Usage":
+        //alert("Usage")
         ShowUsageLog("#container",idx,name)
-	      $('#chartPopup').modal('show')
-    	break;
-  	}
+        $('#chartPopup').modal('show')
+      break;
+    }
   }
   
   switchScenes = function(obj){
-  	var idx = $(obj).data("deviceIdx")
-  	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
-  	$.updateScene(idx,switchcmd)
-  	//store the new switch state in the object
-  	$(obj).data("deviceStatus", switchcmd)
+    var idx = $(obj).data("deviceIdx")
+    var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
+    $.updateScene(idx,switchcmd)
+    //store the new switch state in the object
+    $(obj).data("deviceStatus", switchcmd)
   }
   
   
@@ -650,32 +650,32 @@
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
           .addClass("accent " +deviceTileColor)
         $("<p></p>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
         $("<img></img>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix")
-        	.attr("src", deviceImage)
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix")
+          .attr("src", deviceImage)
         $("<span></span>")
-      	  .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
-      	  .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-      	  .addClass("clear-fix text-right")          	
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right")            
         $("<span></span>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix text-right metroLarge")
-        	.text(text)
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right metroLarge")
+          .text(text)
         $("<span></span>")
           .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
           .addClass("clear-fix text-right")
-          .text(value.Name)        	
+          .text(value.Name)          
         $("<span></span>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix text-right metroSmaller")
-        	.text(value.LastUpdate)
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right metroSmaller")
+          .text(value.LastUpdate)
         
         }
       }
@@ -745,34 +745,34 @@
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
           .addClass("accent " +deviceTileColor)
         $("<p></p>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
         $("<img></img>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix")
-        	.attr("src", deviceImage)
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix")
+          .attr("src", deviceImage)
         $("<span></span>")
-      	  .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
-      	  .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-      	  .addClass("clear-fix text-right")          	
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right")            
         $("<span></span>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix text-right metroLarge")
-        	.text(text)
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right metroLarge")
+          .text(text)
         if(value.Type == "Energy"){
           $("<span></span>")
-          	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
-          	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          	.addClass("clear-fix text-right")
-          	.text("Today: " +counterToday)
+            .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
+            .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+            .addClass("clear-fix text-right")
+            .text("Today: " +counterToday)
         }
         $("<span></span>")
-        	.attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
-        	.appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-        	.addClass("clear-fix text-right metroSmaller")
-        	.text(value.LastUpdate)
+          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
+          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+          .addClass("clear-fix text-right metroSmaller")
+          .text(value.LastUpdate)
         
       }
     })  
@@ -1114,116 +1114,116 @@
   
   Get5MinuteHistoryDaysGraphTitle = function()
   {
-	  if ($.FiveMinuteHistoryDays==1) {
-		  return "Last" + " 24 " + "Hours";
-	  }
-	  else if  ($.FiveMinuteHistoryDays==2) {
-		  return "Last" + " 48 " + "Hours";
-	  }
-	  return "Last" + " " + $.FiveMinuteHistoryDays + " " + "Days";
+    if ($.FiveMinuteHistoryDays==1) {
+      return "Last" + " 24 " + "Hours";
+    }
+    else if  ($.FiveMinuteHistoryDays==2) {
+      return "Last" + " 48 " + "Hours";
+    }
+    return "Last" + " " + $.FiveMinuteHistoryDays + " " + "Days";
   }
   
   CheckForUpdate = function(showdialog) {
-	$.ajax({
-		 url: "/json.htm?type=command&param=checkforupdate&forced=" + showdialog,
-		 async: false, 
-		 dataType: 'json',
-		 success: function(data) {
-			var urights=data.statuscode;
-			var bDisplayLogout=false;
-			$.FiveMinuteHistoryDays=data["5MinuteHistoryDays"];
-			$.AllowWidgetOrdering=data["AllowWidgetOrdering"];
-			if (urights!=3) {
-				bDisplayLogout=true;
-			}
-			else {
-				bDisplayLogout=false;
-				urights=2;
-			}
-			window.my_config =
-			{
-				userrights : urights
-			};
+  $.ajax({
+     url: "/json.htm?type=command&param=checkforupdate&forced=" + showdialog,
+     async: false, 
+     dataType: 'json',
+     success: function(data) {
+      var urights=data.statuscode;
+      var bDisplayLogout=false;
+      $.FiveMinuteHistoryDays=data["5MinuteHistoryDays"];
+      $.AllowWidgetOrdering=data["AllowWidgetOrdering"];
+      if (urights!=3) {
+        bDisplayLogout=true;
+      }
+      else {
+        bDisplayLogout=false;
+        urights=2;
+      }
+      window.my_config =
+      {
+        userrights : urights
+      };
                  }
           })
   }
   
   chartPointClickNew = function(event, isShort, retChart) {
-	  if (event.shiftKey!=true) {
-		  return;
-	  }
-	  if (window.my_config.userrights!=2) {
+    if (event.shiftKey!=true) {
+      return;
+    }
+    if (window.my_config.userrights!=2) {
           HideNotify();
-		  ShowNotify(('You do not have permission to do that!'), 2500, true);
-		  return;
-	  }
-	  var dateString;
-	  if (isShort==false) {
-		  dateString=Highcharts.dateFormat('%Y-%m-%d', event.point.x);
-	  }
-	  else {
-		  dateString=Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', event.point.x);
-	  }
-	  var bValid = false;
-	  bValid=(confirm(("Are you sure to remove this value at") + " ?:\n\nDate: " + dateString + " \nValue: " + event.point.y)==true);
-	  if (bValid == false) {
-		  return;
-	  }
-	  $.ajax({
-		   url: "/json.htm?type=command&param=deletedatapoint&idx=" + $.devIdx + "&date=" + dateString,
-		   async: false, 
-		   dataType: 'json',
-		   success: function(data) {
-			  if (data.status == "OK") {
-				  retChart($.content,$.devIdx,$.devName);
-			  }
-			  else {
-				  ShowNotify(('Problem deleting data point!'), 2500, true);
-			  }
-		   },
-		   error: function(){
-			  ShowNotify(('Problem deleting data point!'), 2500, true);
-		   }     
-	  }); 	
+      ShowNotify(('You do not have permission to do that!'), 2500, true);
+      return;
+    }
+    var dateString;
+    if (isShort==false) {
+      dateString=Highcharts.dateFormat('%Y-%m-%d', event.point.x);
+    }
+    else {
+      dateString=Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', event.point.x);
+    }
+    var bValid = false;
+    bValid=(confirm(("Are you sure to remove this value at") + " ?:\n\nDate: " + dateString + " \nValue: " + event.point.y)==true);
+    if (bValid == false) {
+      return;
+    }
+    $.ajax({
+       url: "/json.htm?type=command&param=deletedatapoint&idx=" + $.devIdx + "&date=" + dateString,
+       async: false, 
+       dataType: 'json',
+       success: function(data) {
+        if (data.status == "OK") {
+          retChart($.content,$.devIdx,$.devName);
+        }
+        else {
+          ShowNotify(('Problem deleting data point!'), 2500, true);
+        }
+       },
+       error: function(){
+        ShowNotify(('Problem deleting data point!'), 2500, true);
+       }     
+    });   
   } 
   
   chartPointClickNewEx = function(event, isShort, retChart) {
-	  if (event.shiftKey!=true) {
-		  return;
-	  }
-	  if (window.my_config.userrights!=2) {
+    if (event.shiftKey!=true) {
+      return;
+    }
+    if (window.my_config.userrights!=2) {
           HideNotify();
-		  ShowNotify(('You do not have permission to do that!'), 2500, true);
-		  return;
-	  }
-	  var dateString;
-	  if (isShort==false) {
-		  dateString=Highcharts.dateFormat('%Y-%m-%d', event.point.x);
-	  }
-	  else {
-		  dateString=Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', event.point.x);
-	  }
-	  var bValid = false;
-	  bValid=(confirm(("Are you sure to remove this value at") + " ?:\n\nDate: " + dateString + " \nValue: " + event.point.y)==true);
-	  if (bValid == false) {
-		  return;
-	  }
-	  $.ajax({
-		   url: "/json.htm?type=command&param=deletedatapoint&idx=" + $.devIdx + "&date=" + dateString,
-		   async: false, 
-		   dataType: 'json',
-		   success: function(data) {
-			  if (data.status == "OK") {
-				  retChart($.content,$.devIdx,$.devName,$.devSwitchType);
-			  }
-			  else {
-				  ShowNotify(('Problem deleting data point!'), 2500, true);
-			  }
-		   },
-		   error: function(){
-			  ShowNotify(('Problem deleting data point!'), 2500, true);
-		   }     
-	  }); 	
+      ShowNotify(('You do not have permission to do that!'), 2500, true);
+      return;
+    }
+    var dateString;
+    if (isShort==false) {
+      dateString=Highcharts.dateFormat('%Y-%m-%d', event.point.x);
+    }
+    else {
+      dateString=Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', event.point.x);
+    }
+    var bValid = false;
+    bValid=(confirm(("Are you sure to remove this value at") + " ?:\n\nDate: " + dateString + " \nValue: " + event.point.y)==true);
+    if (bValid == false) {
+      return;
+    }
+    $.ajax({
+       url: "/json.htm?type=command&param=deletedatapoint&idx=" + $.devIdx + "&date=" + dateString,
+       async: false, 
+       dataType: 'json',
+       success: function(data) {
+        if (data.status == "OK") {
+          retChart($.content,$.devIdx,$.devName,$.devSwitchType);
+        }
+        else {
+          ShowNotify(('Problem deleting data point!'), 2500, true);
+        }
+       },
+       error: function(){
+        ShowNotify(('Problem deleting data point!'), 2500, true);
+       }     
+    });   
   }   
   
   AddDataToUtilityChart = function(data,chart,switchtype)
@@ -1242,327 +1242,327 @@
       var datatableTotalUsagePrev = [];
       var datatableTotalReturnPrev = [];
 
-	  var bHaveDelivered=(typeof data.delivered!= 'undefined');
+    var bHaveDelivered=(typeof data.delivered!= 'undefined');
 
-	  var bHavePrev=(typeof data.resultprev!= 'undefined');
-	  if (bHavePrev)
-	  {
-		  $.each(data.resultprev, function(i,item)
-		  {
-			  var cdate=GetPrevDateFromString(item.d);
-			  datatableUsage1Prev.push( [cdate, parseFloat(item.v) ] );
-			  if (typeof item.v2!= 'undefined') {
-				  datatableUsage2Prev.push( [cdate, parseFloat(item.v2) ] );
-			  }
-			  if (bHaveDelivered) {
-				  datatableReturn1Prev.push( [cdate, parseFloat(item.r1) ] );
-				  if (typeof item.r2!= 'undefined') {
-					  datatableReturn2Prev.push( [cdate, parseFloat(item.r2) ] );
-				  }
-			  }
-			  if (datatableUsage2Prev.length>0) {
-				  datatableTotalUsagePrev.push( [cdate, parseFloat(item.v)+parseFloat(item.v2) ] );
-			  }
-			  else {
-				  datatableTotalUsagePrev.push( [cdate, parseFloat(item.v) ] );
-			  }
-			  if (datatableUsage2Prev.length>0) {
-				  datatableTotalReturnPrev.push( [cdate, parseFloat(item.r1)+parseFloat(item.r2) ] );
-			  }
-			  else {
-				  if (typeof item.r1!= 'undefined') {
-					  datatableTotalReturnPrev.push( [cdate, parseFloat(item.r1) ] );
-				  }
-			  }
-		  });
-	  }
-	
+    var bHavePrev=(typeof data.resultprev!= 'undefined');
+    if (bHavePrev)
+    {
+      $.each(data.resultprev, function(i,item)
+      {
+        var cdate=GetPrevDateFromString(item.d);
+        datatableUsage1Prev.push( [cdate, parseFloat(item.v) ] );
+        if (typeof item.v2!= 'undefined') {
+          datatableUsage2Prev.push( [cdate, parseFloat(item.v2) ] );
+        }
+        if (bHaveDelivered) {
+          datatableReturn1Prev.push( [cdate, parseFloat(item.r1) ] );
+          if (typeof item.r2!= 'undefined') {
+            datatableReturn2Prev.push( [cdate, parseFloat(item.r2) ] );
+          }
+        }
+        if (datatableUsage2Prev.length>0) {
+          datatableTotalUsagePrev.push( [cdate, parseFloat(item.v)+parseFloat(item.v2) ] );
+        }
+        else {
+          datatableTotalUsagePrev.push( [cdate, parseFloat(item.v) ] );
+        }
+        if (datatableUsage2Prev.length>0) {
+          datatableTotalReturnPrev.push( [cdate, parseFloat(item.r1)+parseFloat(item.r2) ] );
+        }
+        else {
+          if (typeof item.r1!= 'undefined') {
+            datatableTotalReturnPrev.push( [cdate, parseFloat(item.r1) ] );
+          }
+        }
+      });
+    }
+  
       $.each(data.result, function(i,item)
       {
-			  if (chart == $.DayChart) {
-				  var cdate=GetUTCFromString(item.d);
-				  datatableUsage1.push( [cdate, parseFloat(item.v) ] );
-				  if (typeof item.v2!= 'undefined') {
-					  datatableUsage2.push( [cdate, parseFloat(item.v2) ] );
-				  }
-				  if (bHaveDelivered) {
-					  datatableReturn1.push( [cdate, parseFloat(item.r1) ] );
-					  if (typeof item.r2!= 'undefined') {
-						  datatableReturn2.push( [cdate, parseFloat(item.r2) ] );
-					  }
-				  }
-			  }
-			  else {
-				  var cdate=GetDateFromString(item.d);
-				  datatableUsage1.push( [cdate, parseFloat(item.v) ] );
-				  if (typeof item.v2!= 'undefined') {
-					  datatableUsage2.push( [cdate, parseFloat(item.v2) ] );
-				  }
-				  if (bHaveDelivered) {
-					  datatableReturn1.push( [cdate, parseFloat(item.r1) ] );
-					  if (typeof item.r2!= 'undefined') {
-						  datatableReturn2.push( [cdate, parseFloat(item.r2) ] );
-					  }
-				  }
-				  if (datatableUsage2.length>0) {
-					  datatableTotalUsage.push( [cdate, parseFloat(item.v)+parseFloat(item.v2) ] );
-				  }
-				  else {
-					  datatableTotalUsage.push( [cdate, parseFloat(item.v) ] );
-				  }
-				  if (datatableUsage2.length>0) {
-					  datatableTotalReturn.push( [cdate, parseFloat(item.r1)+parseFloat(item.r2) ] );
-				  }
-				  else {
-					  if (typeof item.r1!= 'undefined') {
-						  datatableTotalReturn.push( [cdate, parseFloat(item.r1) ] );
-					  }
-				  }
-			  }
+        if (chart == $.DayChart) {
+          var cdate=GetUTCFromString(item.d);
+          datatableUsage1.push( [cdate, parseFloat(item.v) ] );
+          if (typeof item.v2!= 'undefined') {
+            datatableUsage2.push( [cdate, parseFloat(item.v2) ] );
+          }
+          if (bHaveDelivered) {
+            datatableReturn1.push( [cdate, parseFloat(item.r1) ] );
+            if (typeof item.r2!= 'undefined') {
+              datatableReturn2.push( [cdate, parseFloat(item.r2) ] );
+            }
+          }
+        }
+        else {
+          var cdate=GetDateFromString(item.d);
+          datatableUsage1.push( [cdate, parseFloat(item.v) ] );
+          if (typeof item.v2!= 'undefined') {
+            datatableUsage2.push( [cdate, parseFloat(item.v2) ] );
+          }
+          if (bHaveDelivered) {
+            datatableReturn1.push( [cdate, parseFloat(item.r1) ] );
+            if (typeof item.r2!= 'undefined') {
+              datatableReturn2.push( [cdate, parseFloat(item.r2) ] );
+            }
+          }
+          if (datatableUsage2.length>0) {
+            datatableTotalUsage.push( [cdate, parseFloat(item.v)+parseFloat(item.v2) ] );
+          }
+          else {
+            datatableTotalUsage.push( [cdate, parseFloat(item.v) ] );
+          }
+          if (datatableUsage2.length>0) {
+            datatableTotalReturn.push( [cdate, parseFloat(item.r1)+parseFloat(item.r2) ] );
+          }
+          else {
+            if (typeof item.r1!= 'undefined') {
+              datatableTotalReturn.push( [cdate, parseFloat(item.r1) ] );
+            }
+          }
+        }
       });
 
       var series;
       if (switchtype==0)
       {
-		  if ((chart == $.DayChart)||(chart == $.WeekChart)) {
-			  var totDecimals=3;
-			  if (chart == $.DayChart) {
-				  totDecimals=0;
-			  }
-			  if (datatableUsage1.length>0) {
-				  if (datatableUsage2.length>0) {
-					  chart.highcharts().addSeries({
-						  id: 'usage1',
-						  name: 'Usage_1',
-						  tooltip: {
-							  valueSuffix: ' Watt',
-							  valueDecimals: totDecimals
-						  },
-						  color: 'rgba(60,130,252,0.8)',
-						  stack: 'susage',
-						  yAxis: 0
-					  });
-				  }
-				  else {
-					  chart.highcharts().addSeries({
-					    id: 'usage1',
-					    name: 'Usage',
-						  tooltip: {
-							  valueSuffix: ' Watt',
-							  valueDecimals: totDecimals
-						  },
-					    color: 'rgba(3,190,252,0.8)',
-					    stack: 'susage',
-					    yAxis: 0
-					  });
-				  }
-				  series = chart.highcharts().get('usage1');
-				  series.setData(datatableUsage1);
-			  }
-			  if (datatableUsage2.length>0) {
-				  chart.highcharts().addSeries({
-				    id: 'usage2',
-				    name: 'Usage_2',
-					  tooltip: {
-						  valueSuffix: ' Watt',
-						  valueDecimals: totDecimals
-					  },
-				    color: 'rgba(3,190,252,0.8)',
-				    stack: 'susage',
-				    yAxis: 0
-				  });
-				  series = chart.highcharts().get('usage2');
-				  series.setData(datatableUsage2);
-			  }
-			  if (bHaveDelivered) {
-				  if (datatableReturn1.length>0) {
-					  chart.highcharts().addSeries({
-						  id: 'return1',
-						  name: 'Return_1',
-						  tooltip: {
-							  valueSuffix: ' Watt',
-							  valueDecimals: totDecimals
-						  },
-						  color: 'rgba(30,242,110,0.8)',
-						  stack: 'sreturn',
-						  yAxis: 0
-					  });
-					  series = chart.highcharts().get('return1');
-					  series.setData(datatableReturn1);
-				  }
-				  if (datatableReturn2.length>0) {
-					  chart.highcharts().addSeries({
-						  id: 'return2',
-						  name: 'Return_2',
-						  tooltip: {
-							  valueSuffix: ' Watt',
-							  valueDecimals: totDecimals
-						  },				
-						  color: 'rgba(3,252,190,0.8)',
-						  stack: 'sreturn',
-						  yAxis: 0
-					  });
-					  series = chart.highcharts().get('return2');
-					  series.setData(datatableReturn2);
-				  }
-			  }
-		  }
-		  else {
-			  //month/year, show total for now
-			  if (datatableTotalUsage.length>0) {
-				  chart.highcharts().addSeries({
-				    id: 'usage',
-				    name: 'Total_Usage',
-					  zIndex: 1,
-					  tooltip: {
-						  valueSuffix: ' kWh',
-						  valueDecimals: 3
-					  },
-				    color: 'rgba(3,190,252,0.8)',
-				    yAxis: 0
-				  });
-				  series = chart.highcharts().get('usage');
-				  series.setData(datatableTotalUsage);
-			  }
-			  if (bHaveDelivered) {
-				  if (datatableTotalReturn.length>0) {
-					  chart.highcharts().addSeries({
-						  id: 'return',
-						  name: 'Total_Return',
-						  zIndex: 1,
-						  tooltip: {
-							  valueSuffix: ' kWh',
-							  valueDecimals: 3
-						  },
-						  color: 'rgba(3,252,190,0.8)',
-						  yAxis: 0
-					  });
-					  series = chart.highcharts().get('return');
-					  series.setData(datatableTotalReturn);
-				  }
-			  }
-			  if (datatableTotalUsagePrev.length>0) {
-				  chart.highcharts().addSeries({
-				    id: 'usageprev',
-				    name: 'Past_Usage',
-					  tooltip: {
-						  valueSuffix: ' kWh',
-						  valueDecimals: 3
-					  },
-				    color: 'rgba(190,3,252,0.8)',
-				    yAxis: 0
-				  });
-				  series = chart.highcharts().get('usageprev');
-				  series.setData(datatableTotalUsagePrev);
-				  series.setVisible(false);
-			  }
-			  if (bHaveDelivered) {
-				  if (datatableTotalReturnPrev.length>0) {
-					  chart.highcharts().addSeries({
-						  id: 'returnprev',
-						  name: 'Past_Return',
-						  tooltip: {
-							  valueSuffix: ' kWh',
-							  valueDecimals: 3
-						  },
-						  color: 'rgba(252,190,3,0.8)',
-						  yAxis: 0
-					  });
-					  series = chart.highcharts().get('returnprev');
-					  series.setData(datatableTotalReturnPrev);
-					  series.setVisible(false);
-				  }
-			  }
-		  }
+      if ((chart == $.DayChart)||(chart == $.WeekChart)) {
+        var totDecimals=3;
+        if (chart == $.DayChart) {
+          totDecimals=0;
+        }
+        if (datatableUsage1.length>0) {
+          if (datatableUsage2.length>0) {
+            chart.highcharts().addSeries({
+              id: 'usage1',
+              name: 'Usage_1',
+              tooltip: {
+                valueSuffix: ' Watt',
+                valueDecimals: totDecimals
+              },
+              color: 'rgba(60,130,252,0.8)',
+              stack: 'susage',
+              yAxis: 0
+            });
+          }
+          else {
+            chart.highcharts().addSeries({
+              id: 'usage1',
+              name: 'Usage',
+              tooltip: {
+                valueSuffix: ' Watt',
+                valueDecimals: totDecimals
+              },
+              color: 'rgba(3,190,252,0.8)',
+              stack: 'susage',
+              yAxis: 0
+            });
+          }
+          series = chart.highcharts().get('usage1');
+          series.setData(datatableUsage1);
+        }
+        if (datatableUsage2.length>0) {
+          chart.highcharts().addSeries({
+            id: 'usage2',
+            name: 'Usage_2',
+            tooltip: {
+              valueSuffix: ' Watt',
+              valueDecimals: totDecimals
+            },
+            color: 'rgba(3,190,252,0.8)',
+            stack: 'susage',
+            yAxis: 0
+          });
+          series = chart.highcharts().get('usage2');
+          series.setData(datatableUsage2);
+        }
+        if (bHaveDelivered) {
+          if (datatableReturn1.length>0) {
+            chart.highcharts().addSeries({
+              id: 'return1',
+              name: 'Return_1',
+              tooltip: {
+                valueSuffix: ' Watt',
+                valueDecimals: totDecimals
+              },
+              color: 'rgba(30,242,110,0.8)',
+              stack: 'sreturn',
+              yAxis: 0
+            });
+            series = chart.highcharts().get('return1');
+            series.setData(datatableReturn1);
+          }
+          if (datatableReturn2.length>0) {
+            chart.highcharts().addSeries({
+              id: 'return2',
+              name: 'Return_2',
+              tooltip: {
+                valueSuffix: ' Watt',
+                valueDecimals: totDecimals
+              },        
+              color: 'rgba(3,252,190,0.8)',
+              stack: 'sreturn',
+              yAxis: 0
+            });
+            series = chart.highcharts().get('return2');
+            series.setData(datatableReturn2);
+          }
+        }
+      }
+      else {
+        //month/year, show total for now
+        if (datatableTotalUsage.length>0) {
+          chart.highcharts().addSeries({
+            id: 'usage',
+            name: 'Total_Usage',
+            zIndex: 1,
+            tooltip: {
+              valueSuffix: ' kWh',
+              valueDecimals: 3
+            },
+            color: 'rgba(3,190,252,0.8)',
+            yAxis: 0
+          });
+          series = chart.highcharts().get('usage');
+          series.setData(datatableTotalUsage);
+        }
+        if (bHaveDelivered) {
+          if (datatableTotalReturn.length>0) {
+            chart.highcharts().addSeries({
+              id: 'return',
+              name: 'Total_Return',
+              zIndex: 1,
+              tooltip: {
+                valueSuffix: ' kWh',
+                valueDecimals: 3
+              },
+              color: 'rgba(3,252,190,0.8)',
+              yAxis: 0
+            });
+            series = chart.highcharts().get('return');
+            series.setData(datatableTotalReturn);
+          }
+        }
+        if (datatableTotalUsagePrev.length>0) {
+          chart.highcharts().addSeries({
+            id: 'usageprev',
+            name: 'Past_Usage',
+            tooltip: {
+              valueSuffix: ' kWh',
+              valueDecimals: 3
+            },
+            color: 'rgba(190,3,252,0.8)',
+            yAxis: 0
+          });
+          series = chart.highcharts().get('usageprev');
+          series.setData(datatableTotalUsagePrev);
+          series.setVisible(false);
+        }
+        if (bHaveDelivered) {
+          if (datatableTotalReturnPrev.length>0) {
+            chart.highcharts().addSeries({
+              id: 'returnprev',
+              name: 'Past_Return',
+              tooltip: {
+                valueSuffix: ' kWh',
+                valueDecimals: 3
+              },
+              color: 'rgba(252,190,3,0.8)',
+              yAxis: 0
+            });
+            series = chart.highcharts().get('returnprev');
+            series.setData(datatableTotalReturnPrev);
+            series.setVisible(false);
+          }
+        }
+      }
 
-		  if (chart == $.DayChart) {
-			  chart.highcharts().yAxis[0].axisTitle.attr({
-				  text: ('Energy') + ' Watt'
-			  });			
-		  }
-		  else {
-			  chart.highcharts().yAxis[0].axisTitle.attr({
-				  text: ('Energy') + ' kWh'
-			  });			
-		  }
-		  chart.highcharts().yAxis[0].redraw();
+      if (chart == $.DayChart) {
+        chart.highcharts().yAxis[0].axisTitle.attr({
+          text: ('Energy') + ' Watt'
+        });      
+      }
+      else {
+        chart.highcharts().yAxis[0].axisTitle.attr({
+          text: ('Energy') + ' kWh'
+        });      
+      }
+      chart.highcharts().yAxis[0].redraw();
       }
       else if (switchtype==1)
       {
-		  //gas
-		  chart.highcharts().addSeries({
+      //gas
+      chart.highcharts().addSeries({
             id: 'gas',
             name: 'Gas',
-		    zIndex: 1,
-			  tooltip: {
-				  valueSuffix: ' m3',
-				  valueDecimals: 3
-			  },
+        zIndex: 1,
+        tooltip: {
+          valueSuffix: ' m3',
+          valueDecimals: 3
+        },
             color: 'rgba(3,190,252,0.8)',
             yAxis: 0
           });
-		  if ((chart == $.MonthChart)||(chart == $.YearChart)) {
-			  if (datatableUsage1Prev.length>0) {
-				  chart.highcharts().addSeries({
-				    id: 'gasprev',
-				    name: 'Past_Gas',
-					  tooltip: {
-						  valueSuffix: ' m3',
-						  valueDecimals: 3
-					  },
-				    color: 'rgba(190,3,252,0.8)',
-				    yAxis: 0
-				  });
-				  series = chart.highcharts().get('gasprev');
-				  series.setData(datatableUsage1Prev);
-				  series.setVisible(false);
-			  }
-		  }
-		  series = chart.highcharts().get('gas');
-		  series.setData(datatableUsage1);
-		  chart.highcharts().yAxis[0].axisTitle.attr({
-			  text: 'Gas m3'
-		  });			
+      if ((chart == $.MonthChart)||(chart == $.YearChart)) {
+        if (datatableUsage1Prev.length>0) {
+          chart.highcharts().addSeries({
+            id: 'gasprev',
+            name: 'Past_Gas',
+            tooltip: {
+              valueSuffix: ' m3',
+              valueDecimals: 3
+            },
+            color: 'rgba(190,3,252,0.8)',
+            yAxis: 0
+          });
+          series = chart.highcharts().get('gasprev');
+          series.setData(datatableUsage1Prev);
+          series.setVisible(false);
+        }
+      }
+      series = chart.highcharts().get('gas');
+      series.setData(datatableUsage1);
+      chart.highcharts().yAxis[0].axisTitle.attr({
+        text: 'Gas m3'
+      });      
       }
       else if (switchtype==2)
       {
-		  //water
-		  chart.highcharts().addSeries({
+      //water
+      chart.highcharts().addSeries({
             id: 'water',
             name: 'Water',
-			  tooltip: {
-				  valueSuffix: ' m3',
-				  valueDecimals: 3
-			  },
+        tooltip: {
+          valueSuffix: ' m3',
+          valueDecimals: 3
+        },
             color: 'rgba(3,190,252,0.8)',
             yAxis: 0
           });
-		  chart.highcharts().yAxis[0].axisTitle.attr({
-			  text: 'Water m3'
-		  });			
-		  series = chart.highcharts().get('water');
-		  series.setData(datatableUsage1);
+      chart.highcharts().yAxis[0].axisTitle.attr({
+        text: 'Water m3'
+      });      
+      series = chart.highcharts().get('water');
+      series.setData(datatableUsage1);
       }
       else if (switchtype==3)
       {
-		  //counter
-		  chart.highcharts().addSeries({
+      //counter
+      chart.highcharts().addSeries({
             id: 'counter',
             name: 'Counter',
             color: 'rgba(3,190,252,0.8)',
             yAxis: 0
           });
-		  chart.highcharts().yAxis[0].axisTitle.attr({
-			  text: 'Count'
-		  });			
-		  series = chart.highcharts().get('counter');
-		  series.setData(datatableUsage1);
+      chart.highcharts().yAxis[0].axisTitle.attr({
+        text: 'Count'
+      });      
+      series = chart.highcharts().get('counter');
+      series.setData(datatableUsage1);
       }
   }
 
   ShowCounterLogSpline = function(contentdiv,id,name,switchtype)
   {
-	  //clearInterval($.myglobals.refreshTimer);
+    //clearInterval($.myglobals.refreshTimer);
     //$('#modal').show();
     
     $.content=contentdiv;
@@ -1570,44 +1570,44 @@
     $.devIdx=id;
     $.devName=name;
     if (typeof switchtype != 'undefined') {
-	  $.devSwitchType=switchtype;
+    $.devSwitchType=switchtype;
     }
     else {
-	  switchtype=$.devSwitchType;
+    switchtype=$.devSwitchType;
     }
     $('#modaltitle').text(name)
 
     if ((switchtype==0)||(switchtype==1)||(switchtype==2)) {
-	  $.costsT1=0.2389;
-	  $.costsT2=0.2389;
-	  $.costsGas=0.6218;
-	  $.costsWater=1.6473;
+    $.costsT1=0.2389;
+    $.costsT2=0.2389;
+    $.costsGas=0.6218;
+    $.costsWater=1.6473;
 
-	  $.ajax({
-		   url: "/json.htm?type=command&param=getcosts&idx="+$.devIdx,
-		   async: false, 
-		   dataType: 'json',
-		   success: function(data) {
-			  $.costsT1=parseFloat(data.CostEnergy)/10000;
-			  $.costsT2=parseFloat(data.CostEnergyT2)/10000;
-			  $.costsGas=parseFloat(data.CostGas)/10000;
-			  $.costsWater=parseFloat(data.CostWater)/10000;
-		   }
-	  });
+    $.ajax({
+       url: "/json.htm?type=command&param=getcosts&idx="+$.devIdx,
+       async: false, 
+       dataType: 'json',
+       success: function(data) {
+        $.costsT1=parseFloat(data.CostEnergy)/10000;
+        $.costsT2=parseFloat(data.CostEnergyT2)/10000;
+        $.costsGas=parseFloat(data.CostGas)/10000;
+        $.costsWater=parseFloat(data.CostWater)/10000;
+       }
+    });
 
-	  $.costsR1=$.costsT1;
-	  $.costsR2=$.costsT2;
+    $.costsR1=$.costsT1;
+    $.costsR2=$.costsT2;
 
-	  $.monthNames = [ "January", "February", "March", "April", "May", "June",
+    $.monthNames = [ "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December" ];
       
-	  var d = new Date();
-	  var actMonth = d.getMonth()+1;
-	  var actYear = d.getYear()+1900;
-	  //$($.content).html(GetBackbuttonHTMLTableWithRight(backfunction,'ShowP1YearReportGas('+actYear+')','Report')+htmlcontent);
+    var d = new Date();
+    var actMonth = d.getMonth()+1;
+    var actYear = d.getYear()+1900;
+    //$($.content).html(GetBackbuttonHTMLTableWithRight(backfunction,'ShowP1YearReportGas('+actYear+')','Report')+htmlcontent);
     }
     else {
-	  //$($.content).html(GetBackbuttonHTMLTable(backfunction)+htmlcontent);
+    //$($.content).html(GetBackbuttonHTMLTable(backfunction)+htmlcontent);
     }
     //$($.content).i18n();
     
@@ -1624,7 +1624,7 @@
                     
                   $.getJSON("/json.htm?type=graph&sensor=counter&method=1&idx="+id+"&range=day",
                   function(data) {
-					  AddDataToUtilityChart(data,$.DayChart,switchtype);
+            AddDataToUtilityChart(data,$.DayChart,switchtype);
                   });
                 }
             }
@@ -1640,10 +1640,10 @@
           xAxis: {
               type: 'datetime',
               labels: {
-							  formatter: function() {
-								  return Highcharts.dateFormat("%H:%M", this.value);
-							  }
-						  }
+                formatter: function() {
+                  return Highcharts.dateFormat("%H:%M", this.value);
+                }
+              }
           },
           yAxis: {
               title: {
@@ -1651,21 +1651,21 @@
               },
               min: 0
           },
-		  tooltip: {
-		    crosshairs: true,
-		    shared: true
-		  },
+      tooltip: {
+        crosshairs: true,
+        shared: true
+      },
           plotOptions: {
-			  series: {
-				  point: {
-					  events: {
-						  click: function(event) {
-							  chartPointClickNew(event,true,ShowCounterLogSpline);
-						  }
-					  }
-				  }
-			  },
-			  spline: {
+        series: {
+          point: {
+            events: {
+              click: function(event) {
+                chartPointClickNew(event,true,ShowCounterLogSpline);
+              }
+            }
+          }
+        },
+        spline: {
                   lineWidth: 3,
                   states: {
                       hover: {
@@ -1701,7 +1701,7 @@
                     
                   $.getJSON("/json.htm?type=graph&sensor=counter&idx="+id+"&range=week",
                   function(data) {
-					  AddDataToUtilityChart(data,$.WeekChart,switchtype);
+            AddDataToUtilityChart(data,$.WeekChart,switchtype);
                   });
                 }
             }
@@ -1731,13 +1731,13 @@
           },
           tooltip: {
               formatter: function() {
-										  var unit = {
-																  'Usage': 'kWh',
-																  'Return': 'kWh',
-																  'Gas': 'm3',
-																  'Past_Gas': 'm3',
-																  'Water': 'm3'
-													  }[this.series.name];
+                      var unit = {
+                                  'Usage': 'kWh',
+                                  'Return': 'kWh',
+                                  'Gas': 'm3',
+                                  'Past_Gas': 'm3',
+                                  'Water': 'm3'
+                            }[this.series.name];
                       return (Highcharts.dateFormat('%A',this.x)) + ' ' + Highcharts.dateFormat('%Y-%m-%d', this.x) + '<br/>' + this.series.name + ': ' + this.y + ' ' + unit;
               }
           },
@@ -1746,7 +1746,7 @@
                   minPointLength: 4,
                   pointPadding: 0.1,
                   groupPadding: 0,
-				  dataLabels: {
+          dataLabels: {
                           enabled: true,
                           color: 'white'
                   }
@@ -1770,7 +1770,7 @@
                     
                   $.getJSON("/json.htm?type=graph&sensor=counter&idx="+id+"&range=month",
                   function(data) {
-					  AddDataToUtilityChart(data,$.MonthChart,switchtype);
+            AddDataToUtilityChart(data,$.MonthChart,switchtype);
                   });
                 }
             }
@@ -1792,21 +1792,21 @@
               },
               min: 0
           },
-		  tooltip: {
-		    crosshairs: true,
-		    shared: true
-		  },
+      tooltip: {
+        crosshairs: true,
+        shared: true
+      },
           plotOptions: {
-			  series: {
-				  point: {
-					  events: {
-						  click: function(event) {
-							  chartPointClickNewEx(event,false,ShowCounterLogSpline);
-						  }
-					  }
-				  }
-			  },
-			  spline: {
+        series: {
+          point: {
+            events: {
+              click: function(event) {
+                chartPointClickNewEx(event,false,ShowCounterLogSpline);
+              }
+            }
+          }
+        },
+        spline: {
                   lineWidth: 3,
                   states: {
                       hover: {
@@ -1844,7 +1844,7 @@
                     
                   $.getJSON("/json.htm?type=graph&sensor=counter&idx="+id+"&range=year",
                   function(data) {
-					  AddDataToUtilityChart(data,$.YearChart,switchtype);
+            AddDataToUtilityChart(data,$.YearChart,switchtype);
                   });
                 }
             }
@@ -1866,21 +1866,21 @@
               },
               min: 0
           },
-		  tooltip: {
-		    crosshairs: true,
-		    shared: true
-		  },
+      tooltip: {
+        crosshairs: true,
+        shared: true
+      },
           plotOptions: {
-			  series: {
-				  point: {
-					  events: {
-						  click: function(event) {
-							  chartPointClickNewEx(event,false,ShowCounterLogSpline);
-						  }
-					  }
-				  }
-			  },
-			  spline: {
+        series: {
+          point: {
+            events: {
+              click: function(event) {
+                chartPointClickNewEx(event,false,ShowCounterLogSpline);
+              }
+            }
+          }
+        },
+        spline: {
                   lineWidth: 3,
                   states: {
                       hover: {
@@ -1908,7 +1908,7 @@
 
   ShowUsageLog = function(contentdiv,id,name)
   {
-	  //clearInterval($.myglobals.refreshTimer);
+    //clearInterval($.myglobals.refreshTimer);
     //$('#modal').show();
     $.content=contentdiv;
     //$.backfunction=backfunction;
@@ -1959,10 +1959,10 @@
               },
               min: 0
           },
-		    tooltip: {
-			    crosshairs: true,
-			    shared: true
-		    },
+        tooltip: {
+          crosshairs: true,
+          shared: true
+        },
           plotOptions: {
               spline: {
                   lineWidth: 3,
@@ -1986,17 +1986,17 @@
           },
           series: [{
               name: ('Usage'),
-			  tooltip: {
-				  valueSuffix: ' Watt',
-				  valueDecimals: 1
-			  },
-			  point: {
-				  events: {
-					  click: function(event) {
-						  chartPointClickNew(event,true,ShowUsageLog);
-					  }
-				  }
-			  }
+        tooltip: {
+          valueSuffix: ' Watt',
+          valueDecimals: 1
+        },
+        point: {
+          events: {
+            click: function(event) {
+              chartPointClickNew(event,true,ShowUsageLog);
+            }
+          }
+        }
           }]
           ,
           navigation: {
@@ -2052,10 +2052,10 @@
               },
               min: 0
           },
-		    tooltip: {
-			    crosshairs: true,
-			    shared: true
-		    },
+        tooltip: {
+          crosshairs: true,
+          shared: true
+        },
           plotOptions: {
               spline: {
                   lineWidth: 3,
@@ -2079,30 +2079,30 @@
           },
           series: [{
               name: 'Usage_min',
-			  tooltip: {
-				  valueSuffix: ' Watt',
-				  valueDecimals: 1
-			  },
-			  point: {
-				  events: {
-					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
-					  }
-				  }
-			  }
-		  }, {
+        tooltip: {
+          valueSuffix: ' Watt',
+          valueDecimals: 1
+        },
+        point: {
+          events: {
+            click: function(event) {
+              chartPointClickNew(event,false,ShowUsageLog);
+            }
+          }
+        }
+      }, {
               name: 'Usage_max',
-			  tooltip: {
-				  valueSuffix: ' Watt',
-				  valueDecimals: 1
-			  },
-			  point: {
-				  events: {
-					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
-					  }
-				  }
-			  }
+        tooltip: {
+          valueSuffix: ' Watt',
+          valueDecimals: 1
+        },
+        point: {
+          events: {
+            click: function(event) {
+              chartPointClickNew(event,false,ShowUsageLog);
+            }
+          }
+        }
           }]
           ,
           navigation: {
@@ -2158,10 +2158,10 @@
               },
               min: 0
           },
-		    tooltip: {
-			    crosshairs: true,
-			    shared: true
-		    },
+        tooltip: {
+          crosshairs: true,
+          shared: true
+        },
           plotOptions: {
               spline: {
                   lineWidth: 3,
@@ -2185,30 +2185,30 @@
           },
           series: [{
               name: 'Usage_min',
-			  tooltip: {
-				  valueSuffix: ' Watt',
-				  valueDecimals: 1
-			  },
-			  point: {
-				  events: {
-					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
-					  }
-				  }
-			  }
-		  }, {
+        tooltip: {
+          valueSuffix: ' Watt',
+          valueDecimals: 1
+        },
+        point: {
+          events: {
+            click: function(event) {
+              chartPointClickNew(event,false,ShowUsageLog);
+            }
+          }
+        }
+      }, {
               name: 'Usage_max',
-			  tooltip: {
-				  valueSuffix: ' Watt',
-				  valueDecimals: 1
-			  },
-			  point: {
-				  events: {
-					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
-					  }
-				  }
-			  }
+        tooltip: {
+          valueSuffix: ' Watt',
+          valueDecimals: 1
+        },
+        point: {
+          events: {
+            click: function(event) {
+              chartPointClickNew(event,false,ShowUsageLog);
+            }
+          }
+        }
           }]
           ,
           navigation: {
