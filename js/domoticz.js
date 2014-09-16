@@ -187,12 +187,23 @@
     });
   }
   
-  switchLights = function(obj){
+  tileClickHandler = function(obj){
   	var idx = $(obj).data("deviceIdx")
-  	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
-  	$.updateLightSwitch(idx,switchcmd)
-  	//store the new switch state in the object
-  	$(obj).data("deviceStatus", switchcmd)
+  	var type = $(obj).data("deviceType")
+  	switch (type){
+  	  case "Lighting 2":
+      	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
+      	$.updateLightSwitch(idx,switchcmd)
+      	//store the new switch state in the object
+      	$(obj).data("deviceStatus", switchcmd)
+    	break;
+    	case "Energy":
+    	  //alert("Energy")
+    	break;
+    	case "Usage":
+    	  //alert("Usage")
+    	break;
+  	}
   }
   
   switchScenes = function(obj){
@@ -713,7 +724,8 @@
           .data("deviceIdx", value.idx)
           .data("deviceStatus", text)
           .data("deviceSetLevel", value.LevelInt)
-          .attr("onclick", "switchLights(this)")
+          .data("deviceType", value.Type)
+          .attr("onclick", "tileClickHandler(this)")
         $("<span></span>")
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
           .addClass("tile-title")
@@ -809,6 +821,8 @@
           //.attr("data-stack", "true")
           .attr("data-delay", "3000")
           .attr("data-speed","1500")
+          .data("virtualDeviceIdx", vdidx)
+          
           //.attr("data-swap", "image")
           //.attr("data-stops", "100%")
           //.attr("data-delay","3500")
