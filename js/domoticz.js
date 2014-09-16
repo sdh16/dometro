@@ -52,7 +52,6 @@
       dataType: 'json',
       success: function (json) {
         device = json;
-        $.FiveMinuteHistoryDays=json["5MinuteHistoryDays"];
       }
     });
     return device.result;
@@ -192,6 +191,7 @@
   	var idx = $(obj).data("deviceIdx")
   	var type = $(obj).data("deviceType")
   	var name = $(obj).data("deviceName")
+  	var switchTypeVal = $(obj).data("deviceSwitchTypeVal")
   	switch (type){
   	  case "Lighting 2":
       	var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
@@ -201,7 +201,7 @@
     	break;
     	case "Energy":
     	  //alert("Energy")
-        ShowCounterLogSpline("#container",idx,name,"0")
+        ShowCounterLogSpline("#container",idx,name,switchTypeVal)
 	      $('#chartPopup').modal('show')
     	break;
     	case "Usage":
@@ -732,6 +732,7 @@
           .data("deviceSetLevel", value.LevelInt)
           .data("deviceType", value.Type)
           .data("deviceName", value.Name)
+          .data("deviceSwitchTypeVal", value.SwitchTypeVal)
           .attr("onclick", "tileClickHandler(this)")
         $("<span></span>")
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
@@ -1122,6 +1123,31 @@
 	  return "Last" + " " + $.FiveMinuteHistoryDays + " " + "Days";
   }
   
+  CheckForUpdate = function(showdialog) {
+	$.ajax({
+		 url: "/json.htm?type=command&param=checkforupdate&forced=" + showdialog,
+		 async: false, 
+		 dataType: 'json',
+		 success: function(data) {
+			var urights=data.statuscode;
+			var bDisplayLogout=false;
+			$.FiveMinuteHistoryDays=data["5MinuteHistoryDays"];
+			$.AllowWidgetOrdering=data["AllowWidgetOrdering"];
+			if (urights!=3) {
+				bDisplayLogout=true;
+			}
+			else {
+				bDisplayLogout=false;
+				urights=2;
+			}
+			window.my_config =
+			{
+				userrights : urights
+			};
+                 }
+          })
+  }
+  
   chartPointClickNew = function(event, isShort, retChart) {
 	  if (event.shiftKey!=true) {
 		  return;
@@ -1149,7 +1175,7 @@
 		   dataType: 'json',
 		   success: function(data) {
 			  if (data.status == "OK") {
-				  retChart($.content,$.backfunction,$.devIdx,$.devName);
+				  retChart($.content,$.devIdx,$.devName);
 			  }
 			  else {
 				  ShowNotify(('Problem deleting data point!'), 2500, true);
@@ -1188,7 +1214,7 @@
 		   dataType: 'json',
 		   success: function(data) {
 			  if (data.status == "OK") {
-				  retChart($.content,$.backfunction,$.devIdx,$.devName,$.devSwitchType);
+				  retChart($.content,$.devIdx,$.devName,$.devSwitchType);
 			  }
 			  else {
 				  ShowNotify(('Problem deleting data point!'), 2500, true);
@@ -1634,7 +1660,7 @@
 				  point: {
 					  events: {
 						  click: function(event) {
-							  //chartPointClickNew(event,true,ShowCounterLogSpline);
+							  chartPointClickNew(event,true,ShowCounterLogSpline);
 						  }
 					  }
 				  }
@@ -1775,7 +1801,7 @@
 				  point: {
 					  events: {
 						  click: function(event) {
-							  //chartPointClickNewEx(event,false,ShowCounterLogSpline);
+							  chartPointClickNewEx(event,false,ShowCounterLogSpline);
 						  }
 					  }
 				  }
@@ -1849,7 +1875,7 @@
 				  point: {
 					  events: {
 						  click: function(event) {
-							  //chartPointClickNewEx(event,false,ShowCounterLogSpline);
+							  chartPointClickNewEx(event,false,ShowCounterLogSpline);
 						  }
 					  }
 				  }
@@ -1967,7 +1993,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  //chartPointClickNew(event,true,ShowUsageLog);
+						  chartPointClickNew(event,true,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2060,7 +2086,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  //chartPointClickNew(event,false,ShowUsageLog);
+						  chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2073,7 +2099,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  //chartPointClickNew(event,false,ShowUsageLog);
+						  chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2166,7 +2192,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  //chartPointClickNew(event,false,ShowUsageLog);
+						  chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2179,7 +2205,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  //chartPointClickNew(event,false,ShowUsageLog);
+						  chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2200,8 +2226,5 @@ $(document).ready(function() {
   updateScenes()
   updateDomoticzTabs()
   refreshTabs()
-  //var chart = $.getchartData("67", "counter", "year")
-  //alert("check")
-  
-
+  CheckForUpdate(false)
 });
