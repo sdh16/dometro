@@ -1549,9 +1549,7 @@
     else {
 	  switchtype=$.devSwitchType;
     }
-    var htmlcontent = '';
-    htmlcontent = '<h4 class="modal-title">' +name +'</h4>';
-    $('#daymonthyearlog').append(htmlcontent);
+    $('#modaltitle').text(name)
 
     if ((switchtype==0)||(switchtype==1)||(switchtype==2)) {
 	  $.costsT1=0.2389;
@@ -1591,6 +1589,8 @@
     $.DayChart.highcharts({
         chart: {
             type: 'spline',
+            width: 850,
+            height: 250,
             marginRight: 10,
             zoomType: 'x',
             events: {
@@ -1634,7 +1634,7 @@
 				  point: {
 					  events: {
 						  click: function(event) {
-							  chartPointClickNew(event,true,ShowCounterLogSpline);
+							  //chartPointClickNew(event,true,ShowCounterLogSpline);
 						  }
 					  }
 				  }
@@ -1667,6 +1667,8 @@
     $.WeekChart.highcharts({
         chart: {
             type: 'column',
+            width: 850,
+            height: 300,
             marginRight: 10,
             events: {
                 load: function() {
@@ -1733,6 +1735,8 @@
     $.MonthChart.highcharts({
         chart: {
             type: 'spline',
+            width: 850,
+            height: 300,
             marginRight: 10,
             zoomType: 'x',
             events: {
@@ -1771,7 +1775,7 @@
 				  point: {
 					  events: {
 						  click: function(event) {
-							  chartPointClickNewEx(event,false,ShowCounterLogSpline);
+							  //chartPointClickNewEx(event,false,ShowCounterLogSpline);
 						  }
 					  }
 				  }
@@ -1805,6 +1809,8 @@
     $.YearChart.highcharts({
         chart: {
             type: 'spline',
+            width: 850,
+            height: 300,
             marginRight: 10,
             zoomType: 'x',
             events: {
@@ -1843,7 +1849,7 @@
 				  point: {
 					  events: {
 						  click: function(event) {
-							  chartPointClickNewEx(event,false,ShowCounterLogSpline);
+							  //chartPointClickNewEx(event,false,ShowCounterLogSpline);
 						  }
 					  }
 				  }
@@ -1882,9 +1888,7 @@
     //$.backfunction=backfunction;
     $.devIdx=id;
     $.devName=name;
-    var htmlcontent = '';
-    htmlcontent = '<h4 class="modal-title">' +name +'</h4>';
-    $('#daymonthyearlog').append(htmlcontent);
+    $('#modaltitle').text(name)
     //$($.content).html(GetBackbuttonHTMLTable(backfunction)+htmlcontent);
     //$($.content).i18n();
 
@@ -1892,11 +1896,13 @@
     $.DayChart.highcharts({
         chart: {
             type: 'spline',
+            width: 850,
+            height: 250,
             zoomType: 'x',
             marginRight: 10,
             events: {
                 load: function() {
-                  $.getJSON("json.htm?type=graph&sensor=counter&idx="+id+"&range=day",
+                  $.getJSON("/json.htm?type=graph&sensor=counter&idx="+id+"&range=day",
                   function(data) {
                         var series = $.DayChart.highcharts().series[0];
                         var datatable = [];
@@ -1961,7 +1967,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  chartPointClickNew(event,true,ShowUsageLog);
+						  //chartPointClickNew(event,true,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -1978,12 +1984,14 @@
     $.MonthChart.highcharts({
         chart: {
             type: 'spline',
+            width: 850,
+            height: 300,
             zoomType: 'x',
             marginRight: 10,
             events: {
                 load: function() {
                     
-                  $.getJSON("json.htm?type=graph&sensor=counter&idx="+id+"&range=month",
+                  $.getJSON("/json.htm?type=graph&sensor=counter&idx="+id+"&range=month",
                   function(data) {
                         var datatable1 = [];
                         var datatable2 = [];
@@ -2052,7 +2060,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
+						  //chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2065,7 +2073,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
+						  //chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2082,12 +2090,14 @@
     $.YearChart.highcharts({
         chart: {
             type: 'spline',
+            width: 850,
+            height: 300,
             zoomType: 'x',
             marginRight: 10,
             events: {
                 load: function() {
                     
-                  $.getJSON("json.htm?type=graph&sensor=counter&idx="+id+"&range=year",
+                  $.getJSON("/json.htm?type=graph&sensor=counter&idx="+id+"&range=year",
                   function(data) {
                         var datatable1 = [];
                         var datatable2 = [];
@@ -2156,7 +2166,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
+						  //chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
@@ -2169,7 +2179,7 @@
 			  point: {
 				  events: {
 					  click: function(event) {
-						  chartPointClickNew(event,false,ShowUsageLog);
+						  //chartPointClickNew(event,false,ShowUsageLog);
 					  }
 				  }
 			  }
