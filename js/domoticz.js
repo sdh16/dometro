@@ -52,6 +52,19 @@
       dataType: 'json',
       success: function (json) {
         device = json;
+		    if (typeof device.WindScale != 'undefined') {
+			    $.myglobals.windscale=parseFloat(device.WindScale);
+		    }
+		    if (typeof device.WindSign != 'undefined') {
+			    $.myglobals.windsign=device.WindSign;
+		    }
+		    if (typeof device.TempScale != 'undefined') {
+			    $.myglobals.tempscale=parseFloat(device.TempScale);
+		    }
+		    if (typeof device.TempSign != 'undefined') {
+			    $.myglobals.tempsign=device.TempSign;
+		    }
+        
       }
     });
     return device.result;
@@ -168,21 +181,21 @@
       url: '/json.htm?type=command&param=switchlight&idx='+idx+'&switchcmd='+switchcmd+'&level='+level,
       async: false,
       dataType: 'json',
-		  success: function(data) {
-				if (data.status=="ERROR") {
-					HideNotify();
-					bootbox.alert(('Problem sending switch command'));
-				}
-			  //wait 1 second
-			  setTimeout(function() {
-				HideNotify();
-				refreshfunction();
-			  }, 1000);
-		  },
-		  error: function(){
-			  HideNotify();
-			  alert(('Problem sending switch command'));
-		  } 
+      success: function(data) {
+        if (data.status=="ERROR") {
+          HideNotify();
+          bootbox.alert(('Problem sending switch command'));
+        }
+        //wait 1 second
+        setTimeout(function() {
+        HideNotify();
+        refreshfunction();
+        }, 1000);
+      },
+      error: function(){
+        HideNotify();
+        alert(('Problem sending switch command'));
+      } 
     });
   }
   
@@ -193,21 +206,21 @@
       url: '/json.htm?type=command&param=switchscene&idx='+idx+'&switchcmd='+switchcmd,
       async: false,
       dataType: 'json',
-		  success: function(data) {
-				if (data.status=="ERROR") {
-					HideNotify();
-					bootbox.alert(('Problem sending switch command'));
-				}
-			  //wait 1 second
-			  setTimeout(function() {
-				HideNotify();
-				refreshfunction();
-			  }, 1000);
-		  },
-		  error: function(){
-			  HideNotify();
-			  alert(('Problem sending switch command'));
-		  } 
+      success: function(data) {
+        if (data.status=="ERROR") {
+          HideNotify();
+          bootbox.alert(('Problem sending switch command'));
+        }
+        //wait 1 second
+        setTimeout(function() {
+        HideNotify();
+        refreshfunction();
+        }, 1000);
+      },
+      error: function(){
+        HideNotify();
+        alert(('Problem sending switch command'));
+      } 
     });
   }
   
@@ -231,6 +244,12 @@
       case "Usage":
         //alert("Usage")
         ShowUsageLog("#container",idx,name)
+        $('#chartPopup').modal('show')
+      break;
+      case "Temp":
+      case "Temp + Humidity":
+      case "Temp + Humidity + Baro":
+        ShowTempLog("#container",idx,name)
         $('#chartPopup').modal('show')
       break;
     }
@@ -1098,28 +1117,28 @@
   
   ShowNotify = function(txt, timeout, iserror)
   {
-	  //$("#notification").html('<strong>' + txt + '</strong>');
-	  $("#notificationtext").text(txt)
-	  if (typeof iserror != 'undefined') {
-		  $("#notificationtext").css("color","red");
-	  } else {
-		  $("#notificationtext").css("color","#204060");
-	  }
-	  //$("#notification").center();
-	  //$("#notification").attr("align", "center")
-	  //$("#notification").fadeIn("slow");
-	  $('#notification').modal('show')
+    //$("#notification").html('<strong>' + txt + '</strong>');
+    $("#notificationtext").text(txt)
+    if (typeof iserror != 'undefined') {
+      $("#notificationtext").css("color","red");
+    } else {
+      $("#notificationtext").css("color","#204060");
+    }
+    //$("#notification").center();
+    //$("#notification").attr("align", "center")
+    //$("#notification").fadeIn("slow");
+    $('#notification').modal('show')
 
-	  if (typeof timeout != 'undefined') {
-		  setTimeout(function() {
-			  HideNotify();
-		  }, timeout);
-	  }
+    if (typeof timeout != 'undefined') {
+      setTimeout(function() {
+        HideNotify();
+      }, timeout);
+    }
   }
 
   HideNotify = function()
   {
-	  //$("#notification").hide();
+    //$("#notification").hide();
     $('#notification').modal('hide')
   }
   
@@ -2270,9 +2289,628 @@
           }
       });
   }
+  
+  AddDataToTempChart = function(data,chart,isday)
+  {
+      var datatablete = [];
+      var datatabletm = [];
+      var datatableta = [];
+      var datatabletrange = [];
+      
+      var datatablehu = [];
+      var datatablech = [];
+      var datatablecm = [];
+      var datatabledp = [];
+      var datatableba = [];
+
+      var datatablete_prev = [];
+      var datatabletm_prev = [];
+      var datatableta_prev = [];
+      var datatabletrange_prev = [];
+      
+      var datatablehu_prev = [];
+      var datatablech_prev = [];
+      var datatablecm_prev = [];
+      var datatabledp_prev = [];
+      var datatableba_prev = [];
+
+    var bHavePrev=(typeof data.resultprev!= 'undefined');
+    if (bHavePrev) {
+      $.each(data.resultprev, function(i,item)
+      {
+        if (typeof item.te != 'undefined') {
+          datatablete_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.te) ] );
+          datatabletm_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.tm) ] );
+          datatabletrange_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.tm), parseFloat(item.te) ] );
+          if (typeof item.ta != 'undefined') {
+            datatableta_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.ta) ] );
+          }
+        }
+        if (typeof item.hu != 'undefined') {
+          datatablehu_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.hu) ] );
+        }
+        if (typeof item.ch != 'undefined') {
+          datatablech_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.ch) ] );
+          datatablecm_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.cm) ] );
+        }
+        if (typeof item.dp != 'undefined') {
+          datatabledp_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.dp) ] );
+        }
+        if (typeof item.ba != 'undefined') {
+          datatableba_prev.push( [GetPrevDateFromString(item.d), parseFloat(item.ba) ] );
+        }
+      });
+    }
+
+      $.each(data.result, function(i,item)
+      {
+        if (isday==1) {
+          if (typeof item.te != 'undefined') {
+            datatablete.push( [GetUTCFromString(item.d), parseFloat(item.te) ] );
+          }
+          if (typeof item.hu != 'undefined') {
+            datatablehu.push( [GetUTCFromString(item.d), parseFloat(item.hu) ] );
+          }
+          if (typeof item.ch != 'undefined') {
+            datatablech.push( [GetUTCFromString(item.d), parseFloat(item.ch) ] );
+          }
+          if (typeof item.dp != 'undefined') {
+            datatabledp.push( [GetUTCFromString(item.d), parseFloat(item.dp) ] );
+          }
+          if (typeof item.ba != 'undefined') {
+            datatableba.push( [GetUTCFromString(item.d), parseFloat(item.ba) ] );
+          }
+        } else {
+          if (typeof item.te != 'undefined') {
+        datatablete.push( [GetDateFromString(item.d), parseFloat(item.te) ] );
+        datatabletm.push( [GetDateFromString(item.d), parseFloat(item.tm) ] );
+        datatabletrange.push( [GetDateFromString(item.d), parseFloat(item.tm), parseFloat(item.te) ] );
+        if (typeof item.ta != 'undefined') {
+          datatableta.push( [GetDateFromString(item.d), parseFloat(item.ta) ] );
+        }
+          }
+          if (typeof item.hu != 'undefined') {
+            datatablehu.push( [GetDateFromString(item.d), parseFloat(item.hu) ] );
+          }
+          if (typeof item.ch != 'undefined') {
+            datatablech.push( [GetDateFromString(item.d), parseFloat(item.ch) ] );
+            datatablecm.push( [GetDateFromString(item.d), parseFloat(item.cm) ] );
+          }
+          if (typeof item.dp != 'undefined') {
+            datatabledp.push( [GetDateFromString(item.d), parseFloat(item.dp) ] );
+          }
+          if (typeof item.ba != 'undefined') {
+            datatableba.push( [GetDateFromString(item.d), parseFloat(item.ba) ] );
+          }
+        }
+      });
+      var series;
+      if (datatablehu.length!=0)
+      {
+        chart.addSeries(
+          {
+            id: 'humidity',
+            name: ('Humidity'),
+            color: 'limegreen',
+            yAxis: 1,
+        tooltip: {
+          valueSuffix: ' %',
+          valueDecimals: 0
+        }          
+          }
+        );
+        series = chart.get('humidity');
+        series.setData(datatablehu);
+      }
+
+      if (datatablech.length!=0)
+      {
+        chart.addSeries(
+          {
+            id: 'chill',
+            name: ('Chill'),
+            color: 'red',
+        zIndex: 1,
+        tooltip: {
+          valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+          valueDecimals: 1
+        },
+            yAxis: 0
+          }
+        );
+        series = chart.get('chill');
+        series.setData(datatablech);
+        
+        if (isday==0) {
+        chart.addSeries(
+        {
+          id: 'chillmin',
+          name: ('Chill') + '_min',
+          color: 'rgba(255,127,39,0.8)',
+          linkedTo: ':previous',
+          zIndex: 1,
+          tooltip: {
+            valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+            valueDecimals: 1
+          },
+          yAxis: 0
+        });
+        series = chart.get('chillmin');
+        series.setData(datatablecm);
+        }
+      }
+      if (datatablete.length!=0)
+      {
+        //Add Temperature series
+
+      if (isday==1) {
+        chart.addSeries(
+        {
+          id: 'temperature',
+          name: ('Temperature'),
+          color: 'yellow',
+          yAxis: 0,
+          tooltip: {
+            valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+            valueDecimals: 1
+          }
+        }
+        );
+        series = chart.get('temperature');
+        series.setData(datatablete);
+      }
+      else {
+        //Min/Max range
+        if (datatableta.length!=0) {
+          chart.addSeries(
+            {
+            id: 'temperature_avg',
+            name: ('Temperature') + '_avg',
+            color: 'yellow',
+            fillOpacity: 0.7,
+            yAxis: 0,
+            zIndex: 2,
+            tooltip: {
+              valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+              valueDecimals: 1
+            }          
+            }
+          );
+          series = chart.get('temperature_avg');
+          series.setData(datatableta);
+        }
+        if (datatabletrange.length!=0) {
+          chart.addSeries(
+            {
+            id: 'temperature',
+            name: ('Temperature') + '_range',
+            color: 'rgba(3,190,252,1.0)',
+            type: 'areasplinerange',
+            linkedTo: ':previous',
+            zIndex: 0,
+            lineWidth: 0,
+            fillOpacity: 0.5,
+            yAxis: 0,
+            tooltip: {
+              valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+              valueDecimals: 1
+            }          
+            }
+          );
+          series = chart.get('temperature');
+          series.setData(datatabletrange);
+        }
+        if (datatablete_prev.length!=0)
+        {
+          chart.addSeries(
+          {
+            id: 'prev_temperature',
+            name: 'Prev_' + ('Temperature'),
+            color: 'rgba(224,224,230,0.8)',
+            zIndex: 3,
+            yAxis: 0,
+            tooltip: {
+              valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+              valueDecimals: 1
+            }
+          });
+          series = chart.get('prev_temperature');
+          series.setData(datatablete_prev);
+          series.setVisible(false);
+        }    
+      }
+      }
+   return;   
+      if (datatabledp.length!=0)
+      {
+        chart.addSeries(
+      {
+        id: 'dewpoint',
+        name: ('Dew Point'),
+        color: 'blue',
+        yAxis: 0,
+        tooltip: {
+          valueSuffix: ' \u00B0' + $.myglobals.tempsign,
+          valueDecimals: 1
+        }
+          }
+        );
+        series = chart.get('dewpoint');
+        series.setData(datatabledp);
+      }
+      if (datatableba.length!=0)
+      {
+        chart.addSeries(
+          {
+        id: 'baro',
+        name: ('Barometer'),
+        color: 'pink',
+        yAxis: 2,
+        tooltip: {
+          valueSuffix: ' hPa',
+          valueDecimals: 1
+        }
+          }
+        );
+        series = chart.get('baro');
+        series.setData(datatableba);
+      }
+  }  
+    
+  ShowTempLog = function(contentdiv,id,name)
+  {
+    //clearInterval($.myglobals.refreshTimer);
+    //$('#modal').show();
+    $.content=contentdiv;
+    //$.backfunction=backfunction;
+    $.devIdx=id;
+    $.devName=name;
+      $('#modaltitle').text(name)
+
+    //$($.content).html(GetBackbuttonHTMLTable(backfunction)+htmlcontent);
+    //$($.content).i18n();
+
+    var tempstr="Celsius";
+    if ($.myglobals.tempsign=="F") {
+    tempstr="Fahrenheit";
+    }
+
+    $.DayChart = $($.content + ' #daygraph');
+    $.DayChart.highcharts({
+        chart: {
+            type: 'line',
+            width: 850,
+            height: 300,
+            zoomType: 'x',
+            alignTicks: false,
+            events: {
+                load: function() {
+                  this.showLoading();
+                  $.getJSON("/json.htm?type=graph&sensor=temp&idx="+id+"&range=day",
+                  function(data) {
+                        AddDataToTempChart(data,$.DayChart.highcharts(),1);
+                  });
+                  this.hideLoading();
+                }
+            }
+        },
+        loading: {
+            hideDuration: 1000,
+            showDuration: 1000
+        },
+        credits: {
+          enabled: true,
+          href: "http://www.domoticz.com",
+          text: "Domoticz.com"
+        },
+        title: {
+            text: ('Temperature') + ' ' + Get5MinuteHistoryDaysGraphTitle()
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [{ //temp label
+            labels:  {
+                     formatter: function() {
+                          return this.value +'\u00B0 ' + $.myglobals.tempsign;
+                     },
+                     style: {
+                        color: '#CCCC00'
+                     }
+            },
+            title: {
+                text: 'degrees ' + tempstr,
+                 style: {
+                    color: '#CCCC00'
+                 }
+            }
+        }, { //humidity label
+            labels:  {
+                     formatter: function() {
+                          return this.value +'%';
+                     },
+                     style: {
+                        color: 'limegreen'
+                     }
+            },
+            title: {
+                text: ('Humidity') +' %',
+                 style: {
+                    color: '#00CC00'
+                 }
+            },
+            opposite: true
+        }],
+        tooltip: {
+        crosshairs: true,
+        shared: true
+        },
+        legend: {
+            enabled: true
+        },
+        plotOptions: {
+      series: {
+        point: {
+          events: {
+            click: function(event) {
+              chartPointClickNew(event,true,ShowTempLog);
+            }
+          }
+        }
+      },
+       line: {
+        lineWidth: 3,
+        states: {
+          hover: {
+            lineWidth: 3
+          }
+        },
+        marker: {
+          enabled: false,
+          states: {
+            hover: {
+              enabled: true,
+              symbol: 'circle',
+              radius: 5,
+              lineWidth: 1
+            }
+          }
+        }
+      }
+        }
+    });
+
+    $.MonthChart = $($.content + ' #monthgraph');
+    $.MonthChart.highcharts({
+        chart: {
+            type: 'spline',
+            width: 850,
+            height: 300,
+            zoomType: 'x',
+            alignTicks: false,
+            events: {
+                load: function() {
+                  this.showLoading();
+                  $.getJSON("/json.htm?type=graph&sensor=temp&idx="+id+"&range=month",
+                  function(data) {
+                        AddDataToTempChart(data,$.MonthChart.highcharts(),0);
+                  });
+                  this.hideLoading();
+                }
+            }
+        },
+        loading: {
+            hideDuration: 1000,
+            showDuration: 1000
+        },
+        credits: {
+          enabled: true,
+          href: "http://www.domoticz.com",
+          text: "Domoticz.com"
+        },
+        title: {
+            text: ('Temperature') + ' ' + ('Last Month')
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [{ //temp label
+            labels:  {
+          format: '{value}\u00B0 ' + $.myglobals.tempsign,
+          style: {
+            color: '#CCCC00'
+          }
+            },
+            title: {
+                text: 'degrees ' + tempstr,
+                 style: {
+                    color: '#CCCC00'
+                 }
+            }
+        }, { //humidity label
+            labels:  {
+             format: '{value}%',
+                     style: {
+                        color: 'limegreen'
+                     }
+            },
+            title: {
+                text: ('Humidity')+' %',
+                 style: {
+                    color: '#00CC00'
+                 }
+            },
+            opposite: true
+        }],
+        tooltip: {
+        crosshairs: true,
+        shared: true
+        },
+        legend: {
+            enabled: true
+        },
+        plotOptions: {
+          series: {
+            point: {
+              events: {
+                click: function(event) {
+                  chartPointClickNew(event,false,ShowTempLog);
+                }
+              }
+            }
+          },
+          spline: {
+                      lineWidth: 3,
+                      states: {
+                          hover: {
+                              lineWidth: 3
+                          }
+                      },
+                      marker: {
+                          enabled: false,
+                          states: {
+                              hover: {
+                                  enabled: true,
+                                  symbol: 'circle',
+                                  radius: 5,
+                                  lineWidth: 1
+                              }
+                          }
+                      }
+                  }
+        }
+    });
+
+    $.YearChart = $($.content + ' #yeargraph');
+    $.YearChart.highcharts({
+        chart: {
+            type: 'spline',
+            width: 850,
+            height: 300,
+            zoomType: 'x',
+            alignTicks: false,
+            events: {
+                load: function() {
+                  this.showLoading();
+                  $.getJSON("/json.htm?type=graph&sensor=temp&idx="+id+"&range=year",
+                  function(data) {
+                        AddDataToTempChart(data,$.YearChart.highcharts(),0);
+                  });
+                  this.hideLoading();
+                }
+            }
+        },
+        loading: {
+            hideDuration: 1000,
+            showDuration: 1000
+        },
+        credits: {
+          enabled: true,
+          href: "http://www.domoticz.com",
+          text: "Domoticz.com"
+        },
+        title: {
+            text: ('Temperature') + ' ' + ('Last Year')
+        },
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: [{ //temp label
+            labels:  {
+          format: '{value}\u00B0 ' + $.myglobals.tempsign,
+          style: {
+            color: '#CCCC00'
+          }
+            },
+            title: {
+                text: 'degrees ' + tempstr,
+                 style: {
+                    color: '#CCCC00'
+                 }
+            }
+        }, { //humidity label
+            labels:  {
+             format: '{value}%',
+                     style: {
+                        color: 'limegreen'
+                     }
+            },
+            title: {
+                text: ('Humidity')+' %',
+                 style: {
+                    color: '#00CC00'
+                 }
+            },
+            opposite: true
+        }],
+        tooltip: {
+        crosshairs: true,
+        shared: true
+        },
+        legend: {
+            enabled: true
+        },
+        plotOptions: {
+          series: {
+            point: {
+              events: {
+                click: function(event) {
+                  chartPointClickNew(event,false,ShowTempLog);
+                }
+              }
+            }
+          },
+          spline: {
+                      lineWidth: 3,
+                      states: {
+                          hover: {
+                              lineWidth: 3
+                          }
+                      },
+                      marker: {
+                          enabled: false,
+                          states: {
+                              hover: {
+                                  enabled: true,
+                                  symbol: 'circle',
+                                  radius: 5,
+                                  lineWidth: 1
+                              }
+                          }
+                      }
+                  }
+        }
+    });
+
+    //$('#modal').hide();
+    //cursordefault();
+    return true;
+  }  
 }(jQuery, window, document));
 
 $(document).ready(function() {
+
+  $.myglobals = {
+    actlayout : "",
+    prevlayout : "",
+    ismobile: false,
+    ismobileint: false,
+    windscale: 1.0,
+    windsign: "m/s",
+    tempscale: 1.0,
+    tempsign: "C",
+    historytype : 1,
+    LastPlanSelected: 0,
+    Latitude: "",
+    Longitude: "",
+    DashboardType: 0,
+    dontcache: true
+  };
+  
+  if( /Android|webOS|iPhone|iPad|iPod|ZuneWP7|BlackBerry/i.test(navigator.userAgent) ) {
+    $.myglobals.ismobile=true;
+    $.myglobals.ismobileint=true;
+  }
   updateDevices()
   updateDashboard()
   updateScenes()
