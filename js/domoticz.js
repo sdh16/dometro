@@ -163,27 +163,51 @@
 
   //update light switch
   $.updateLightSwitch = function(idx, switchcmd, level){
-    var result = [];
+    ShowNotify(('Switching') + ' ' + (switchcmd));
     $.ajax({
       url: '/json.htm?type=command&param=switchlight&idx='+idx+'&switchcmd='+switchcmd+'&level='+level,
       async: false,
       dataType: 'json',
-      success: function (json) {
-        result = json;
-      }
+		  success: function(data) {
+				if (data.status=="ERROR") {
+					HideNotify();
+					bootbox.alert(('Problem sending switch command'));
+				}
+			  //wait 1 second
+			  setTimeout(function() {
+				HideNotify();
+				refreshfunction();
+			  }, 1000);
+		  },
+		  error: function(){
+			  HideNotify();
+			  alert(('Problem sending switch command'));
+		  } 
     });
   }
   
   //update light switch
   $.updateScene = function(idx, switchcmd){
-    var result = [];
+    ShowNotify(('Switching') + ' ' + (switchcmd));    
     $.ajax({
       url: '/json.htm?type=command&param=switchscene&idx='+idx+'&switchcmd='+switchcmd,
       async: false,
       dataType: 'json',
-      success: function (json) {
-        result = json;
-      }
+		  success: function(data) {
+				if (data.status=="ERROR") {
+					HideNotify();
+					bootbox.alert(('Problem sending switch command'));
+				}
+			  //wait 1 second
+			  setTimeout(function() {
+				HideNotify();
+				refreshfunction();
+			  }, 1000);
+		  },
+		  error: function(){
+			  HideNotify();
+			  alert(('Problem sending switch command'));
+		  } 
     });
   }
   
@@ -1071,6 +1095,34 @@
       }      
     })
   } 
+  
+  ShowNotify = function(txt, timeout, iserror)
+  {
+	  //$("#notification").html('<strong>' + txt + '</strong>');
+	  $("#notificationtext").text(txt)
+	  if (typeof iserror != 'undefined') {
+		  $("#notificationtext").css("color","red");
+	  } else {
+		  $("#notificationtext").css("color","#204060");
+	  }
+	  //$("#notification").center();
+	  //$("#notification").attr("align", "center")
+	  //$("#notification").fadeIn("slow");
+	  $('#notification').modal('show')
+
+	  if (typeof timeout != 'undefined') {
+		  setTimeout(function() {
+			  HideNotify();
+		  }, timeout);
+	  }
+  }
+
+  HideNotify = function()
+  {
+	  //$("#notification").hide();
+    $('#notification').modal('hide')
+  }
+  
   
   GetUTCFromString = function(s)
   {
