@@ -945,10 +945,10 @@
     // Refresh DOM objects showing data
     timerRefreshTabs = setTimeout(refreshTabs, 5000)
     
-    var device = combinedDeviceList
+    var device = devices.result
     device.forEach(function(value, key){
-      var deviceName = value.VirtualDeivceName
-      var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+      //var deviceName = value.VirtualDeivceName
+      //var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
       var counterToday = value.CounterToday
       if (typeof(counterToday)  === "undefined"){
         counterToday = "0.0 kWh"
@@ -1022,8 +1022,31 @@
         cleanClass = cleanClass.replace(/(\s)+/, ' ');
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class", cleanClass);
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
-      }        
-      // Update Dashboard tile content
+      }
+    })       
+    // Update Dashboard tile content
+    var virtualdevice = combinedDeviceList
+    virtualdevice.forEach(function(value, key){
+      var deviceName = value.VirtualDeivceName
+      var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
+      var counterToday = value.CounterToday
+      if (typeof(counterToday)  === "undefined"){
+        counterToday = "0.0 kWh"
+      }
+    
+      //Use status for lighting devices and data for rest
+      switch(value.SwitchType){
+        case undefined:
+          var text = value.Data
+        break;
+        default:
+          var text = value.Status
+        break;
+      }
+
+      // Create Device Type icons
+      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
+      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       var tileGroupNameText = "Dashboard"
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       // update text if not the same
