@@ -322,6 +322,7 @@
     timerUpdateDevices = setTimeout(updateDevices, 5000)
     combinedDeviceList= []
     var userVariables = $.getUservariables()
+    devices = $.getUseddevices()
     userVariables.result.forEach(function(valueVirtualDevice, index){
       if(valueVirtualDevice.Name.match(/vd_/)){    
         var deviceidx = valueVirtualDevice.Value.split(",")
@@ -334,9 +335,18 @@
           VirtualDeiceIdx: virtualDeviceIndex
         }
         for(i = 1; i < deviceidx.length; i++) {
-          var device = $.getDevice(deviceidx[i])
-          var object = $.extend({}, device[0], tempObj);
-          combinedDeviceList.push(object)
+          //var device = $.getDevice(deviceidx[i])
+          var device = $.grep(devices.result, function(obj) {
+            return obj.idx === deviceidx[i];
+          });
+          if (device !== undefined && device != ""){
+            var object = $.extend({}, device[0], tempObj);
+            combinedDeviceList.push(object)
+          }
+          else {
+            //alert("Not found " +deviceidx[i])
+          }
+          
         }
       }  
     })
@@ -726,7 +736,8 @@
   }
       
   updateDomoticzTabs = function(){
-    var device = combinedDeviceList
+    //var device = combinedDeviceList
+    var device = devices.result
     device.forEach(function(value, key){
     //Read the data or status      
     switch(value.SwitchType){
