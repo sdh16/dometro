@@ -33,11 +33,26 @@
   $.getUseddevices = function(){
     var usedDevices = [];
     $.ajax({
-      url: '/json.htm?type=devices&used=true',
+      url: '/json.htm?type=devices&used=true&filter=all&order=Name&lastupdate=' +$.LastUpdateTime,
       async: false,
       dataType: 'json',
       success: function (json) {
         usedDevices = json;
+		    if (typeof usedDevices.WindScale != 'undefined') {
+			    $.myglobals.windscale=parseFloat(usedDevices.WindScale);
+		    }
+		    if (typeof usedDevices.WindSign != 'undefined') {
+			    $.myglobals.windsign=usedDevices.WindSign;
+		    }
+		    if (typeof usedDevices.TempScale != 'undefined') {
+			    $.myglobals.tempscale=parseFloat(usedDevices.TempScale);
+		    }
+		    if (typeof usedDevices.TempSign != 'undefined') {
+			    $.myglobals.tempsign=usedDevices.TempSign;
+		    }
+		    if (typeof usedDevices.ActTime != 'undefined') {
+			    $.LastUpdateTime=parseInt(usedDevices.ActTime);
+		    }
       }
     });
     return usedDevices;
@@ -52,19 +67,6 @@
       dataType: 'json',
       success: function (json) {
         device = json;
-		    if (typeof device.WindScale != 'undefined') {
-			    $.myglobals.windscale=parseFloat(device.WindScale);
-		    }
-		    if (typeof device.WindSign != 'undefined') {
-			    $.myglobals.windsign=device.WindSign;
-		    }
-		    if (typeof device.TempScale != 'undefined') {
-			    $.myglobals.tempscale=parseFloat(device.TempScale);
-		    }
-		    if (typeof device.TempSign != 'undefined') {
-			    $.myglobals.tempsign=device.TempSign;
-		    }
-        
       }
     });
     return device.result;
@@ -189,7 +191,7 @@
         //wait 1 second
         setTimeout(function() {
         HideNotify();
-        refreshfunction();
+        //updateDevices();
         }, 1000);
       },
       error: function(){
@@ -199,7 +201,7 @@
     });
   }
   
-  //update light switch
+  //update scene switch
   $.updateScene = function(idx, switchcmd){
     ShowNotify(('Switching') + ' ' + (switchcmd));    
     $.ajax({
@@ -214,7 +216,7 @@
         //wait 1 second
         setTimeout(function() {
         HideNotify();
-        refreshfunction();
+        //updateDevices();
         }, 1000);
       },
       error: function(){
@@ -235,6 +237,18 @@
         $.updateLightSwitch(idx,switchcmd)
         //store the new switch state in the object
         $(obj).data("deviceStatus", switchcmd)
+      break;
+      case "Scene":
+        var switchcmd = "On"
+        $.updateScene(idx,switchcmd)
+        //store the new switch state in the object
+        $(obj).data("deviceStatus", switchcmd)      
+      break;
+      case "Group":
+        var switchcmd = (($(obj).data("deviceStatus") == "On") ? "Off" : "On")
+        $.updateScene(idx,switchcmd)
+        //store the new switch state in the object
+        $(obj).data("deviceStatus", switchcmd)      
       break;
       case "Energy":
         //alert("Energy")
@@ -323,6 +337,11 @@
     combinedDeviceList= []
     var userVariables = $.getUservariables()
     devices = $.getUseddevices()
+    if (typeof devices.result === "undefined"){
+      //No changes, so just return
+      return
+    }
+    
     userVariables.result.forEach(function(valueVirtualDevice, index){
       if(valueVirtualDevice.Name.match(/vd_/)){    
         var deviceidx = valueVirtualDevice.Value.split(",")
@@ -336,17 +355,22 @@
         }
         for(i = 1; i < deviceidx.length; i++) {
           //var device = $.getDevice(deviceidx[i])
-          var device = $.grep(devices.result, function(obj) {
-            return obj.idx === deviceidx[i];
-          });
-          if (device !== undefined && device != ""){
-            var object = $.extend({}, device[0], tempObj);
-            combinedDeviceList.push(object)
-          }
-          else {
-            //alert("Not found " +deviceidx[i])
-          }
-          
+          //var device = $.grep(devices.result, function(obj) {
+          //  return ((obj.idx === deviceidx[i]) && ((obj.Type != "Scene") || (obj.Type != "Group")));
+          //});
+          //if ((device != undefined ) && (device != "") && ((device.Type != "Scene") || (device.Type != "Group"))){
+          //  var object = $.extend({}, device[0], tempObj);
+          //  combinedDeviceList.push(object)
+          //}
+          devices.result.forEach(function(device, index){
+            if ((device.idx == deviceidx[i]) && (device != undefined ) && (device != "") && (device.Type != "Scene") && (device.Type != "Group")){
+              var object = $.extend({}, device, tempObj);
+              combinedDeviceList.push(object)
+            }
+            else {
+              //alert("Device " +deviceidx[i] +" not found for virtual device " +virtualDeviceName)
+            }
+          })     
         }
       }  
     })
@@ -602,10 +626,10 @@
         tileGroupNameText = switchType
       break;
       case "Scene":
-        tileGroupNameText = "Scenes"
+        tileGroupNameText = "Scenes and Groups"
       break;
       case "Group":
-        tileGroupNameText = "Groups"
+        tileGroupNameText = "Scenes and Groups"
       break;
       case "Temp":
       case "Temp + Humidity":
@@ -633,7 +657,10 @@
       case "Rain":
       case "Wind":
         tileGroupNameText = "Weather"
-      break;        
+      break;  
+      //default:
+      //  tileGroupNameText = "Unknown Grouping"      
+      //break;
     }
     switch(deviceSubType){
       case "Gas":
@@ -647,7 +674,10 @@
       break;
       case "Solar Radiation":
         tileGroupNameText = "Weather"
-      break;        
+      break; 
+      //default:
+      //  tileGroupNameText = "Unknown Grouping"      
+      //break;             
       
     }
     return tileGroupNameText
@@ -736,7 +766,6 @@
   }
       
   updateDomoticzTabs = function(){
-    //var device = combinedDeviceList
     var device = devices.result
     device.forEach(function(value, key){
     //Read the data or status      
@@ -748,6 +777,9 @@
         var text = value.Status
       break;
     }
+    if((value.Type == "Scene") || (value.Type == "Group")){
+      var text = value.Status
+    }    
     var counterToday = value.CounterToday
     if (typeof(counterToday)  === "undefined"){
       counterToday = "0.0 kWh"
@@ -788,10 +820,18 @@
           .data("deviceName", value.Name)
           .data("deviceSwitchTypeVal", value.SwitchTypeVal)
           .attr("onclick", "tileClickHandler(this)")
-        $("<span></span>")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
-          .addClass("tile-title")
-          .text(value.Name)
+        if((value.Type == "Scene") || (value.Type == "Group")){
+          $("<span></span>")
+            .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+            .addClass("tile-title")
+            .text(value.Type)
+          }
+        else {
+          $("<span></span>")
+            .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
+            .addClass("tile-title")
+            .text(value.Name)
+        }
       }  
       if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").length) {
         $("<div></div>")
@@ -821,6 +861,13 @@
             .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
             .addClass("clear-fix text-right")
             .text("Today: " +counterToday)
+        }
+        if((value.Type == "Scene") || (value.Type == "Group")){
+          $("<span></span>")
+            .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
+            .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
+            .addClass("clear-fix text-right")
+            .text(value.Name)          
         }
         $("<span></span>")
           .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
@@ -946,6 +993,10 @@
     timerRefreshTabs = setTimeout(refreshTabs, 5000)
     
     var device = devices.result
+    if (typeof device === "undefined"){
+      //No changes, so just return
+      return
+    }
     device.forEach(function(value, key){
       //var deviceName = value.VirtualDeivceName
       //var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
@@ -963,6 +1014,10 @@
           var text = value.Status
         break;
       }
+      if((value.Type == "Scene") || (value.Type == "Group")){
+        var text = value.Status
+      }    
+      
 
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
@@ -1102,6 +1157,8 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
       }
     })
+    
+/*    
     var scenes = $.getScenes()
     scenes.result.forEach(function(value, key){
       // Update Scenses and Groups tile content
@@ -1147,6 +1204,7 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
       }      
     })
+*/    
   } 
   
   ShowNotify = function(txt, timeout, iserror)
@@ -2945,9 +3003,10 @@ $(document).ready(function() {
     $.myglobals.ismobile=true;
     $.myglobals.ismobileint=true;
   }
+  $.LastUpdateTime=parseInt(0);  
   updateDevices()
   updateDashboard()
-  updateScenes()
+  //updateScenes()
   updateDomoticzTabs()
   refreshTabs()
   CheckForUpdate(false)
