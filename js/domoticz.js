@@ -355,13 +355,14 @@
         }
         for(i = 1; i < deviceidx.length; i++) {
           //var device = $.getDevice(deviceidx[i])
-          //var device = $.grep(devices.result, function(obj) {
-          //  return ((obj.idx === deviceidx[i]) && ((obj.Type != "Scene") || (obj.Type != "Group")));
-          //});
-          //if ((device != undefined ) && (device != "") && ((device.Type != "Scene") || (device.Type != "Group"))){
-          //  var object = $.extend({}, device[0], tempObj);
-          //  combinedDeviceList.push(object)
-          //}
+          var device = $.grep(devices.result, function(obj) {
+            return ((obj.idx === deviceidx[i]) && (obj.Type != "Scene") && (obj.Type != "Group"));
+          });
+          if ((device != undefined ) && (device != "")){
+            var object = $.extend({}, device[0], tempObj);
+            combinedDeviceList.push(object)
+          }
+          /*
           devices.result.forEach(function(device, index){
             if ((device.idx == deviceidx[i]) && (device != undefined ) && (device != "") && (device.Type != "Scene") && (device.Type != "Group")){
               var object = $.extend({}, device, tempObj);
@@ -370,7 +371,8 @@
             else {
               //alert("Device " +deviceidx[i] +" not found for virtual device " +virtualDeviceName)
             }
-          })     
+          })  
+          */   
         }
       }  
     })
