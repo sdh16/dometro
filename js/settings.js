@@ -37,16 +37,17 @@
   
   ShowNotify = function(txt, timeout, iserror)
   {
-	  $("#notification").html('<strong>' + txt + '</strong>');
-	
+	  //$("#notification").html('<strong>' + txt + '</strong>');
+	  $("#notificationtext").text(txt)
 	  if (typeof iserror != 'undefined') {
-		  $("#notification").css("background-color","red");
+		  $("#notificationtext").css("color","red");
 	  } else {
-		  $("#notification").css("background-color","#204060");
+		  $("#notificationtext").css("color","#204060");
 	  }
 	  //$("#notification").center();
-	  $("#notification").attr("align", "center")
-	  $("#notification").fadeIn("slow");
+	  //$("#notification").attr("align", "center")
+	  //$("#notification").fadeIn("slow");
+	  $('#notification').modal('show')
 
 	  if (typeof timeout != 'undefined') {
 		  setTimeout(function() {
@@ -57,9 +58,9 @@
 
   HideNotify = function()
   {
-	  $("#notification").hide();
+	  //$("#notification").hide();
+    $('#notification').modal('hide')
   }
-
   
   DeleteVariable = function(idx)
   {
