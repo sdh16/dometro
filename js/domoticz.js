@@ -570,6 +570,12 @@
         else
           var deviceImage = "../images/pushoff48.png"
       break;
+      case "Security":
+        if (currentValue == "Normal")
+          var deviceImage = "../images/security48.png"
+        else
+          var deviceImage = "../images/security48.png"
+      break;
       case "General":
         switch (deviceSubType) {
           case "Solar Radiation":
@@ -632,6 +638,9 @@
       break;
       case "Group":
         tileGroupNameText = "Scenes and Groups"
+      break;
+      case "Security":
+        tileGroupNameText = "Security Panel"
       break;
       case "Temp":
       case "Temp + Humidity":
