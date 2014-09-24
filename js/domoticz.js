@@ -579,7 +579,9 @@
     var tileGroupNameText
     var deviceImage
     var status = ""
+    var textSize = "metroLarge"
     if ((item.Type.indexOf('Scene') == 0)||(item.Type.indexOf('Group') == 0)){
+      textSize = "metroLarge"
       status=TranslateStatus(item.Status);    
       tileGroupNameText = "Scenes and Groups"
       if (item.Type.indexOf('Group')==0) {
@@ -595,6 +597,7 @@
       }
     }
     if ((item.Type.indexOf('Light') == 0)||(item.Type.indexOf('Blind') == 0)||(item.Type.indexOf('Curtain') == 0)||(item.Type.indexOf('Thermostat 3') == 0)||(item.Type.indexOf('Chime') == 0)||(item.Type.indexOf('RFY') == 0)){
+      textSize = "metroLarge"
       status=TranslateStatus(item.Status);    
       tileGroupNameText = "Light/Switch Devices: " +item.SwitchType
       if (item.SwitchType == "Doorbell") {
@@ -746,6 +749,7 @@
       }
     }
     if ((typeof item.Temp != 'undefined')||(typeof item.Humidity != 'undefined')||(typeof item.Chill != 'undefined')){
+      textSize = "metroLarge"
       tileGroupNameText = "Temperature Sensors"
                 if (typeof item.Temp != 'undefined') {
                   img=GetTemp48Item(item.Temp);
@@ -765,6 +769,7 @@
                      bHaveBefore=true;
                 }
                 if (typeof item.Chill != 'undefined') {
+                  textSize = "metroSmall"
                   if (bHaveBefore) {
                     status+=', ';
                   }
@@ -772,6 +777,7 @@
                   bHaveBefore=true;
                 }
                 if (typeof item.Humidity != 'undefined') {
+                  textSize = "metroSmall"
                   if (bHaveBefore==true) {
                     status+=', ';
                   }
@@ -782,14 +788,16 @@
                   status+=' (' + (item.HumidityStatus) + ')';
                 }
                 if (typeof item.DewPoint != 'undefined') {
+                  textSize = "metroSmall"
                   if (bHaveBefore==true) {
-                    status+='\u000A';
+                    status+=', ';
                   }
                   status+=("Dew Point") + ": " + item.DewPoint + '° ' + $.myglobals.tempsign;
                 }
-                   
+   
     }
     if ((typeof item.Rain != 'undefined')||(typeof item.Visibility != 'undefined')||(typeof item.UVI != 'undefined')||(typeof item.Radiation != 'undefined')||(typeof item.Direction != 'undefined')||(typeof item.Barometer != 'undefined')){
+      textSize = "metroLarge"
       tileGroupNameText = "Weather"
       if (typeof item.Rain != 'undefined') {
         deviceImage = "../images/rain48.png";
@@ -834,7 +842,7 @@
                     }
                     status+=('Chill') +': ' + item.Chill + '° ' + $.myglobals.tempsign;
                   }
-        
+                  textSize = "metroSmall"
       }
       else if (typeof item.Barometer != 'undefined') {
         deviceImage = "../images/baro48.png";
@@ -851,6 +859,7 @@
       }      
     }
     if ((item.Type.indexOf('Security') == 0)){
+      textSize = "metroLarge"
       tileGroupNameText = "Security Panel"
       status=TranslateStatus(item.Status);    
       if (item.SubType=="Security Panel") {
@@ -909,6 +918,7 @@
     if ( 
           (item.Type == "Usage")
         ){
+      textSize = "metroLarge"  
       tileGroupNameText = "Power Sensors"  
       if (item.Type == "Usage") {
         deviceImage = "../images/current48.png";
@@ -919,6 +929,7 @@
           (item.Type == "Energy") || 
           (item.Type == "Current/Energy") 
         ){
+      textSize = "metroLarge"  
       tileGroupNameText = "Energy Sensors"  
       if (item.Type == "Current/Energy") {
         deviceImage = "../images/current48.png";
@@ -945,6 +956,7 @@
           (item.SubType=="Pressure")||
           (item.SubType=="A/D")
         ){
+      textSize = "metroLarge"  
       tileGroupNameText = "Other Utility Sensors"  
       if (typeof item.Counter != 'undefined') {
         if ((item.Type == "P1 Smart Meter")&&(item.SubType=="Energy")) {
@@ -1031,7 +1043,8 @@
     return{
       group: tileGroupNameText,
       image: deviceImage,
-      text: status
+      text: status,
+      size: textSize
     };
   }
 
@@ -1045,6 +1058,7 @@
       var deviceImage = getTileGroupAndImage(value).image
       var deviceTileColor = getDeviceTileColor(value)
       var text = getTileGroupAndImage(value).text
+      var textSize = getTileGroupAndImage(value).size
       var tileGroupNameText = getTileGroupAndImage(value).group
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
@@ -1111,7 +1125,8 @@
         $("<span></span>")
           .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix text-right metroLarge")
+          //.addClass("clear-fix text-right metroLarge")
+          .addClass("clear-fix text-right " +textSize)
           .text(text)
         if(value.Type == "Energy"){
           $("<span></span>")
@@ -1148,6 +1163,7 @@
       var deviceImage = getTileGroupAndImage(value).image
       var deviceTileColor = getDeviceTileColor(value)
       var text = getTileGroupAndImage(value).text
+      var textSize = getTileGroupAndImage(value).size
       var tileGroupNameText = "Dashboard"
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       
@@ -1210,7 +1226,8 @@
         $("<span></span>")
           .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
           .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix text-right metroLarge")
+          //.addClass("clear-fix text-right metroLarge")
+          .addClass("clear-fix text-right " +textSize)
           .text(text)
         if(value.Type == "Energy"){
           $("<span></span>")
