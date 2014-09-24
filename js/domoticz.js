@@ -38,21 +38,21 @@
       dataType: 'json',
       success: function (json) {
         usedDevices = json;
-		    if (typeof usedDevices.WindScale != 'undefined') {
-			    $.myglobals.windscale=parseFloat(usedDevices.WindScale);
-		    }
-		    if (typeof usedDevices.WindSign != 'undefined') {
-			    $.myglobals.windsign=usedDevices.WindSign;
-		    }
-		    if (typeof usedDevices.TempScale != 'undefined') {
-			    $.myglobals.tempscale=parseFloat(usedDevices.TempScale);
-		    }
-		    if (typeof usedDevices.TempSign != 'undefined') {
-			    $.myglobals.tempsign=usedDevices.TempSign;
-		    }
-		    if (typeof usedDevices.ActTime != 'undefined') {
-			    $.LastUpdateTime=parseInt(usedDevices.ActTime);
-		    }
+        if (typeof usedDevices.WindScale != 'undefined') {
+          $.myglobals.windscale=parseFloat(usedDevices.WindScale);
+        }
+        if (typeof usedDevices.WindSign != 'undefined') {
+          $.myglobals.windsign=usedDevices.WindSign;
+        }
+        if (typeof usedDevices.TempScale != 'undefined') {
+          $.myglobals.tempscale=parseFloat(usedDevices.TempScale);
+        }
+        if (typeof usedDevices.TempSign != 'undefined') {
+          $.myglobals.tempsign=usedDevices.TempSign;
+        }
+        if (typeof usedDevices.ActTime != 'undefined') {
+          $.LastUpdateTime=parseInt(usedDevices.ActTime);
+        }
       }
     });
     return usedDevices;
@@ -377,13 +377,16 @@
       }  
     })
   }
-  
+      //var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
 
-  getDeviceTileColor = function(deviceType, deviceSubType, switchType, currentValue, currentCounterToday){
+  getDeviceTileColor = function(item){
     var tileColor
-    var counterToday = currentCounterToday
-    if (deviceType == "Usage") {
-      var currentPower = parseFloat(currentValue.split(' ')[0])
+    var counterToday = item.CounterToday
+    if (typeof(counterToday)  === "undefined"){
+      counterToday = "0.0 kWh"
+    }
+    if (item.Type == "Usage") {
+      var currentPower = parseFloat(item.Data.split(' ')[0])
       if (currentPower <= 50) {
         tileColor = "green"
       }          
@@ -403,7 +406,7 @@
         tileColor = "violet"
       }        
     }
-    else if (deviceType == "Energy"){
+    else if (item.Type == "Energy"){
       var energyToday = parseFloat(counterToday.split(' ')[0])
       if (energyToday <= 0.5) {
         tileColor = "green"
@@ -424,8 +427,8 @@
         tileColor = "violet"
       }         
     }
-    else if ((deviceType == "Temp") || (deviceType == "Temp + Humidity") || (deviceType == "Temp + Humidity + Baro")) {
-      var currentTemp = parseFloat(currentValue.split(' ')[0])
+    else if ((item.Type == "Temp") || (item.Type == "Temp + Humidity") || (item.Type == "Temp + Humidity + Baro")) {
+      var currentTemp = parseFloat(item.Data.split(' ')[0])
       if (currentTemp <= 5) {
         tileColor = "teal"
       }
@@ -451,34 +454,34 @@
         //tileColor = "blue"
       }    
     }   
-    else if (deviceType == "Lighting 2"){
-      switch (switchType){
+    else if (item.Type == "Lighting 2"){
+      switch (item.SwitchType){
         case "On/Off":
-          if (currentValue == "On")
+          if (item.Status == "On")
             tileColor = "red"
           else
             tileColor = "green"
         break;
         case "Contact":
-          if (currentValue == "Open")
+          if (item.Status == "Open")
             tileColor = "red"
           else
             tileColor = "green"
         break;
         case "Motion Sensor":
-          if (currentValue == "On")
+          if (item.Status == "On")
             tileColor = "red"
           else
             tileColor = "green"
         break;
         case "Smoke Detector":
-          if (currentValue == "On")
+          if (item.Status == "On")
             tileColor = "red"
           else
             tileColor = "green"
           break;
         case "Dimmer":
-          if (currentValue == "Off")
+          if (item.Status == "Off")
             tileColor = "green"
           else
             tileColor = "red"
@@ -488,16 +491,16 @@
         break;    
       }
     }
-    else if ((deviceType == "Scene") || (deviceType == "Group")){
-      switch (deviceType){
+    else if ((item.Type == "Scene") || (item.Type == "Group")){
+      switch (item.Type){
         case "Scene":
-          if (currentValue == "On")
+          if (item.Status == "On")
             tileColor = "red"
           else
             tileColor = "green"
         break;
         case "Group":
-          if (currentValue == "On")
+          if (item.Status == "On")
             tileColor = "red"
           else
             tileColor = "green"
@@ -510,525 +513,525 @@
     return tileColor   
   }  
   
-  
-  getDeviceImage = function(deviceType, deviceSubType, switchType, currentValue){
-    switch (deviceType){
-      case "Usage":
-        var deviceImage = "../images/current48.png"
-      break;
-      case "Energy":
-        var deviceImage = "../images/current48.png"
-      break;
-      case "Temp":
-      case "Temp + Humidity":
-      case "Temp + Humidity + Baro":
-        var currentTemp = parseFloat(currentValue.split(' ')[0])
-        if (currentTemp <= 5) {
-          var deviceImage = "../images/temp-0-5.png"
-        }
-        else if ((currentTemp > 5) && (currentTemp <= 10)) {
-          var deviceImage = "../images/temp-5-10.png"
-        }          
-        else if ((currentTemp > 10) && (currentTemp <= 15)) {
-          var deviceImage = "../images/temp-10-15.png"
-        }          
-        else if ((currentTemp > 15) && (currentTemp <= 20)) {
-          var deviceImage = "../images/temp-15-20.png"
-        }          
-        else if ((currentTemp > 20) && (currentTemp <= 25)) {
-          var deviceImage = "../images/temp-20-25.png"
-        }          
-        else if ((currentTemp > 25) && (currentTemp <= 30)) {
-          var deviceImage = "../images/temp-25-30.png"
-        }          
-        else if (currentTemp > 30) {
-          var deviceImage = "../images/temp-gt-30.png"
-        }        
-      break;
-      case "Rain":
-        var deviceImage = "../images/rain48.png"
-      break;
-      case "Wind":
-        var deviceImage = "../images/wind48.png"
-      break;
-      case "Lux":
-        var deviceImage = "../images/lux48.png"
-      break;
-      case "Security":
-        var deviceImage = "../images/security48.png"
-      break;
-      case "Scene":
-        if (currentValue == "On")
-          var deviceImage = "../images/pushon48.png"
-        else
-          var deviceImage = "../images/pushoff48.png"
-      break;
-      case "Group":
-        if (currentValue == "On")
-          var deviceImage = "../images/pushon48.png"
-        else
-          var deviceImage = "../images/pushoff48.png"
-      break;
-      case "Security":
-        if (currentValue == "Normal")
-          var deviceImage = "../images/security48.png"
-        else
-          var deviceImage = "../images/security48.png"
-      break;
-      case "General":
-        switch (deviceSubType) {
-          case "Solar Radiation":
-            var deviceImage = "../images/radiation48.png"
-          break;
-          case "Percentage":
-            var deviceImage = "../images/Percentage48.png"
-          break;
-        }
-      break;
-      case "Lighting 2":
-        switch (switchType){
-          case "On/Off":
-            if (currentValue == "On")
-              var deviceImage = "../images/Light48_On.png"
-            else
-              var deviceImage = "../images/Light48_Off.png"
-          break;
-          case "Contact":
-            if (currentValue == "Open")
-              var deviceImage = "../images/contact48_open.png"
-            else
-              var deviceImage = "../images/contact48.png"
-          break;
-          case "Motion Sensor":
-            if (currentValue == "On")
-              var deviceImage = "../images/motion48-on.png"
-            else
-              var deviceImage = "../images/motion48-off.png"
-          break;
-          case "Smoke Detector":
-            if (currentValue == "On")
-              var deviceImage = "../images/smoke48on.png"
-            else
-              var deviceImage = "../images/smoke48off.png"
-            break;
-          case "Dimmer":
-            if (currentValue == "Off")
-              var deviceImage = "../images/dimmer48-off.png"
-            else
-              var deviceImage = "../images/dimmer48-on.png"
-          break;
-          default:
-            var deviceImage = "../images/iphone-icon.png"
-          break;    
-        }
-      break;
-    }
-    return deviceImage
-  }
-  
   function GetTemp48Item(temp)
   {
-	  if ($.myglobals.tempsign=="C") {
-		  if (temp<=0) {
-			  return "ice.png";
-		  }
-		  if (temp<5) {
-			  return "temp-0-5.png";
-		  }
-		  if (temp<10) {
-			  return "temp-5-10.png";
-		  }
-		  if (temp<15) {
-			  return "temp-10-15.png";
-		  }
-		  if (temp<20) {
-			  return "temp-15-20.png";
-		  }
-		  if (temp<25) {
-			  return "temp-20-25.png";
-		  }
-		  if (temp<30) {
-			  return "temp-25-30.png";
-		  }
-		  return "temp-gt-30.png";
-	  }
-	  else {
-		  if (temp<=32) {
-			  return "ice.png";
-		  }
-		  if (temp<41) {
-			  return "temp-0-5.png";
-		  }
-		  if (temp<50) {
-			  return "temp-5-10.png";
-		  }
-		  if (temp<59) {
-			  return "temp-10-15.png";
-		  }
-		  if (temp<68) {
-			  return "temp-15-20.png";
-		  }
-		  if (temp<77) {
-			  return "temp-20-25.png";
-		  }
-		  if (temp<86) {
-			  return "temp-25-30.png";
-		  }
-		  return "temp-gt-30.png";
-	  }
+    if ($.myglobals.tempsign=="C") {
+      if (temp<=0) {
+        return "ice.png";
+      }
+      if (temp<5) {
+        return "temp-0-5.png";
+      }
+      if (temp<10) {
+        return "temp-5-10.png";
+      }
+      if (temp<15) {
+        return "temp-10-15.png";
+      }
+      if (temp<20) {
+        return "temp-15-20.png";
+      }
+      if (temp<25) {
+        return "temp-20-25.png";
+      }
+      if (temp<30) {
+        return "temp-25-30.png";
+      }
+      return "temp-gt-30.png";
+    }
+    else {
+      if (temp<=32) {
+        return "ice.png";
+      }
+      if (temp<41) {
+        return "temp-0-5.png";
+      }
+      if (temp<50) {
+        return "temp-5-10.png";
+      }
+      if (temp<59) {
+        return "temp-10-15.png";
+      }
+      if (temp<68) {
+        return "temp-15-20.png";
+      }
+      if (temp<77) {
+        return "temp-20-25.png";
+      }
+      if (temp<86) {
+        return "temp-25-30.png";
+      }
+      return "temp-gt-30.png";
+    }
   }
   
+  function TranslateStatus(status)
+  {
+  //should of course be changed, but for now a quick sollution
+  if (status.indexOf("Set Level") != -1) {
+    return status.replace("Set Level",('Set Level'));
+  }
+  else {
+    return (status);
+  }
+  }  
   getTileGroupAndImage = function(item){
     var tileGroupNameText
     var deviceImage
+    var status = ""
     if ((item.Type.indexOf('Scene') == 0)||(item.Type.indexOf('Group') == 0)){
+      status=TranslateStatus(item.Status);    
       tileGroupNameText = "Scenes and Groups"
       if (item.Type.indexOf('Group')==0) {
         if (item.Status == 'On') {
-					deviceImage = "../images/push48.png";
-				}
-				else if (item.Status == 'Off') {
-					deviceImage = "../images/pushoff48.png";
-				}      
+          deviceImage = "../images/push48.png";
+        }
+        else if (item.Status == 'Off') {
+          deviceImage = "../images/pushoff48.png";
+        }      
       }
       else{
         deviceImage = "../images/push48.png";
       }
     }
     if ((item.Type.indexOf('Light') == 0)||(item.Type.indexOf('Blind') == 0)||(item.Type.indexOf('Curtain') == 0)||(item.Type.indexOf('Thermostat 3') == 0)||(item.Type.indexOf('Chime') == 0)||(item.Type.indexOf('RFY') == 0)){
+      status=TranslateStatus(item.Status);    
       tileGroupNameText = "Light/Switch Devices: " +item.SwitchType
-			if (item.SwitchType == "Doorbell") {
-				deviceImage = "../images/doorbell48.png";
-			}
-			else if (item.SwitchType == "Push On Button") {
-				if (item.InternalState=="On") {
-					deviceImage = "../images/pushon48.png";
-				}
-				else {
-					deviceImage = "../images/push48.png";
-				}
-			}
-			else if (item.SwitchType == "Door Lock") {
-				if (item.InternalState=="Open") {
-					deviceImage = "../images/door48open.png";
-				}
-				else {
-					deviceImage = "../images/door48.png";
-				}
-			}
-			else if (item.SwitchType == "Push Off Button") {
-				deviceImage = "../images/pushoff48.png";
-			}
-			else if (item.SwitchType == "X10 Siren") {
-				if (
-						(item.Status == 'On')||
-						(item.Status == 'Chime')||
-						(item.Status == 'Group On')||
-						(item.Status == 'All On')
-					 )
-				{
-						deviceImage = "../images/siren-on.png";
-				}
-				else {
-						deviceImage = "../images/siren-off.png";
-				}
-			}
-			else if (item.SwitchType == "Contact") {
-				if (item.Status == 'Closed') {
-					deviceImage = "../images/contact48.png";
-				}
-				else {
-					deviceImage = "../images/contact48_open.png";
-				}
-			}
-			else if ((item.SwitchType == "Blinds")||(item.SwitchType.indexOf("Venetian Blinds") == 0)) {
-				if ((item.SubType=="RAEX")||(item.SubType.indexOf('A-OK') == 0)||(item.SubType.indexOf('RollerTrol') == 0)||(item.SubType=="Harrison")||(item.SubType.indexOf('RFY') == 0)||(item.SwitchType.indexOf("Venetian Blinds") == 0)) {
-					if (item.Status == 'Closed') {
-						deviceImage = "../images/blindsopen48.png";
-					}
-					else {
-						deviceImage = "../images/blinds48.png";
-					}
-				}
-				else {
-					if (item.Status == 'Closed') {
-						deviceImage = "../images/blindsopen48.png";
-					}
-					else {
-						deviceImage = "../images/blinds48.png";
-					}
-				}
-			}
-			else if (item.SwitchType == "Blinds Inverted") {
-				if ((item.SubType=="RAEX")||(item.SubType.indexOf('A-OK') == 0)||(item.SubType.indexOf('RollerTrol') == 0)||(item.SubType=="Harrison")||(item.SubType.indexOf('RFY') == 0)) {
-					if (item.Status == 'Closed') {
-						deviceImage = "../images/blindsopen48.png";
-					}
-					else {
-						deviceImage = "../images/blinds48.png";
-					}
-				}
-				else {
-					if (item.Status == 'Closed') {
-						deviceImage = "../images/blindsopen48.png";
-					}
-					else {
-						deviceImage = "../images/blinds48.png";
-					}
-				}
-			}               
-			else if (item.SwitchType == "Blinds Percentage") {
-				if (item.Status == 'Closed') {
-					deviceImage = "../images/blindsopen48.png";
-				}
-				else {
-					deviceImage = "../images/blinds48.png";
-				}
-			}
-			else if (item.SwitchType == "Dimmer") {
-				if (
-						(item.Status == 'On')||
-						(item.Status == 'Chime')||
-						(item.Status == 'Group On')||
-						(item.Status.indexOf('Set ') == 0)
-					 ) {
-							deviceImage = "../images/dimmer48-on.png";
-				}
-				else {
-							deviceImage = "../images/dimmer48-off.png";
-				}
-			}
-			else if (item.SwitchType == "Dusk Sensor") {
-				if (item.Status == 'On')
-				{
-							deviceImage = "../images/uvdark.png";
-				}
-				else {
-							deviceImage = "../images/uvsunny.png";
-				}
-			}
-			else if (item.SwitchType == "Motion Sensor") {
-				if (
-						(item.Status == 'On')||
-						(item.Status == 'Chime')||
-						(item.Status == 'Group On')||
-						(item.Status.indexOf('Set ') == 0)
-					 ) {
-							deviceImage = "../images/motion48-on.png";
-				}
-				else {
-							deviceImage = "../images/motion48-off.png";
-				}
-			}
-			else if (item.SwitchType == "Smoke Detector") {
-					if (
-							(item.Status == "Panic")||
-							(item.Status == "On")
-						 ) {
-							deviceImage = "../images/smoke48on.png";
-					}
-					else {
-							deviceImage = "../images/smoke48off.png";
-					}
-			}
-			else {
-				if (
-						(item.Status == 'On')||
-						(item.Status == 'Chime')||
-						(item.Status == 'Group On')||
-						(item.Status.indexOf('Set ') == 0)
-					 ) {
-							deviceImage = "../images/" + item.Image + "48_On.png";
-				}
-				else {
-							deviceImage = "../images/" + item.Image + "48_Off.png";
-				}
-			}
+      if (item.SwitchType == "Doorbell") {
+        deviceImage = "../images/doorbell48.png";
+      }
+      else if (item.SwitchType == "Push On Button") {
+        if (item.InternalState=="On") {
+          deviceImage = "../images/pushon48.png";
+        }
+        else {
+          deviceImage = "../images/push48.png";
+        }
+      }
+      else if (item.SwitchType == "Door Lock") {
+        if (item.InternalState=="Open") {
+          deviceImage = "../images/door48open.png";
+        }
+        else {
+          deviceImage = "../images/door48.png";
+        }
+      }
+      else if (item.SwitchType == "Push Off Button") {
+        deviceImage = "../images/pushoff48.png";
+      }
+      else if (item.SwitchType == "X10 Siren") {
+        if (
+            (item.Status == 'On')||
+            (item.Status == 'Chime')||
+            (item.Status == 'Group On')||
+            (item.Status == 'All On')
+           )
+        {
+            deviceImage = "../images/siren-on.png";
+        }
+        else {
+            deviceImage = "../images/siren-off.png";
+        }
+      }
+      else if (item.SwitchType == "Contact") {
+        if (item.Status == 'Closed') {
+          deviceImage = "../images/contact48.png";
+        }
+        else {
+          deviceImage = "../images/contact48_open.png";
+        }
+      }
+      else if ((item.SwitchType == "Blinds")||(item.SwitchType.indexOf("Venetian Blinds") == 0)) {
+        if ((item.SubType=="RAEX")||(item.SubType.indexOf('A-OK') == 0)||(item.SubType.indexOf('RollerTrol') == 0)||(item.SubType=="Harrison")||(item.SubType.indexOf('RFY') == 0)||(item.SwitchType.indexOf("Venetian Blinds") == 0)) {
+          if (item.Status == 'Closed') {
+            deviceImage = "../images/blindsopen48.png";
+          }
+          else {
+            deviceImage = "../images/blinds48.png";
+          }
+        }
+        else {
+          if (item.Status == 'Closed') {
+            deviceImage = "../images/blindsopen48.png";
+          }
+          else {
+            deviceImage = "../images/blinds48.png";
+          }
+        }
+      }
+      else if (item.SwitchType == "Blinds Inverted") {
+        if ((item.SubType=="RAEX")||(item.SubType.indexOf('A-OK') == 0)||(item.SubType.indexOf('RollerTrol') == 0)||(item.SubType=="Harrison")||(item.SubType.indexOf('RFY') == 0)) {
+          if (item.Status == 'Closed') {
+            deviceImage = "../images/blindsopen48.png";
+          }
+          else {
+            deviceImage = "../images/blinds48.png";
+          }
+        }
+        else {
+          if (item.Status == 'Closed') {
+            deviceImage = "../images/blindsopen48.png";
+          }
+          else {
+            deviceImage = "../images/blinds48.png";
+          }
+        }
+      }     
+      else if (item.SwitchType == "Blinds Percentage") {
+        if (item.Status == 'Closed') {
+          deviceImage = "../images/blindsopen48.png";
+        }
+        else {
+          deviceImage = "../images/blinds48.png";
+        }
+      }
+      else if (item.SwitchType == "Dimmer") {
+        if (
+            (item.Status == 'On')||
+            (item.Status == 'Chime')||
+            (item.Status == 'Group On')||
+            (item.Status.indexOf('Set ') == 0)
+           ) {
+              deviceImage = "../images/dimmer48-on.png";
+        }
+        else {
+              deviceImage = "../images/dimmer48-off.png";
+        }
+      }
+      else if (item.SwitchType == "Dusk Sensor") {
+        if (item.Status == 'On')
+        {
+              deviceImage = "../images/uvdark.png";
+        }
+        else {
+              deviceImage = "../images/uvsunny.png";
+        }
+      }
+      else if (item.SwitchType == "Motion Sensor") {
+        if (
+            (item.Status == 'On')||
+            (item.Status == 'Chime')||
+            (item.Status == 'Group On')||
+            (item.Status.indexOf('Set ') == 0)
+           ) {
+              deviceImage = "../images/motion48-on.png";
+        }
+        else {
+              deviceImage = "../images/motion48-off.png";
+        }
+      }
+      else if (item.SwitchType == "Smoke Detector") {
+          if (
+              (item.Status == "Panic")||
+              (item.Status == "On")
+             ) {
+              deviceImage = "../images/smoke48on.png";
+          }
+          else {
+              deviceImage = "../images/smoke48off.png";
+          }
+      }
+      else {
+        if (
+            (item.Status == 'On')||
+            (item.Status == 'Chime')||
+            (item.Status == 'Group On')||
+            (item.Status.indexOf('Set ') == 0)
+           ) {
+              deviceImage = "../images/" + item.Image + "48_On.png";
+        }
+        else {
+              deviceImage = "../images/" + item.Image + "48_Off.png";
+        }
+      }
     }
     if ((typeof item.Temp != 'undefined')||(typeof item.Humidity != 'undefined')||(typeof item.Chill != 'undefined')){
       tileGroupNameText = "Temperature Sensors"
                 if (typeof item.Temp != 'undefined') {
-									img=GetTemp48Item(item.Temp);
-									deviceImage = "../images/" +img
-								}
-								else {
-									if (item.Type=="Humidity") {
-										deviceImage = "../images/gauge48.png";
-									}
-									else {
-										img=GetTemp48Item(item.Chill);
-									  deviceImage = "../images/" +img
-										
-									}
-								}      
+                  img=GetTemp48Item(item.Temp);
+                  deviceImage = "../images/" +img
+                }
+                else {
+                  if (item.Type=="Humidity") {
+                    deviceImage = "../images/gauge48.png";
+                  }
+                  else {
+                    img=GetTemp48Item(item.Chill);
+                    deviceImage = "../images/" +img
+                  }
+                }   
+                if (typeof item.Temp != 'undefined') {
+                     status+=item.Temp + '° ' + $.myglobals.tempsign;
+                     bHaveBefore=true;
+                }
+                if (typeof item.Chill != 'undefined') {
+                  if (bHaveBefore) {
+                    status+=', ';
+                  }
+                  status+=('Chill') + ': ' + item.Chill + '° ' + $.myglobals.tempsign;
+                  bHaveBefore=true;
+                }
+                if (typeof item.Humidity != 'undefined') {
+                  if (bHaveBefore==true) {
+                    status+=', ';
+                  }
+                  status+=('Humidity') + ': ' + item.Humidity + ' %';
+                  bHaveBefore=true;
+                }
+                if (typeof item.HumidityStatus != 'undefined') {
+                  status+=' (' + (item.HumidityStatus) + ')';
+                }
+                if (typeof item.DewPoint != 'undefined') {
+                  if (bHaveBefore==true) {
+                    status+='\u000A';
+                  }
+                  status+=("Dew Point") + ": " + item.DewPoint + '° ' + $.myglobals.tempsign;
+                }
+                   
     }
     if ((typeof item.Rain != 'undefined')||(typeof item.Visibility != 'undefined')||(typeof item.UVI != 'undefined')||(typeof item.Radiation != 'undefined')||(typeof item.Direction != 'undefined')||(typeof item.Barometer != 'undefined')){
       tileGroupNameText = "Weather"
-		  if (typeof item.Rain != 'undefined') {
-			  deviceImage = "../images/rain48.png";
-		  }
-		  else if (typeof item.Visibility != 'undefined') {
-			  deviceImage = "../images/visibility48.png"
-		  }
-		  else if (typeof item.UVI != 'undefined') {
-			  deviceImage = "../images/uv48.png";
-			  if (typeof item.Temp != 'undefined') {
-				  deviceImage = "../images/";
-			  }
-		  }
-		  else if (typeof item.Radiation != 'undefined') {
-			  deviceImage = "../images/radiation48.png";
-		  }
-		  else if (typeof item.Direction != 'undefined') {
-			  deviceImage = "../images/Wind" + item.DirectionStr + ".png";
-		  }
-		  else if (typeof item.Barometer != 'undefined') {
-			  deviceImage = "../images/baro48.png";
-		  }      
+      if (typeof item.Rain != 'undefined') {
+        deviceImage = "../images/rain48.png";
+                  status=item.Rain + ' mm';
+                  if (typeof item.RainRate != 'undefined') {
+                    if (item.RainRate!=0) {
+                      status+=', Rate: ' + item.RainRate + ' mm/h';
+                    }
+                  }
+      }
+      else if (typeof item.Visibility != 'undefined') {
+        deviceImage = "../images/visibility48.png"
+                  status=item.Data;
+      }
+      else if (typeof item.UVI != 'undefined') {
+        deviceImage = "../images/uv48.png";
+                  status=item.UVI + ' UVI';
+        if (typeof item.Temp != 'undefined') {
+          status+=', Temp: ' + item.Temp + '° ' + $.myglobals.tempsign;
+        }
+      }
+      else if (typeof item.Radiation != 'undefined') {
+        deviceImage = "../images/radiation48.png";
+                  status=item.Data;
+      }
+      else if (typeof item.Direction != 'undefined') {
+        deviceImage = "../images/Wind" + item.DirectionStr + ".png";
+                  status=item.Direction + ' ' + item.DirectionStr;
+                  if (typeof item.Speed != 'undefined') {
+                    status+=', ' + ('Speed') + ': ' + item.Speed + ' ' + $.myglobals.windsign;
+                  }
+                  if (typeof item.Gust != 'undefined') {
+                    status+=', ' +('Gust') + ': ' + item.Gust + ' ' + $.myglobals.windsign;
+                  }
+                  status+=', ';
+                  if (typeof item.Temp != 'undefined') {
+                    status+=('Temp') + ': ' + item.Temp + '° ' + $.myglobals.tempsign;
+                  }
+                  if (typeof item.Chill != 'undefined') {
+                    if (typeof item.Temp != 'undefined') {
+                      status+=', ';
+                    }
+                    status+=('Chill') +': ' + item.Chill + '° ' + $.myglobals.tempsign;
+                  }
+        
+      }
+      else if (typeof item.Barometer != 'undefined') {
+        deviceImage = "../images/baro48.png";
+                  if (typeof item.ForecastStr != 'undefined') {
+                    status=item.Barometer + ' hPa, ' +('Prediction') + ': ' +(item.ForecastStr);
+                  }
+                  else {
+                    status=item.Barometer + ' hPa';
+                  }
+                  if (typeof item.Altitude != 'undefined') {
+                    status+=', Altitude: ' + item.Altitude + ' meter';
+                  }
+        
+      }      
     }
     if ((item.Type.indexOf('Security') == 0)){
       tileGroupNameText = "Security Panel"
+      status=TranslateStatus(item.Status);    
       if (item.SubType=="Security Panel") {
-				deviceImage = "../images/security48.png";
-	    }
-			else if (item.SubType.indexOf('remote') > 0) {
-				if ((item.Status.indexOf('Arm') >= 0)||(item.Status.indexOf('Panic') >= 0)) {
-					deviceImage = "../images/remote48.png";
-				}
-				else {
-					deviceImage = "../images/remote48.png";
-				}
-			}
-			else if (item.SwitchType == "Smoke Detector") {
-					if (
-							(item.Status == "Panic")||
-							(item.Status == "On")
-						 ) {
-							deviceImage = "../images/smoke48on.png";
-					}
-					else {
-							deviceImage = "../images/smoke48off.png";
-					}
-			}
-			else if (item.SubType == "X10 security") {
-				if (item.Status.indexOf('Normal') >= 0) {
-					deviceImage = "../images/security48.png";
-				}
-				else {
-					deviceImage = "../images/Alarm48_On.png";
-				}
-			}
-			else if (item.SubType == "X10 security motion") {
-				if ((item.Status == "No Motion")) {
-					deviceImage = "../images/security48.png";
-				}
-				else {
-					deviceImage = "../images/Alarm48_On.png";
-				}
-			}
-			else if ((item.Status.indexOf('Alarm') >= 0)||(item.Status.indexOf('Tamper') >= 0)) {
-				deviceImage = "../images/Alarm48_On.png";
-			}
-			else if (item.SubType.indexOf('Meiantech') >= 0) {
-				if ((item.Status.indexOf('Arm') >= 0)||(item.Status.indexOf('Panic') >= 0)) {
-					deviceImage = "../images/security48.png";
-				}
-				else {
-					deviceImage = "../images/security48.png";
-				}
-			}
-			else {
-				deviceImage = "../images/security48.png";
-			}      
+        deviceImage = "../images/security48.png";
+      }
+      else if (item.SubType.indexOf('remote') > 0) {
+        if ((item.Status.indexOf('Arm') >= 0)||(item.Status.indexOf('Panic') >= 0)) {
+          deviceImage = "../images/remote48.png";
+        }
+        else {
+          deviceImage = "../images/remote48.png";
+        }
+      }
+      else if (item.SwitchType == "Smoke Detector") {
+          if (
+              (item.Status == "Panic")||
+              (item.Status == "On")
+             ) {
+              deviceImage = "../images/smoke48on.png";
+          }
+          else {
+              deviceImage = "../images/smoke48off.png";
+          }
+      }
+      else if (item.SubType == "X10 security") {
+        if (item.Status.indexOf('Normal') >= 0) {
+          deviceImage = "../images/security48.png";
+        }
+        else {
+          deviceImage = "../images/Alarm48_On.png";
+        }
+      }
+      else if (item.SubType == "X10 security motion") {
+        if ((item.Status == "No Motion")) {
+          deviceImage = "../images/security48.png";
+        }
+        else {
+          deviceImage = "../images/Alarm48_On.png";
+        }
+      }
+      else if ((item.Status.indexOf('Alarm') >= 0)||(item.Status.indexOf('Tamper') >= 0)) {
+        deviceImage = "../images/Alarm48_On.png";
+      }
+      else if (item.SubType.indexOf('Meiantech') >= 0) {
+        if ((item.Status.indexOf('Arm') >= 0)||(item.Status.indexOf('Panic') >= 0)) {
+          deviceImage = "../images/security48.png";
+        }
+        else {
+          deviceImage = "../images/security48.png";
+        }
+      }
+      else {
+        deviceImage = "../images/security48.png";
+      }      
     }
     if ( 
-					(item.Type == "Usage")
-				){
-			tileGroupNameText = "Power Sensors"	
-			if (item.Type == "Usage") {
-				deviceImage = "../images/current48.png";
-			}
-		}
-		if ( 
-					(item.Type == "Energy") || 
-					(item.Type == "Current/Energy") 
-				){
-			tileGroupNameText = "Energy Sensors"	
-			if (item.Type == "Current/Energy") {
-				deviceImage = "../images/current48.png";
-			}
-			else if (item.Type == "Energy") {
-				deviceImage = "../images/current48.png";
-			}
-			
-		}
-		if ( 
-					(typeof item.Counter != 'undefined') || 
-					(item.Type == "Current") || 
-					(item.Type == "Air Quality") || 
-					(item.Type == "Lux") || 
-					(item.Type == "Weight") || 
-					(item.SubType=="Percentage")||
-					(item.Type=="Fan")||
-					((item.Type == "Thermostat")&&(item.SubType=="SetPoint"))||
-					(item.SubType=="Soil Moisture")||
-					(item.SubType=="Leaf Wetness")||
-					(item.SubType=="Voltage")||
-					(item.SubType=="Pressure")||
-					(item.SubType=="A/D")
-				){
-			tileGroupNameText = "Other Utility Sensors"	
-			if (typeof item.Counter != 'undefined') {
-				if ((item.Type == "P1 Smart Meter")&&(item.SubType=="Energy")) {
-					deviceImage = "../images/counter.png";
-				}
-				else {
-					deviceImage = "../images/counter.png";
-				}
-			}
-			else if ((item.Type == "Current") || (item.Type == "Current/Energy")) {
-				deviceImage = "../images/current48.png";
-			}
-			else if (item.Type == "Energy") {
-				deviceImage = "../images/current48.png";
-			}
-			else if (item.Type == "Air Quality") {
-				deviceImage = "../images/air48.png";
-			}
-			else if (item.SubType == "Percentage") {
-				deviceImage = "../images/Percentage48.png";
-			}
-			else if (item.Type == "Fan") {
-				deviceImage = "../images/Fan48_On.png";
-			}				
-			else if (item.Type == "Lux") {
-				deviceImage = "../images/lux48.png";
-			}
-			else if (item.Type == "Weight") {
-				deviceImage = "../images/scale48.png";
-			}
-			else if (item.Type == "Usage") {
-				deviceImage = "../images/current48.png";
-			}
-			else if (item.SubType=="Soil Moisture") {
-				deviceImage = "../images/moisture48.png";
-			}
-			else if (item.SubType=="Leaf Wetness") {
-				deviceImage = "../images/leaf48.png";
-			}
-			else if ((item.SubType=="Voltage")||(item.SubType=="A/D")) {
-				deviceImage = "../images/current48.png";
-			}
-			else if (item.SubType=="Pressure") {
-				deviceImage = "../images/gauge48.png";
-			}
-			else if ((item.Type == "Thermostat")&&(item.SubType=="SetPoint")) {
-				deviceImage = "../images/override.png";
-			}			
-		}
+          (item.Type == "Usage")
+        ){
+      tileGroupNameText = "Power Sensors"  
+      if (item.Type == "Usage") {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+    }
+    if ( 
+          (item.Type == "Energy") || 
+          (item.Type == "Current/Energy") 
+        ){
+      tileGroupNameText = "Energy Sensors"  
+      if (item.Type == "Current/Energy") {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+      else if (item.Type == "Energy") {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+      
+    }
+    if ( 
+          (typeof item.Counter != 'undefined') || 
+          (item.Type == "Current") || 
+          (item.Type == "Air Quality") || 
+          (item.Type == "Lux") || 
+          (item.Type == "Weight") || 
+          (item.SubType=="Percentage")||
+          (item.Type=="Fan")||
+          ((item.Type == "Thermostat")&&(item.SubType=="SetPoint"))||
+          (item.SubType=="Soil Moisture")||
+          (item.SubType=="Leaf Wetness")||
+          (item.SubType=="Voltage")||
+          (item.SubType=="Pressure")||
+          (item.SubType=="A/D")
+        ){
+      tileGroupNameText = "Other Utility Sensors"  
+      if (typeof item.Counter != 'undefined') {
+        if ((item.Type == "P1 Smart Meter")&&(item.SubType=="Energy")) {
+          deviceImage = "../images/counter.png";
+        }
+        else {
+          deviceImage = "../images/counter.png";
+        }
+        if ((item.SubType!="Gas")&&(item.SubType != "RFXMeter counter")) {
+          status='' + ("Usage") + ': ' + item.CounterToday;
+        }
+        else {
+          status="&nbsp;";
+        }
+        
+      }
+      else if ((item.Type == "Current") || (item.Type == "Current/Energy")) {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+      else if (item.Type == "Energy") {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+      else if (item.Type == "Air Quality") {
+        deviceImage = "../images/air48.png";
+        status=item.Data + " (" + item.Quality + ")";
+      }
+      else if (item.SubType == "Percentage") {
+        deviceImage = "../images/Percentage48.png";
+        status=item.Data;
+      }
+      else if (item.Type == "Fan") {
+        deviceImage = "../images/Fan48_On.png";
+        status=item.Data;
+      }        
+      else if (item.Type == "Lux") {
+        deviceImage = "../images/lux48.png";
+        status=item.Data;
+      }
+      else if (item.Type == "Weight") {
+        deviceImage = "../images/scale48.png";
+        status=item.Data;
+      }
+      else if (item.Type == "Usage") {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+      else if (item.SubType=="Soil Moisture") {
+        deviceImage = "../images/moisture48.png";
+        status=item.Data;
+      }
+      else if (item.SubType=="Leaf Wetness") {
+        deviceImage = "../images/leaf48.png";
+        status=item.Data;
+      }
+      else if ((item.SubType=="Voltage")||(item.SubType=="A/D")) {
+        deviceImage = "../images/current48.png";
+        status=item.Data;
+      }
+      else if (item.SubType=="Pressure") {
+        deviceImage = "../images/gauge48.png";
+        status=item.Data;
+      }
+      else if ((item.Type == "Thermostat")&&(item.SubType=="SetPoint")) {
+        deviceImage = "../images/override.png";
+        status=item.Data + '\u00B0 ' + $.myglobals.tempsign;
+      }
+        if (typeof item.Usage != 'undefined') {
+          if (item.Type!="P1 Smart Meter") {
+            if (typeof item.CounterToday != 'undefined') {
+              status+='<br>' + ("Today") + ': ' + item.CounterToday;
+            }
+          }
+        }
+        if (typeof item.CounterDeliv != 'undefined') {
+          if (item.CounterDeliv!=0) {
+            status+='<br>';
+            status+='' +("Return") + ': ' + item.CounterDelivToday;
+          }
+        }
+            
+    }
     return{
       group: tileGroupNameText,
-      image: deviceImage
+      image: deviceImage,
+      text: status
     };
   }
 
@@ -1036,35 +1039,17 @@
   updateDomoticzTabs = function(){
     var device = devices.result
     device.forEach(function(value, key){
-    //Read the data or status      
-    switch(value.SwitchType){
-      case undefined:
-        var text = value.Data
-      break;
-      default:
-        var text = value.Status
-      break;
-    }
-    if((value.Type == "Scene") || (value.Type == "Group")){
-      var text = value.Status
-    }    
-    var counterToday = value.CounterToday
-    if (typeof(counterToday)  === "undefined"){
-      counterToday = "0.0 kWh"
-    }
-    
+
     //Create The live Tiles
       var idx = value.idx
-      //var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceImage = getTileGroupAndImage(value).image
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      //var tileGroupNameText = getTileGroupAndImage(value.Type, value.SubType, value.SwitchType)
+      var deviceTileColor = getDeviceTileColor(value)
+      var text = getTileGroupAndImage(value).text
       var tileGroupNameText = getTileGroupAndImage(value).group
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
       }
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-
       if(!$("#" +tileGroupName +"-tile-group").length) {
         $("<section></section>")
           .attr("id", tileGroupName +"-tile-group")
@@ -1133,7 +1118,7 @@
             .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
             .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
             .addClass("clear-fix text-right")
-            .text("Today: " +counterToday)
+            .text("Today: " +value.CounterToday)
         }
         if((value.Type == "Scene") || (value.Type == "Group")){
           $("<span></span>")
@@ -1160,23 +1145,9 @@
       var deviceName = value.VirtualDeivceName
       var virtualDeviceType = value.VirtualDeivceType.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
       var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-      //Use status for lighting devices and data for rest
-      switch(value.SwitchType){
-        case undefined:
-          var text = value.Data
-        break;
-        default:
-          var text = value.Status
-        break;
-      }
-      var counterToday = value.CounterToday
-      if (typeof(counterToday)  === "undefined"){
-        counterToday = "0.0 kWh"
-      }
-      
-      //var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceImage = getTileGroupAndImage(value).image
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
+      var deviceTileColor = getDeviceTileColor(value)
+      var text = getTileGroupAndImage(value).text
       var tileGroupNameText = "Dashboard"
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       
@@ -1246,7 +1217,7 @@
             .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
             .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
             .addClass("clear-fix text-right")
-            .text("Today: " +counterToday)
+            .text("Today: " +value.CounterToday)
         }
         $("<span></span>")
           .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
@@ -1272,33 +1243,11 @@
       return
     }
     device.forEach(function(value, key){
-      //var deviceName = value.VirtualDeivceName
-      //var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-      var counterToday = value.CounterToday
-      if (typeof(counterToday)  === "undefined"){
-        counterToday = "0.0 kWh"
-      }
-    
-      //Use status for lighting devices and data for rest
-      switch(value.SwitchType){
-        case undefined:
-          var text = value.Data
-        break;
-        default:
-          var text = value.Status
-        break;
-      }
-      if((value.Type == "Scene") || (value.Type == "Group")){
-        var text = value.Status
-      }    
-      
 
-      // Create Device Type icons
-      //var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceImage = getTileGroupAndImage(value).image
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      //var tileGroupNameText = getTileGroupAndImage(value.Type, value.SubType, value.SwitchType)
+      var deviceTileColor = getDeviceTileColor(value)
       var tileGroupNameText = getTileGroupAndImage(value).group
+      var text = getTileGroupAndImage(value).text
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
       }
@@ -1332,10 +1281,10 @@
           .show()
       }
       //if(value.Type == "Energy"){
-        if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != "Today: " +counterToday){        
+        if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != "Today: " +value.CounterToday){        
           $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
             .hide()
-            .text("Today: " +counterToday)
+            .text("Today: " +value.CounterToday)
             //.fadeIn(500)        
             .show()
         }
@@ -1363,25 +1312,9 @@
     virtualdevice.forEach(function(value, key){
       var deviceName = value.VirtualDeivceName
       var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
-      var counterToday = value.CounterToday
-      if (typeof(counterToday)  === "undefined"){
-        counterToday = "0.0 kWh"
-      }
-    
-      //Use status for lighting devices and data for rest
-      switch(value.SwitchType){
-        case undefined:
-          var text = value.Data
-        break;
-        default:
-          var text = value.Status
-        break;
-      }
-
-      // Create Device Type icons
-      //var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceImage = getTileGroupAndImage(value).image
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
+      var deviceTileColor = getDeviceTileColor(value)
+      var text = getTileGroupAndImage(value).text
       var tileGroupNameText = "Dashboard"
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       // update text if not the same
@@ -1412,10 +1345,10 @@
           .show()
       }
       //if(value.Type == "Energy"){
-        if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != "Today: " +counterToday){        
+        if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday").text() != "Today: " +value.CounterToday){        
           $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-countertoday")
             .hide()
-            .text("Today: " +counterToday)
+            .text("Today: " +value.CounterToday)
             //.fadeIn(500)        
             .show()
         }
