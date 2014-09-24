@@ -1057,9 +1057,10 @@
       var idx = value.idx
       var deviceImage = getTileGroupAndImage(value).image
       var deviceTileColor = getDeviceTileColor(value)
-      var text = getTileGroupAndImage(value).text
-      var textSize = getTileGroupAndImage(value).size
-      var tileGroupNameText = getTileGroupAndImage(value).group
+      var result = getTileGroupAndImage(value)
+      var text = result.text
+      var textSize = result.size
+      var tileGroupNameText = result.group
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
       }
@@ -1162,8 +1163,9 @@
       var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
       var deviceImage = getTileGroupAndImage(value).image
       var deviceTileColor = getDeviceTileColor(value)
-      var text = getTileGroupAndImage(value).text
-      var textSize = getTileGroupAndImage(value).size
+      var result = getTileGroupAndImage(value)
+      var text = result.text
+      var textSize = result.size
       var tileGroupNameText = "Dashboard"
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       
@@ -1263,8 +1265,9 @@
 
       var deviceImage = getTileGroupAndImage(value).image
       var deviceTileColor = getDeviceTileColor(value)
-      var tileGroupNameText = getTileGroupAndImage(value).group
-      var text = getTileGroupAndImage(value).text
+      var result = getTileGroupAndImage(value)
+      var text = result.text
+      var tileGroupNameText = result.group
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
       }
@@ -1331,7 +1334,8 @@
       var virtualDeviceName = deviceName.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '');
       var deviceImage = getTileGroupAndImage(value).image
       var deviceTileColor = getDeviceTileColor(value)
-      var text = getTileGroupAndImage(value).text
+      var result = getTileGroupAndImage(value)
+      var text = result.text
       var tileGroupNameText = "Dashboard"
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       // update text if not the same
