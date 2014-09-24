@@ -801,6 +801,9 @@
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      if (typeof(tileGroupNameText) === "undefined"){
+        tileGroupNameText = "Unknown Group"
+      }
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
 
       if(!$("#" +tileGroupName +"-tile-group").length) {
@@ -1034,6 +1037,9 @@
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
       var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      if (typeof(tileGroupNameText) === "undefined"){
+        tileGroupNameText = "Unknown Group"
+      }
       var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
       
       // update text if not the same
