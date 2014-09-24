@@ -376,7 +376,6 @@
         }
       }  
     })
-    //updateScenes()
   }
   
 
@@ -627,154 +626,56 @@
     return deviceImage
   }
   
-  getTileGrouping = function(deviceType, deviceSubType, switchType){
+  getTileGrouping = function(item){
     var tileGroupNameText
-    switch(deviceType){
-      case "Lighting 2":
-        tileGroupNameText = switchType
-      break;
-      case "Scene":
-        tileGroupNameText = "Scenes and Groups"
-      break;
-      case "Group":
-        tileGroupNameText = "Scenes and Groups"
-      break;
-      case "Security":
-        tileGroupNameText = "Security Panel"
-      break;
-      case "Temp":
-      case "Temp + Humidity":
-      case "Temp + Humidity + Baro":
-        tileGroupNameText = "Temperature Sensors"
-      break;
-      
-      case "Usage":
-      case "Current":
-        tileGroupNameText = "Power Sensors"
-      break;      
-
-      case "Energy":
-      case "Current/Energy":
-        tileGroupNameText = "Energy Sensors"
-      break;      
-      case "Fan":
-      case "Air Quality":
-      case "Lux":
-      case "Weight":
-      case "Thermostat":
-        tileGroupNameText = "Other Utility Sensors"
-      break;
-      
-      case "Rain":
-      case "Wind":
-        tileGroupNameText = "Weather"
-      break;  
-      //default:
-      //  tileGroupNameText = "Unknown Grouping"      
-      //break;
+    if ((item.Type.indexOf('Scene') == 0)||(item.Type.indexOf('Group') == 0)){
+      tileGroupNameText = "Scenes and Groups"
     }
-    switch(deviceSubType){
-      case "Gas":
-      case "RFXMeter counter":
-      case "Percentage":
-      case "Soil Moisture":
-      case "Voltage":
-      case "A/D":
-      case "Pressure":
-        tileGroupNameText = "Other Utility Sensors"
-      break;
-      case "Solar Radiation":
-        tileGroupNameText = "Weather"
-      break; 
-      //default:
-      //  tileGroupNameText = "Unknown Grouping"      
-      //break;             
-      
+    if ((item.Type.indexOf('Light') == 0)||(item.Type.indexOf('Blind') == 0)||(item.Type.indexOf('Curtain') == 0)||(item.Type.indexOf('Thermostat 3') == 0)||(item.Type.indexOf('Chime') == 0)||(item.Type.indexOf('RFY') == 0)){
+      tileGroupNameText = "Light/Switch Devices: " +item.SwitchType
     }
+    if ((typeof item.Temp != 'undefined')||(typeof item.Humidity != 'undefined')||(typeof item.Chill != 'undefined')){
+      tileGroupNameText = "Temperature Sensors"
+    }
+    if ((typeof item.Rain != 'undefined')||(typeof item.Visibility != 'undefined')||(typeof item.UVI != 'undefined')||(typeof item.Radiation != 'undefined')||(typeof item.Direction != 'undefined')||(typeof item.Barometer != 'undefined')){
+      tileGroupNameText = "Weather"
+    }
+    if ((item.Type.indexOf('Security') == 0)){
+      tileGroupNameText = "Security Panel"
+    }
+    if ( 
+					(typeof item.Counter != 'undefined') || 
+					(item.Type == "Current") || 
+					(item.Type == "Usage")
+				){
+			tileGroupNameText = "Power Sensors"	
+		}
+		if ( 
+					(typeof item.Counter != 'undefined') || 
+					(item.Type == "Energy") || 
+					(item.Type == "Current/Energy") 
+				){
+			tileGroupNameText = "Energy Sensors"	
+		}
+		if ( 
+					(typeof item.Counter != 'undefined') || 
+					(item.Type == "Air Quality") || 
+					(item.Type == "Lux") || 
+					(item.Type == "Weight") || 
+					(item.SubType=="Percentage")||
+					(item.Type=="Fan")||
+					((item.Type == "Thermostat")&&(item.SubType=="SetPoint"))||
+					(item.SubType=="Soil Moisture")||
+					(item.SubType=="Leaf Wetness")||
+					(item.SubType=="Voltage")||
+					(item.SubType=="Pressure")||
+					(item.SubType=="A/D")
+				){
+			tileGroupNameText = "Other Utility Sensors"	
+		}
     return tileGroupNameText
   }
 
-  //Create Scenes Tab
-  updateScenes = function(){
-
-    var scenes = $.getScenes()
-    scenes.result.forEach(function(value, key){
-    if((value.Type == "Scene") || (value.Type == "Group")){
-      var text = value.Status
-      var idx = value.idx
-      var sceneType = value.Type
-      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text)
-      var tileGroupNameText = "Scenes and Groups"
-      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-
-      if(!$("#" +tileGroupName +"-tile-group").length) {
-        $("<section></section>")
-          .attr("id", tileGroupName +"-tile-group")
-          .appendTo("#content-wrapper")
-          .addClass("tile-group two-wide")
-        $("<h2></h2>")
-          .appendTo("#" +tileGroupName +"-tile-group")
-          .text(tileGroupNameText)
-      }
-        
-      if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile").length) {
-        $("<div></div>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile")
-          .appendTo("#" +tileGroupName +"-tile-group")
-          .addClass("live-tile metrojs-carousel")
-          .attr("data-bounce", "true")
-          .attr("data-bounce-dir", "edges")
-          .attr("data-mode", "carousel")
-          .attr("data-direction", "horizontal")
-          .attr("data-slide-direction", "forward")
-          .attr("data-pause-onhover", "true")
-          .data("deviceIdx", value.idx)
-          .data("deviceStatus", text)
-          //.data("deviceSetLevel", value.LevelInt)
-          .attr("onclick", "switchScenes(this)")
-        $("<span></span>")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
-          .addClass("tile-title")
-          .text(value.Type)
-      }  
-      if(!$("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").length) {
-        $("<div></div>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile")
-          .addClass("accent " +deviceTileColor)
-        $("<p></p>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content")
-        $("<img></img>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix")
-          .attr("src", deviceImage)
-        $("<span></span>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-dummy")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix text-right")            
-        $("<span></span>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix text-right metroLarge")
-          .text(text)
-        $("<span></span>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-devicename")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix text-right")
-          .text(value.Name)          
-        $("<span></span>")
-          .attr("id", tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
-          .appendTo("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p")
-          .addClass("clear-fix text-right metroSmaller")
-          .text(value.LastUpdate)
-        
-        }
-      }
-    })
-  }
       
   updateDomoticzTabs = function(){
     var device = devices.result
@@ -800,7 +701,8 @@
       var idx = value.idx
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      //var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      var tileGroupNameText = getTileGrouping(value)
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
       }
@@ -1036,7 +938,8 @@
       // Create Device Type icons
       var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
       var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text, counterToday)
-      var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      //var tileGroupNameText = getTileGrouping(value.Type, value.SubType, value.SwitchType)
+      var tileGroupNameText = getTileGrouping(value)
       if (typeof(tileGroupNameText) === "undefined"){
         tileGroupNameText = "Unknown Group"
       }
@@ -1174,54 +1077,6 @@
         $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
       }
     })
-    
-/*    
-    var scenes = $.getScenes()
-    scenes.result.forEach(function(value, key){
-      // Update Scenses and Groups tile content
-      var text = value.Status
-      var deviceImage = getDeviceImage(value.Type, value.SubType, value.SwitchType, text)
-      var deviceTileColor = getDeviceTileColor(value.Type, value.SubType, value.SwitchType, text)
-      var tileGroupNameText = "Scenes and Groups"
-      var tileGroupName = tileGroupNameText.replace(/[_\s]/g, '').replace(/[^a-z0-9-\s]/gi, '')
-      // update text if not the same
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status").text() != text){
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-status")
-          .hide()
-          .text(text)
-          //.fadeIn(500)
-          .show()
-        //setTimeout(function(){
-        //  $.Notify({style: {background: '#1ba1e2', color: 'white'}, caption: 'Update...', content: value.Name +" changed to " +text});
-        //}, 3000);
-              
-      }
-      // Update the image in case of status chage
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img").attr('src') != deviceImage){
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-img")
-          .hide()
-          .attr("src", deviceImage)
-          //.fadeIn(500)
-          .show()
-      }
-      if ($("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate").text() != value.LastUpdate){        
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content-p-span-lastupdate")
-          .hide()
-          .text(value.LastUpdate)
-          //.fadeIn(500)        
-          .show()
-      }
-      // Update the tile color
-      $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").addClass(deviceTileColor);
-      var dAccent = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent");
-      if (dAccent != deviceTileColor) {
-        var cleanClass = $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class").replace(dAccent, "");
-        cleanClass = cleanClass.replace(/(\s)+/, ' ');
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").attr("class", cleanClass);
-        $("#" +tileGroupName +"-" +value.idx +"-tile-group-live-tile-content").data("accent", deviceTileColor);
-      }      
-    })
-*/    
   } 
   
   ShowNotify = function(txt, timeout, iserror)
